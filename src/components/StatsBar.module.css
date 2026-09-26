@@ -1,0 +1,158 @@
+.statsBar {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.4rem;
+  background: var(--surface-1);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 1.2rem;
+}
+
+.overall {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-shrink: 0;
+}
+
+.ring {
+  width: 56px;
+  height: 56px;
+  transform: rotate(-90deg);
+  flex-shrink: 0;
+}
+
+.ringBg {
+  fill: none;
+  stroke: var(--surface-3);
+  stroke-width: 5;
+}
+
+.ringFill {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 5;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+.ringLabel {
+  position: absolute;
+}
+
+.ring {
+  position: relative;
+}
+
+.overallText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.overallTitle {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.overallSub {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.ringPct {
+  display: none;
+}
+
+.separator {
+  width: 1.5px;
+  height: 44px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.diffStats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 160px;
+}
+
+.diffStat {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.diffLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  width: 52px;
+  flex-shrink: 0;
+}
+
+.diffBar {
+  flex: 1;
+  height: 5px;
+  background: var(--surface-3);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.diffBarFill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+
+.diffCount {
+  font-size: 0.72rem;
+  font-weight: 600;
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.bookmark {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid transparent;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  color: var(--text);
+}
+
+.bookmark:hover {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+.bookmarkActive {
+  background: var(--surface-3);
+  border-color: var(--accent);
+}
+
+.bookmarkIcon {
+  font-size: 1rem;
+}
+
+.bookmarkLabel {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: inherit;
+}
+
+
