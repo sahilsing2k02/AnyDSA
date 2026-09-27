@@ -127,7 +127,7 @@
   flex-shrink: 0;
   background: none;
   border: 1px solid transparent;
-  padding: 0.5rem 0.8rem;
+  padding: 0.35rem 0.6rem;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -155,4 +155,41 @@
   color: inherit;
 }
 
+.actionsGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
 
+.randomBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1px solid transparent;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  color: var(--text);
+}
+
+.randomBtn:hover {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+.randomIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.randomLabel {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: inherit;
+}

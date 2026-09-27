@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Pattern } from '../types';
 import { ProblemRow } from './ProblemRow';
 import { useApp } from '../context/AppContext';
@@ -13,6 +13,16 @@ interface Props {
 export function PatternCard({ pattern, defaultOpen = false }: Props) {
   const [open, setOpen] = useState(defaultOpen);
   const { state } = useApp();
+
+  useEffect(() => {
+    const handleOpen = (e: Event) => {
+      if ((e as CustomEvent).detail === pattern.id) {
+        setOpen(true);
+      }
+    };
+    window.addEventListener('openPattern', handleOpen);
+    return () => window.removeEventListener('openPattern', handleOpen);
+  }, [pattern.id]);
 
   const solvedCount = useMemo(
     () => pattern.problems.filter(p => state.solvedProblems.has(p.id)).length,

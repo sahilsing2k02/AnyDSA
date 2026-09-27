@@ -33,6 +33,35 @@ export function StatsBar({ patterns, showStarredOnly, onToggleStarred }: Props) 
 
     return { totalProblems, totalSolved, easyTotal, easyDone, mediumTotal, mediumDone, hardTotal, hardDone };
   }, [patterns, state.solvedProblems]);
+  const handleRandomClick = () => {
+    const unsolved = patterns.flatMap(pattern => 
+      pattern.problems
+        .filter(p => !state.solvedProblems.has(p.id))
+        .map(p => ({ patternId: pattern.id, problemId: p.id }))
+    );
+
+    if (unsolved.length === 0) {
+      alert("Amazing! You've solved all problems.");
+      return;
+    }
+
+    const randomPick = unsolved[Math.floor(Math.random() * unsolved.length)];
+    
+    // Open the pattern card
+    window.dispatchEvent(new CustomEvent('openPattern', { detail: randomPick.patternId }));
+
+    // Scroll to the problem row slightly after to allow render
+    setTimeout(() => {
+      const el = document.getElementById(`problem-${randomPick.problemId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Flash highlight
+        el.style.backgroundColor = 'var(--surface-3)';
+        el.style.transition = 'background-color 0.5s ease';
+        setTimeout(() => { el.style.backgroundColor = ''; }, 1500);
+      }
+    }, 150);
+  };
 
   const overallPercent = getProgressPercent(totalSolved, totalProblems);
 
@@ -71,15 +100,35 @@ export function StatsBar({ patterns, showStarredOnly, onToggleStarred }: Props) 
 
       <div className={styles.separator} />
 
-      {/* Starred */}
-      <button 
-        className={`${styles.bookmark} ${showStarredOnly ? styles.bookmarkActive : ''}`} 
-        onClick={onToggleStarred}
-        title={showStarredOnly ? 'Show all problems' : 'Show only starred problems'}
-      >
-        <span className={styles.bookmarkIcon}>★</span>
-        <span className={styles.bookmarkLabel}>{state.bookmarkedProblems.size} Starred</span>
-      </button>
+      <div className={styles.actionsGroup}>
+        {/* Starred */}
+        <button 
+          className={`${styles.bookmark} ${showStarredOnly ? styles.bookmarkActive : ''}`} 
+          onClick={onToggleStarred}
+          title={showStarredOnly ? 'Show all problems' : 'Show only starred problems'}
+        >
+          <span className={styles.bookmarkIcon}>★</span>
+          <span className={styles.bookmarkLabel}>{state.bookmarkedProblems.size} Starred</span>
+        </button>
+
+        {/* Random Pick */}
+        <button 
+          className={styles.randomBtn} 
+          onClick={handleRandomClick}
+          title="Pick a random unsolved problem"
+        >
+          <span className={styles.randomIcon}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="16 3 21 3 21 8"></polyline>
+              <line x1="4" y1="20" x2="21" y2="3"></line>
+              <polyline points="21 16 21 21 16 21"></polyline>
+              <line x1="15" y1="15" x2="21" y2="21"></line>
+              <line x1="4" y1="4" x2="9" y2="9"></line>
+            </svg>
+          </span>
+          <span className={styles.randomLabel}>Random</span>
+        </button>
+      </div>
     </div>
   );
 }
