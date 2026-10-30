@@ -65,7 +65,10 @@ function loadTheme(): Theme {
 
 export function AppProvider({ children, isAuthenticated }: { children: ReactNode; isAuthenticated?: boolean }) {
   const isAuthRef = useRef(isAuthenticated);
-  isAuthRef.current = isAuthenticated;
+
+  useEffect(() => {
+    isAuthRef.current = isAuthenticated;
+  }, [isAuthenticated]);
 
   const [state, setState] = useState<AppState>(() => ({
     solvedProblems: loadSet(KEYS.SOLVED),
@@ -74,7 +77,7 @@ export function AppProvider({ children, isAuthenticated }: { children: ReactNode
     theme: loadTheme(),
   }));
 
-  // Fetch persisted data from SQLite relational database when authenticated
+  // Fetch persisted data from PostgreSQL relational database when authenticated
   useEffect(() => {
     if (!isAuthenticated) return;
 
