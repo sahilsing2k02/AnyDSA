@@ -33,6 +33,7 @@ export interface ProblemNote {
   problemId: string;
   content: string;
   updatedAt: string;
+  version?: number;
 }
 
 export interface AppState {

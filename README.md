@@ -1,32 +1,50 @@
-# React + TypeScript + Vite
+# AnyDSA - Full-Stack DSA Problem & Note Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A full-stack web application for DSA pattern mastery, progress tracking, and note-taking built with a 3-tier architecture adhering to core system design principles (reliability, data consistency, security, and separation of concerns).
 
-Currently, two official plugins are available:
+## Architecture (3-Tier)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. **Presentation Layer (Frontend UI)**:
+   - React 19 + TypeScript + Vite.
+   - Responsive problem rows, pattern cards, and live progress dashboards.
+   - Comprehensive client-side state wipe on logout (in-memory state, caches, `localStorage`, `sessionStorage`, and history replacement).
+2. **Domain API Layer (Backend Services)**:
+   - Express server with Zod schema validation at all API boundaries.
+   - Strict RFC-compliant email validation.
+   - Password hashing via bcrypt (`bcryptjs`).
+   - Secure session management using `httpOnly`, `SameSite=Lax` cookies.
+   - Optimistic Concurrency Control (OCC) on note edits (`version` tracking).
+   - Centralized error handling returning sanitized JSON payloads without leaking stack traces.
+3. **Persistence Layer (Relational Database)**:
+   - Relational SQLite database (`node:sqlite` in WAL mode).
+   - Foreign keys enforced with `ON DELETE CASCADE`.
+   - Atomic database transactions (`BEGIN` / `COMMIT` / `ROLLBACK`) for multi-step operations.
+   - Connection retry mechanism and `/api/health` diagnostic endpoint.
 
-## React Compiler
+## Setup & Running
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+### 1. Install Dependencies
+```bash
+npm install
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+### 2. Run Self-Checking Integration Tests
+```bash
+npm test
+```
+Tests RFC email validation, bcrypt hashing, session cookies, cache headers, OCC conflict detection, atomic transactions, logout invalidation, and `ON DELETE CASCADE`.
+
+### 3. Start Development Servers
+In separate terminals:
+
+**Backend API Server (Port 3001):**
+```bash
+npm run server
+```
+
+**Frontend Dev Server (Port 5173):**
+```bash
+npm run dev
+```
+
+The Vite dev server automatically proxies `/api` requests to `http://localhost:3001`.
