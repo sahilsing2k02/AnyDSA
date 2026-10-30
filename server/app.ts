@@ -20,7 +20,7 @@ export async function createApp() {
   app.use(express.json());
   app.use(cookieParser());
 
-  // CORS middleware for separate Vercel frontend / Render backend deployments
+  // CORS middleware for multi-origin requests
   app.use((req, res, next) => {
     const origin = req.headers.origin;
     const allowedOrigins = process.env.ALLOWED_ORIGINS
@@ -41,11 +41,15 @@ export async function createApp() {
     next();
   });
 
-  // API Routes
-  app.use('/api/health', healthRouter);
-  app.use('/api/auth', authRouter);
-  app.use('/api/notes', notesRouter);
-  app.use('/api/progress', progressRouter);
+  // API Router mounted at both /api and root (to handle both local proxy and Vercel serverless functions)
+  const apiRouter = express.Router();
+  apiRouter.use('/health', healthRouter);
+  apiRouter.use('/auth', authRouter);
+  apiRouter.use('/notes', notesRouter);
+  apiRouter.use('/progress', progressRouter);
+
+  app.use('/api', apiRouter);
+  app.use(apiRouter);
 
   // Serve production client build when dist exists (Render full-stack web service mode)
   const distPath = path.resolve(process.cwd(), 'dist');

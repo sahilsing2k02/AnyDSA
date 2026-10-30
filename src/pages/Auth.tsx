@@ -10,7 +10,7 @@ interface Props {
 const RFC_EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 
 export function Auth({ onBack, onLoginSuccess }: Props) {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false); // Default to register for new users
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -49,7 +49,15 @@ export function Auth({ onBack, onLoginSuccess }: Props) {
         body: JSON.stringify(payload)
       });
 
-      const data = await res.json();
+      let data: any = {};
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text || `Server returned error (${res.status})`);
+      }
+
       if (!res.ok) {
         throw new Error(data.error || 'Authentication failed');
       }
@@ -87,7 +95,7 @@ export function Auth({ onBack, onLoginSuccess }: Props) {
                 id="name"
                 value={name}
                 onChange={e => setName(e.target.value)}
-                placeholder="Ada Lovelace"
+                placeholder="Sahil Singh"
               />
             </div>
           )}
