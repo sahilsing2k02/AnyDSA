@@ -9,9 +9,9 @@ import { progressRouter } from './routes/progress.js';
 import { healthRouter } from './routes/health.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
-export function createApp() {
+export async function createApp() {
   // Ensure schema migrations are executed
-  runMigrations();
+  await runMigrations();
 
   const app = express();
 

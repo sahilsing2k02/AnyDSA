@@ -63,22 +63,26 @@ authRouter.post('/login', async (req, res, next) => {
   }
 });
 
-authRouter.post('/logout', (req, res) => {
-  const sessionId = req.cookies?.session_id || (req.headers['authorization']?.startsWith('Bearer ') ? req.headers['authorization'].slice(7) : undefined);
-  if (sessionId) {
-    AuthService.logout(sessionId);
+authRouter.post('/logout', async (req, res, next) => {
+  try {
+    const sessionId = req.cookies?.session_id || (req.headers['authorization']?.startsWith('Bearer ') ? req.headers['authorization'].slice(7) : undefined);
+    if (sessionId) {
+      await AuthService.logout(sessionId);
+    }
+
+    // Clear cookie and set strict cache prevention headers
+    res.clearCookie('session_id', COOKIE_OPTIONS);
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
+    res.json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+  } catch (err) {
+    next(err);
   }
-
-  // Clear cookie and set strict cache prevention headers
-  res.clearCookie('session_id', COOKIE_OPTIONS);
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-
-  res.json({
-    success: true,
-    message: 'Logged out successfully'
-  });
 });
 
 authRouter.get('/me', requireAuth, (req, res) => {
@@ -86,4 +90,3 @@ authRouter.get('/me', requireAuth, (req, res) => {
     user: req.user
   });
 });
-

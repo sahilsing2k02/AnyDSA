@@ -15,11 +15,12 @@ A full-stack web application for DSA pattern mastery, progress tracking, and not
    - Secure session management using `httpOnly`, `SameSite=Lax` cookies.
    - Optimistic Concurrency Control (OCC) on note edits (`version` tracking).
    - Centralized error handling returning sanitized JSON payloads without leaking stack traces.
-3. **Persistence Layer (Relational Database)**:
-   - Relational SQLite database (`node:sqlite` in WAL mode).
+3. **Persistence Layer (PostgreSQL Database)**:
+   - Relational PostgreSQL database via `pg` connection pool.
+   - Connected via `DATABASE_URL` in production (e.g. Render Managed Postgres, Neon, Supabase) with zero-config in-memory PostgreSQL engine for local development & automated tests.
    - Foreign keys enforced with `ON DELETE CASCADE`.
    - Atomic database transactions (`BEGIN` / `COMMIT` / `ROLLBACK`) for multi-step operations.
-   - Connection retry mechanism and `/api/health` diagnostic endpoint.
+   - Connection pool retry mechanism and `/api/health` diagnostic endpoint.
 
 ## Setup & Running
 

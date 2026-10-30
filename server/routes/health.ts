@@ -1,17 +1,16 @@
 import { Router } from 'express';
-import { getDb } from '../db.js';
+import { getPool } from '../db.js';
 
 export const healthRouter = Router();
 
-healthRouter.get('/', (_req, res) => {
+healthRouter.get('/', async (_req, res) => {
   try {
-    const db = getDb();
-    // Test database query
-    const row = db.prepare('SELECT 1 as alive').get() as { alive: number } | undefined;
-    if (row?.alive === 1) {
+    const pool = getPool();
+    const result = await pool.query('SELECT 1 as alive;');
+    if (result.rows[0]?.alive === 1 || result.rows[0]?.alive === '1') {
       res.json({
         status: 'ok',
-        database: 'connected',
+        database: 'postgresql_connected',
         timestamp: new Date().toISOString()
       });
     } else {
@@ -30,4 +29,3 @@ healthRouter.get('/', (_req, res) => {
     });
   }
 });
-

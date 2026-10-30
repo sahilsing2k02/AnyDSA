@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
-import { getDb } from '../db.js';
+import { getPool } from '../db.js';
 import { ConflictError, ValidationError } from '../errors.js';
+import type pg from 'pg';
 
 export interface NoteItem {
   id: string;
@@ -11,48 +12,44 @@ export interface NoteItem {
 }
 
 export class NoteService {
-  static getNotes(userId: string): Record<string, NoteItem> {
-    const db = getDb();
-    const rows = db.prepare(`
+  static async getNotes(userId: string): Promise<Record<string, NoteItem>> {
+    const pool = getPool();
+    const res = await pool.query(`
       SELECT id, problem_id, content, version, updated_at
       FROM notes
-      WHERE user_id = ?
-    `).all(userId) as Array<{
-      id: string;
-      problem_id: string;
-      content: string;
-      version: number;
-      updated_at: string;
-    }>;
+      WHERE user_id = $1
+    `, [userId]);
 
     const result: Record<string, NoteItem> = {};
-    for (const r of rows) {
+    for (const r of res.rows) {
       result[r.problem_id] = {
         id: r.id,
         problemId: r.problem_id,
         content: r.content,
         version: r.version,
-        updatedAt: r.updated_at
+        updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString()
       };
     }
     return result;
   }
 
-  static saveNote(userId: string, problemId: string, content: string, expectedVersion?: number): NoteItem {
+  static async saveNote(
+    userId: string,
+    problemId: string,
+    content: string,
+    expectedVersion?: number,
+    client?: pg.PoolClient | pg.Pool
+  ): Promise<NoteItem> {
     if (!problemId) throw new ValidationError('problemId is required');
-    const db = getDb();
+    const runner = client || getPool();
 
-    const existing = db.prepare(`
+    const existingRes = await runner.query(`
       SELECT id, problem_id, content, version, updated_at
       FROM notes
-      WHERE user_id = ? AND problem_id = ?
-    `).get(userId, problemId) as {
-      id: string;
-      problem_id: string;
-      content: string;
-      version: number;
-      updated_at: string;
-    } | undefined;
+      WHERE user_id = $1 AND problem_id = $2
+    `, [userId, problemId]);
+
+    const existing = existingRes.rows[0];
 
     if (existing) {
       // Optimistic concurrency control check
@@ -70,13 +67,13 @@ export class NoteService {
       }
 
       const nextVersion = existing.version + 1;
-      const res = db.prepare(`
+      const res = await runner.query(`
         UPDATE notes
-        SET content = ?, version = ?, updated_at = datetime('now')
-        WHERE user_id = ? AND problem_id = ? AND version = ?
-      `).run(content, nextVersion, userId, problemId, existing.version);
+        SET content = $1, version = $2, updated_at = NOW()
+        WHERE user_id = $3 AND problem_id = $4 AND version = $5
+      `, [content, nextVersion, userId, problemId, existing.version]);
 
-      if (res.changes === 0) {
+      if (res.rowCount === 0) {
         throw new ConflictError('Concurrent edit conflict during update');
       }
 
@@ -89,10 +86,10 @@ export class NoteService {
       };
     } else {
       const id = crypto.randomUUID();
-      db.prepare(`
+      await runner.query(`
         INSERT INTO notes (id, user_id, problem_id, content, version)
-        VALUES (?, ?, ?, ?, 1)
-      `).run(id, userId, problemId, content);
+        VALUES ($1, $2, $3, $4, 1)
+      `, [id, userId, problemId, content]);
 
       return {
         id,
@@ -104,4 +101,3 @@ export class NoteService {
     }
   }
 }
-

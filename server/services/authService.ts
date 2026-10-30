@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 import bcrypt from 'bcryptjs';
-import { getDb } from '../db.js';
+import { getPool } from '../db.js';
 import { ValidationError, UnauthorizedError, ConflictError } from '../errors.js';
 
 // Strict RFC-compliant email regex
@@ -30,13 +30,6 @@ export interface UserRow {
   created_at: string;
 }
 
-export interface SessionRow {
-  id: string;
-  user_id: string;
-  expires_at: number;
-  created_at: string;
-}
-
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 export class AuthService {
@@ -47,9 +40,9 @@ export class AuthService {
     }
     const name = nameRaw?.trim() || email.split('@')[0];
 
-    const db = getDb();
-    const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
-    if (existing) {
+    const pool = getPool();
+    const existing = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) {
       throw new ConflictError('A user with this email already exists');
     }
 
@@ -57,12 +50,12 @@ export class AuthService {
     const passwordHash = await bcrypt.hash(password, saltRounds);
     const userId = crypto.randomUUID();
 
-    db.prepare(`
-      INSERT INTO users (id, email, password_hash, name)
-      VALUES (?, ?, ?, ?)
-    `).run(userId, email, passwordHash, name);
+    await pool.query(
+      'INSERT INTO users (id, email, password_hash, name) VALUES ($1, $2, $3, $4)',
+      [userId, email, passwordHash, name]
+    );
 
-    const { sessionId, expiresAt } = this.createSession(userId);
+    const { sessionId, expiresAt } = await this.createSession(userId);
 
     return {
       user: { id: userId, email, name },
@@ -77,8 +70,9 @@ export class AuthService {
       throw new ValidationError('Password is required');
     }
 
-    const db = getDb();
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email) as UserRow | undefined;
+    const pool = getPool();
+    const res = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = res.rows[0] as UserRow | undefined;
     if (!user) {
       throw new UnauthorizedError('Invalid email or password');
     }
@@ -88,7 +82,7 @@ export class AuthService {
       throw new UnauthorizedError('Invalid email or password');
     }
 
-    const { sessionId, expiresAt } = this.createSession(user.id);
+    const { sessionId, expiresAt } = await this.createSession(user.id);
 
     return {
       user: { id: user.id, email: user.email, name: user.name },
@@ -97,36 +91,36 @@ export class AuthService {
     };
   }
 
-  static createSession(userId: string): { sessionId: string; expiresAt: number } {
-    const db = getDb();
+  static async createSession(userId: string): Promise<{ sessionId: string; expiresAt: number }> {
+    const pool = getPool();
     const sessionId = crypto.randomUUID();
     const expiresAt = Date.now() + SESSION_TTL_MS;
 
-    db.prepare(`
-      INSERT INTO sessions (id, user_id, expires_at)
-      VALUES (?, ?, ?)
-    `).run(sessionId, userId, expiresAt);
+    await pool.query(
+      'INSERT INTO sessions (id, user_id, expires_at) VALUES ($1, $2, $3)',
+      [sessionId, userId, expiresAt]
+    );
 
     return { sessionId, expiresAt };
   }
 
-  static validateSession(sessionId: string): { id: string; email: string; name: string; sessionId: string } | null {
+  static async validateSession(sessionId: string): Promise<{ id: string; email: string; name: string; sessionId: string } | null> {
     if (!sessionId) return null;
-    const db = getDb();
+    const pool = getPool();
 
-    // Query session joined with user
-    const row = db.prepare(`
-      SELECT s.id as sessionId, s.expires_at, u.id as userId, u.email, u.name
+    const res = await pool.query(`
+      SELECT s.id as "sessionId", s.expires_at, u.id as "userId", u.email, u.name
       FROM sessions s
       JOIN users u ON s.user_id = u.id
-      WHERE s.id = ?
-    `).get(sessionId) as { sessionId: string; expires_at: number; userId: string; email: string; name: string } | undefined;
+      WHERE s.id = $1
+    `, [sessionId]);
 
+    const row = res.rows[0] as { sessionId: string; expires_at: string | number; userId: string; email: string; name: string } | undefined;
     if (!row) return null;
 
-    if (Date.now() > row.expires_at) {
-      // Invalidate expired session
-      db.prepare('DELETE FROM sessions WHERE id = ?').run(sessionId);
+    const expiresAt = Number(row.expires_at);
+    if (Date.now() > expiresAt) {
+      await pool.query('DELETE FROM sessions WHERE id = $1', [sessionId]);
       return null;
     }
 
@@ -138,10 +132,9 @@ export class AuthService {
     };
   }
 
-  static logout(sessionId: string): void {
+  static async logout(sessionId: string): Promise<void> {
     if (!sessionId) return;
-    const db = getDb();
-    db.prepare('DELETE FROM sessions WHERE id = ?').run(sessionId);
+    const pool = getPool();
+    await pool.query('DELETE FROM sessions WHERE id = $1', [sessionId]);
   }
 }
-

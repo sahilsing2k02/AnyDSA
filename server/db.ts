@@ -1,52 +1,45 @@
-import { DatabaseSync } from 'node:sqlite';
-import path from 'node:path';
-import fs from 'node:fs';
+import pg from 'pg';
+import { newDb } from 'pg-mem';
 
-const DB_DIR = path.resolve(process.cwd(), 'data');
-if (!fs.existsSync(DB_DIR)) {
-  fs.mkdirSync(DB_DIR, { recursive: true });
-}
+const { Pool } = pg;
 
-export const DB_PATH = process.env.NODE_ENV === 'test' 
-  ? ':memory:' 
-  : path.join(DB_DIR, 'anydsa.sqlite');
+export type DbPool = pg.Pool;
 
-let databaseInstance: DatabaseSync | null = null;
+let poolInstance: DbPool | null = null;
 
-export function getDb(retries = 3, delayMs = 200): DatabaseSync {
-  if (databaseInstance) return databaseInstance;
+export function getPool(): DbPool {
+  if (poolInstance) return poolInstance;
 
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      const db = new DatabaseSync(DB_PATH);
-      // Enforce relational integrity & write performance
-      db.exec('PRAGMA foreign_keys = ON;');
-      db.exec('PRAGMA journal_mode = WAL;');
-      databaseInstance = db;
-      return databaseInstance;
-    } catch (err) {
-      if (attempt === retries) {
-        console.error(`[DB] Failed to connect after ${retries} attempts:`, err);
-        throw err;
-      }
-      const wait = delayMs * attempt;
-      const start = Date.now();
-      while (Date.now() - start < wait) {
-        // synchronous backoff pause for SQLite lock contention
-      }
-    }
+  const databaseUrl = process.env.DATABASE_URL;
+
+  if (databaseUrl && process.env.NODE_ENV !== 'test') {
+    // Production / External PostgreSQL connection
+    console.log('[Database] Connecting to PostgreSQL via DATABASE_URL...');
+    poolInstance = new Pool({
+      connectionString: databaseUrl,
+      ssl: databaseUrl.includes('localhost') ? false : { rejectUnauthorized: false },
+      max: 10,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 5000,
+    });
+  } else {
+    // High-fidelity in-memory PostgreSQL engine for local development & testing
+    console.log('[Database] Using in-memory PostgreSQL engine...');
+    const memDb = newDb();
+    const memPg = memDb.adapters.createPg();
+    poolInstance = new memPg.Pool() as unknown as DbPool;
   }
-  throw new Error('Database initialization failure');
+
+  return poolInstance;
 }
 
-export function closeDb(): void {
-  if (databaseInstance) {
+export async function closePool(): Promise<void> {
+  if (poolInstance) {
     try {
-      databaseInstance.close();
+      await poolInstance.end();
     } catch {
       // ignore on close
     }
-    databaseInstance = null;
+    poolInstance = null;
   }
 }
-

@@ -1,3 +1,9 @@
+databases:
+  - name: anydsa-db
+    databaseName: anydsa
+    user: anydsa_user
+    plan: free
+
 services:
   - type: web
     name: anydsa
@@ -10,7 +16,7 @@ services:
         value: production
       - key: PORT
         value: 10000
-    disk:
-      name: anydsa-data
-      mountPath: /opt/render/project/src/data
-      sizeGB: 1
+      - key: DATABASE_URL
+        fromDatabase:
+          name: anydsa-db
+          property: connectionString

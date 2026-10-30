@@ -20,49 +20,56 @@ const atomicSyncSchema = z.object({
   noteVersion: z.number().int().positive().optional()
 });
 
-progressRouter.get('/', (req, res) => {
-  const progress = ProgressService.getProgress(req.user!.id);
-  res.json(progress);
+progressRouter.get('/', async (req, res, next) => {
+  try {
+    const progress = await ProgressService.getProgress(req.user!.id);
+    res.json(progress);
+  } catch (err) {
+    next(err);
+  }
 });
 
-progressRouter.post('/toggle-solved', (req, res, next) => {
+progressRouter.post('/toggle-solved', async (req, res, next) => {
   try {
     const parse = problemIdSchema.safeParse(req.body);
     if (!parse.success) throw new ValidationError(parse.error.issues[0].message);
 
-    const isSolved = ProgressService.toggleSolved(req.user!.id, parse.data.problemId);
+    const isSolved = await ProgressService.toggleSolved(req.user!.id, parse.data.problemId);
     res.json({ problemId: parse.data.problemId, isSolved });
   } catch (err) {
     next(err);
   }
 });
 
-progressRouter.post('/toggle-bookmark', (req, res, next) => {
+progressRouter.post('/toggle-bookmark', async (req, res, next) => {
   try {
     const parse = problemIdSchema.safeParse(req.body);
     if (!parse.success) throw new ValidationError(parse.error.issues[0].message);
 
-    const isBookmarked = ProgressService.toggleBookmark(req.user!.id, parse.data.problemId);
+    const isBookmarked = await ProgressService.toggleBookmark(req.user!.id, parse.data.problemId);
     res.json({ problemId: parse.data.problemId, isBookmarked });
   } catch (err) {
     next(err);
   }
 });
 
-progressRouter.post('/atomic-sync', (req, res, next) => {
+progressRouter.post('/atomic-sync', async (req, res, next) => {
   try {
     const parse = atomicSyncSchema.safeParse(req.body);
     if (!parse.success) throw new ValidationError(parse.error.issues[0].message);
 
-    const result = ProgressService.atomicSync(req.user!.id, parse.data);
+    const result = await ProgressService.atomicSync(req.user!.id, parse.data);
     res.json(result);
   } catch (err) {
     next(err);
   }
 });
 
-progressRouter.post('/reset', (req, res) => {
-  ProgressService.resetProgress(req.user!.id);
-  res.json({ success: true, message: 'All user progress and notes cleared' });
+progressRouter.post('/reset', async (req, res, next) => {
+  try {
+    await ProgressService.resetProgress(req.user!.id);
+    res.json({ success: true, message: 'All user progress and notes cleared' });
+  } catch (err) {
+    next(err);
+  }
 });
-

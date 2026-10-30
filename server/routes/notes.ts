@@ -13,12 +13,16 @@ const saveNoteSchema = z.object({
   version: z.number().int().positive().optional()
 });
 
-notesRouter.get('/', (req, res) => {
-  const notes = NoteService.getNotes(req.user!.id);
-  res.json({ notes });
+notesRouter.get('/', async (req, res, next) => {
+  try {
+    const notes = await NoteService.getNotes(req.user!.id);
+    res.json({ notes });
+  } catch (err) {
+    next(err);
+  }
 });
 
-notesRouter.put('/:problemId', (req, res, next) => {
+notesRouter.put('/:problemId', async (req, res, next) => {
   try {
     const { problemId } = req.params;
     const parse = saveNoteSchema.safeParse(req.body);
@@ -26,7 +30,7 @@ notesRouter.put('/:problemId', (req, res, next) => {
       throw new ValidationError(parse.error.issues.map(i => i.message).join(', '));
     }
 
-    const note = NoteService.saveNote(
+    const note = await NoteService.saveNote(
       req.user!.id,
       problemId,
       parse.data.content,
@@ -38,4 +42,3 @@ notesRouter.put('/:problemId', (req, res, next) => {
     next(err);
   }
 });
-

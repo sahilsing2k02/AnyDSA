@@ -1,14 +1,14 @@
 import assert from 'node:assert/strict';
 import { createApp } from '../app.js';
-import { getDb, closeDb } from '../db.js';
+import { getPool, closePool } from '../db.js';
 import type { Server } from 'node:http';
 
 process.env.NODE_ENV = 'test';
 
 async function runTests() {
-  console.log('--- Starting Integration & Lifecycle Tests ---');
+  console.log('--- Starting PostgreSQL Integration & Lifecycle Tests ---');
 
-  const app = createApp();
+  const app = await createApp();
   let server: Server;
   const port = 3999;
   const baseUrl = `http://localhost:${port}`;
@@ -24,8 +24,8 @@ async function runTests() {
     assert.equal(healthRes.status, 200);
     const healthData = await healthRes.json();
     assert.equal(healthData.status, 'ok');
-    assert.equal(healthData.database, 'connected');
-    console.log('✓ Health check passed');
+    assert.equal(healthData.database, 'postgresql_connected');
+    console.log('✓ PostgreSQL health check passed');
 
     // 2. Strict RFC email validation
     console.log('[Test 2] RFC Email Validation...');
@@ -117,7 +117,7 @@ async function runTests() {
     const conflictData = await conflictRes.json();
     assert.ok(conflictData.error.includes('Conflict'));
     assert.equal(conflictData.currentData.version, 2);
-    console.log('✓ Optimistic concurrency control correctly triggers 409 Conflict');
+    console.log('✓ Optimistic concurrency control correctly triggers 409 Conflict in PostgreSQL');
 
     // 6. Atomic Transaction (Progress + Note)
     console.log('[Test 6] Atomic multi-step transaction...');
@@ -140,7 +140,7 @@ async function runTests() {
     const progressData = await progressRes.json();
     assert.ok(progressData.solvedProblems.includes('two-sum'));
     assert.ok(progressData.bookmarkedProblems.includes('two-sum'));
-    console.log('✓ Atomic multi-step transaction committed both progress and note');
+    console.log('✓ Atomic multi-step PostgreSQL transaction committed both progress and note');
 
     // 7. Explicit Logout Lifecycle & Invalidation
     console.log('[Test 7] Logout lifecycle & session invalidation...');
@@ -157,36 +157,36 @@ async function runTests() {
       headers: { Cookie: cookieHeader }
     });
     assert.equal(postLogoutRes.status, 401, 'Logged-out session must be invalidated on server');
-    console.log('✓ Explicit logout invalidated session token and purged server session');
+    console.log('✓ Explicit logout invalidated session token and purged PostgreSQL session');
 
     // 8. Relational Integrity: ON DELETE CASCADE
     console.log('[Test 8] Relational ON DELETE CASCADE test...');
-    const db = getDb();
+    const pool = getPool();
     const userId = regData.user.id;
     // Verify records exist before user deletion
-    const beforeNotes = db.prepare('SELECT count(*) as count FROM notes WHERE user_id = ?').get(userId) as any;
-    const beforeProgress = db.prepare('SELECT count(*) as count FROM progress WHERE user_id = ?').get(userId) as any;
-    assert.ok(beforeNotes.count > 0);
-    assert.ok(beforeProgress.count > 0);
+    const beforeNotes = await pool.query('SELECT count(*) as count FROM notes WHERE user_id = $1', [userId]);
+    const beforeProgress = await pool.query('SELECT count(*) as count FROM progress WHERE user_id = $1', [userId]);
+    assert.ok(Number(beforeNotes.rows[0].count) > 0);
+    assert.ok(Number(beforeProgress.rows[0].count) > 0);
 
     // Delete user
-    db.prepare('DELETE FROM users WHERE id = ?').run(userId);
+    await pool.query('DELETE FROM users WHERE id = $1', [userId]);
 
     // Verify cascade deleted
-    const afterNotes = db.prepare('SELECT count(*) as count FROM notes WHERE user_id = ?').get(userId) as any;
-    const afterProgress = db.prepare('SELECT count(*) as count FROM progress WHERE user_id = ?').get(userId) as any;
-    const afterSessions = db.prepare('SELECT count(*) as count FROM sessions WHERE user_id = ?').get(userId) as any;
-    assert.equal(afterNotes.count, 0, 'Notes should be cascade deleted');
-    assert.equal(afterProgress.count, 0, 'Progress should be cascade deleted');
-    assert.equal(afterSessions.count, 0, 'Sessions should be cascade deleted');
-    console.log('✓ Foreign key ON DELETE CASCADE verified');
+    const afterNotes = await pool.query('SELECT count(*) as count FROM notes WHERE user_id = $1', [userId]);
+    const afterProgress = await pool.query('SELECT count(*) as count FROM progress WHERE user_id = $1', [userId]);
+    const afterSessions = await pool.query('SELECT count(*) as count FROM sessions WHERE user_id = $1', [userId]);
+    assert.equal(Number(afterNotes.rows[0].count), 0, 'Notes should be cascade deleted');
+    assert.equal(Number(afterProgress.rows[0].count), 0, 'Progress should be cascade deleted');
+    assert.equal(Number(afterSessions.rows[0].count), 0, 'Sessions should be cascade deleted');
+    console.log('✓ Foreign key ON DELETE CASCADE verified in PostgreSQL');
 
-    console.log('\n=======================================');
-    console.log(' ALL INTEGRATION & LIFECYCLE TESTS PASSED! ');
-    console.log('=======================================\n');
+    console.log('\n======================================================');
+    console.log(' ALL POSTGRESQL INTEGRATION & LIFECYCLE TESTS PASSED! ');
+    console.log('======================================================\n');
   } finally {
     server.close();
-    closeDb();
+    await closePool();
   }
 }
 
@@ -194,4 +194,3 @@ runTests().catch((err) => {
   console.error('Integration test failed:', err);
   process.exit(1);
 });
-

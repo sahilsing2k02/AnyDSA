@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-export function requireAuth(req: Request, res: Response, next: NextFunction): void {
+export async function requireAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
   // Prevent any caching of authenticated responses to prevent back-button replay
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.setHeader('Pragma', 'no-cache');
@@ -29,18 +29,20 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
     return next(new UnauthorizedError('Authentication session required'));
   }
 
-  const user = AuthService.validateSession(sessionId);
-  if (!user) {
-    // Clear stale cookie
-    res.clearCookie('session_id', {
-      httpOnly: true,
-      sameSite: 'lax',
-      path: '/'
-    });
-    return next(new UnauthorizedError('Invalid or expired session'));
+  try {
+    const user = await AuthService.validateSession(sessionId);
+    if (!user) {
+      res.clearCookie('session_id', {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/'
+      });
+      return next(new UnauthorizedError('Invalid or expired session'));
+    }
+
+    req.user = user;
+    next();
+  } catch (err) {
+    next(err);
   }
-
-  req.user = user;
-  next();
 }
-
