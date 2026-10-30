@@ -10,7 +10,7 @@ let poolInstance: DbPool | null = null;
 export function getPool(): DbPool {
   if (poolInstance) return poolInstance;
 
-  const databaseUrl = process.env.DATABASE_URL;
+  const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
   if (databaseUrl && process.env.NODE_ENV !== 'test') {
     // Production / External PostgreSQL connection
