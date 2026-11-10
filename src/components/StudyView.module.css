@@ -1,0 +1,433 @@
+.studyContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  margin: 0.5rem auto 2rem;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ── Top Bar ───────────────────────────────────────────────────────────────── */
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+
+.topBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sectionBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--surface-3);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.questionCounter {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.topBarRight {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.setProgressBarWrap {
+  width: 90px;
+  height: 6px;
+  background: var(--surface-3);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.setProgressBar {
+  height: 100%;
+  background: var(--text);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.setProgressLabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.jumpSelect {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  cursor: pointer;
+  max-width: 220px;
+  text-overflow: ellipsis;
+  outline: none;
+}
+
+.jumpSelect:focus {
+  border-color: var(--text);
+}
+
+/* ── 2-Column Study Grid ───────────────────────────────────────────────────── */
+.studyGrid {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(400px, 1.4fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* ── Left Column: Question ─────────────────────────────────────────────────── */
+.questionColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.4rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.columnBadge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.columnBadgeAnswer {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text);
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.difficultyBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.tagList {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 99px;
+  background: var(--surface-3);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.tagHot {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.28);
+}
+
+.tagStar {
+  background: rgba(234, 179, 8, 0.12);
+  color: #facc15;
+  border-color: rgba(234, 179, 8, 0.28);
+}
+
+.tagAdv {
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+  border-color: rgba(168, 85, 247, 0.28);
+}
+
+.questionCard {
+  padding: 0.5rem 0;
+}
+
+.questionTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Actions Row */
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+}
+
+.actionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.actionBtn:hover {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.solvedBtn {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--text);
+}
+
+.bookmarkedBtn {
+  background: var(--surface-3);
+  color: #facc15;
+  border-color: #facc15;
+}
+
+.btnIcon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.extLink {
+  margin-left: auto;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+
+.extLink:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+.hintBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.hintIcon {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.hintText {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* ── Right Column: Solution & Explanation ─────────────────────────────────── */
+.answerColumn {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.4rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  max-height: 720px;
+}
+
+.answerScrollArea {
+  overflow-y: auto;
+  padding-right: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.answerScrollArea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.answerScrollArea::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 99px;
+}
+
+.answerContent {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.noAnswer {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  padding: 2rem 0;
+  text-align: center;
+}
+
+/* ── Bottom Sticky Navigation Bar ─────────────────────────────────────────── */
+.bottomNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.85rem 1.4rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.prevBtn,
+.nextBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  font-family: inherit;
+}
+
+.prevBtn {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.prevBtn:hover:not(:disabled) {
+  background: var(--surface-3);
+  border-color: var(--text);
+}
+
+.prevBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.nextBtn {
+  background: var(--text);
+  color: var(--bg);
+  border: 1px solid var(--text);
+}
+
+.nextBtn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateX(2px);
+}
+
+.nextBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.navCenter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navCounter {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* Empty State */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 4rem 1rem;
+  background: var(--surface-1);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+}
+
+.emptyIcon {
+  font-size: 2.2rem;
+}
+
+.emptyText {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+/* ── Responsive Mobile Layout ─────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .studyGrid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .answerColumn {
+    max-height: none;
+  }
+}

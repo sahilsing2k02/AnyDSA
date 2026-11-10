@@ -5,6 +5,7 @@ import { csFundamentals } from '../data/csFundamentals';
 import { sqlQuestions } from '../data/sqlQuestions';
 import { lldQuestions } from '../data/lldQuestions';
 import { PatternCard } from '../components/PatternCard';
+import { StudyView } from '../components/StudyView';
 import { StatsBar } from '../components/StatsBar';
 import { useApp } from '../context/AppContext';
 import styles from './Home.module.css';
@@ -15,6 +16,9 @@ export function Home() {
   const [sqlCategory, setSqlCategory] = useState<SqlCategory>('all');
   const [schemaOpen, setSchemaOpen] = useState(true);
   const [showStarredOnly, setShowStarredOnly] = useState(false);
+  const [viewMode, setViewMode] = useState<'study' | 'list'>('study');
+
+  const isStudySection = activeSection !== 'dsa';
 
   // Select base pattern set depending on active section
   const currentSectionPatterns = useMemo(() => {
@@ -48,6 +52,23 @@ export function Home() {
   }, [showStarredOnly, currentSectionPatterns, state.bookmarkedProblems]);
 
   const hasResults = displayedPatterns.length > 0;
+
+  const allSectionProblems = useMemo(() => {
+    return displayedPatterns.flatMap(p => p.problems);
+  }, [displayedPatterns]);
+
+  const sectionTitle = useMemo(() => {
+    switch (activeSection) {
+      case 'cs-fundamentals':
+        return csCategory === 'all' ? 'CS Fundamentals' : `CS Fundamentals: ${csCategory.toUpperCase()}`;
+      case 'sql':
+        return sqlCategory === 'all' ? 'SQL Top 50' : sqlCategory === 'theory' ? 'SQL Theory' : 'SQL Commands';
+      case 'lld':
+        return 'Low-Level Design';
+      default:
+        return 'DSA Patterns';
+    }
+  }, [activeSection, csCategory, sqlCategory]);
 
   return (
     <main className={styles.main} id="home-page">
@@ -250,28 +271,58 @@ export function Home() {
         onToggleStarred={() => setShowStarredOnly(prev => !prev)} 
       />
 
-      {/* Pattern list */}
-      <div className={styles.patternList} id="pattern-list">
-        {hasResults ? (
-          displayedPatterns.map((pattern, i) => (
-            <PatternCard
-              key={pattern.id}
-              pattern={pattern}
-              defaultOpen={i === 0}
-            />
-          ))
-        ) : (
-          <div className={styles.empty} id="no-results">
-            <span className={styles.emptyIcon}>⭐</span>
-            <p className={styles.emptyText}>No starred items found in this section.</p>
-            {showStarredOnly && (
-              <button className={styles.emptyReset} onClick={() => setShowStarredOnly(false)}>
-                Show All Items
-              </button>
-            )}
+      {/* View Mode Switcher for Study Sections (CS Fundamentals, SQL, LLD) */}
+      {isStudySection && (
+        <div className={styles.viewModeToggleRow}>
+          <div className={styles.viewModeGroup} role="group" aria-label="Study Layout Mode">
+            <button
+              className={`${styles.viewModeBtn} ${viewMode === 'study' ? styles.viewModeActive : ''}`}
+              onClick={() => setViewMode('study')}
+              title="One-by-one Study Mode with side-by-side solution"
+            >
+              <span>📖 Study Mode</span>
+            </button>
+            <button
+              className={`${styles.viewModeBtn} ${viewMode === 'list' ? styles.viewModeActive : ''}`}
+              onClick={() => setViewMode('list')}
+              title="Browse all questions as a list"
+            >
+              <span>📋 List View</span>
+            </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* Study Mode View (Question Left, Answer Right, Next Arrow) */}
+      {isStudySection && viewMode === 'study' ? (
+        <StudyView
+          problems={allSectionProblems}
+          sectionName={sectionTitle}
+        />
+      ) : (
+        /* Pattern list (DSA & List View fallback) */
+        <div className={styles.patternList} id="pattern-list">
+          {hasResults ? (
+            displayedPatterns.map((pattern, i) => (
+              <PatternCard
+                key={pattern.id}
+                pattern={pattern}
+                defaultOpen={i === 0}
+              />
+            ))
+          ) : (
+            <div className={styles.empty} id="no-results">
+              <span className={styles.emptyIcon}>⭐</span>
+              <p className={styles.emptyText}>No starred items found in this section.</p>
+              {showStarredOnly && (
+                <button className={styles.emptyReset} onClick={() => setShowStarredOnly(false)}>
+                  Show All Items
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </main>
   );
 }

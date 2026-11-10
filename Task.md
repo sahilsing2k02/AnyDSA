@@ -66,6 +66,11 @@ This document tracks all completed milestones, current production architecture, 
 - [x] **Navbar Navigation Shift (Emoji-Free):** Shifted all study section tabs (`DSA`, `CS Fundamentals`, `SQL Top 50`, `LLD`) into the global sticky top Navbar with `useApp()` state sync. Removed redundant in-page tab controls and guaranteed zero emojis in the navbar links. Stripped emojis from CS Fundamentals subcategory pills for a sleek, distraction-free aesthetic.
 - [x] **Section-Scoped Note Taking:** Restricted personal note taking (`📝` button and textarea) strictly to the DSA pattern section. Removed note buttons and panels from CS Fundamentals, SQL Top 50, and LLD sections while ensuring the `👁️ View Answer` solution drawer, solved toggles, and bookmarks remain fully functional across all sections.
 - [x] **Dark Mode Contrast & Active Button Fix:** Resolved active tab / filter pill wash-out bug where active states turned blinding solid white with invisible white text in dark mode. Refactored `.activePill`, `.answerActive`, and `.activeSection` across `Home.module.css`, `ProblemRow.module.css`, and `Navbar.module.css` to use elevated dark surfaces (`var(--surface-3)`) and high-contrast text (`var(--text)`), ensuring consistent dark theme readability.
+- [x] **Interactive Side-by-Side Study Mode (Non-DSA Sections):**
+  - Created [`StudyView.tsx`](file:///c:/Users/sahil/OneDrive/Desktop/AnyDSA/src/components/StudyView.tsx) active across CS Fundamentals, SQL Top 50, and LLD sections.
+  - Implemented 2-column split layout: Left side contains Question details, priority tags, and completion/bookmark actions; Right side contains Solution, MySQL queries, ASCII diagrams, and explanations.
+  - Bottom sticky navigation bar with prominent `Next →` and `← Previous` arrow buttons, question counter (`Question X of Y`), dropdown jump selector, and keyboard arrow hotkeys (`←` and `→`).
+  - Added view toggle (`Study Mode` vs `List View`) in [`Home.tsx`](file:///c:/Users/sahil/OneDrive/Desktop/AnyDSA/src/pages/Home.tsx) defaulting to Study Mode for all non-DSA sections.
 
 ---
 

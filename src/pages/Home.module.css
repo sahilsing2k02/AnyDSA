@@ -278,3 +278,50 @@
   background: var(--surface-3);
   color: var(--text);
 }
+
+/* ── View Mode Switcher (Study Mode vs List View) ─────────────────────────── */
+.viewModeToggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: -0.3rem 0 1rem;
+}
+
+.viewModeGroup {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.viewModeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.viewModeBtn:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.viewModeActive {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
