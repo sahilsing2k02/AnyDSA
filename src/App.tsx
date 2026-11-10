@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Navbar } from './components/Navbar';
-import { Footer } from './components/Footer';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Home } from './pages/Home';
 import { Auth } from './pages/Auth';
@@ -75,8 +74,6 @@ function MainLayout({
         )}
         {view === 'home' && <Home />}
       </div>
-
-      <Footer onOpenPrivacy={() => setView('privacy')} />
     </div>
   );
 }
