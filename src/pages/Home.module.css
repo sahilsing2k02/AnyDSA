@@ -88,6 +88,8 @@
 }
 
 .subCategoryPill {
+  display: inline-flex;
+  align-items: center;
   padding: 0.35rem 0.85rem;
   border-radius: 20px;
   border: 1px solid var(--border);
@@ -98,19 +100,52 @@
   cursor: pointer;
   font-family: inherit;
   transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .subCategoryPill:hover {
   background: var(--surface-3);
   color: var(--text);
+  border-color: var(--border-hover);
 }
 
-.activePill {
+.subCategoryPill:active {
   background: var(--surface-3);
   color: var(--text);
-  border-color: var(--text);
+  transform: translateY(1px);
+}
+
+.subCategoryPill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.activePill,
+.subCategoryPill.activePill {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--border-active);
   font-weight: 700;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.activePill:hover,
+.subCategoryPill.activePill:hover {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--border-hover);
+}
+
+.activePill:active,
+.subCategoryPill.activePill:active {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.activePill:focus-visible,
+.subCategoryPill.activePill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* ── SQL Schema Reference Card ────────────────────────────────────────────── */
@@ -212,7 +247,16 @@
 
 .toggleSchemaBtn:hover {
   background: var(--surface-3);
-  border-color: var(--accent);
+  border-color: var(--border-hover);
+}
+
+.toggleSchemaBtn:active {
+  background: var(--surface-3);
+}
+
+.toggleSchemaBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .sqlTablesGrid {
@@ -311,6 +355,7 @@
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .viewModeBtn:hover {
@@ -318,10 +363,41 @@
   background: var(--surface-2);
 }
 
-.viewModeActive {
+.viewModeBtn:active {
+  color: var(--text);
+  background: var(--surface-3);
+  transform: translateY(1px);
+}
+
+.viewModeBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.viewModeActive,
+.viewModeBtn.viewModeActive {
   background: var(--surface-3);
   color: var(--text);
-  border-color: var(--text);
+  border-color: var(--border-active);
   font-weight: 700;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.viewModeActive:hover,
+.viewModeBtn.viewModeActive:hover {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--border-hover);
+}
+
+.viewModeActive:active,
+.viewModeBtn.viewModeActive:active {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.viewModeActive:focus-visible,
+.viewModeBtn.viewModeActive:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }

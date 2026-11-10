@@ -340,19 +340,37 @@
 .answerBtn:hover {
   background: var(--surface-3);
   color: var(--text);
-  border-color: var(--border);
+  border-color: var(--border-hover);
   transform: translateY(-1px);
 }
 
-.answerActive {
+.answerBtn:active {
   background: var(--surface-3);
   color: var(--text);
-  border-color: var(--text);
+}
+
+.answerBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.answerActive,
+.answerBtn.answerActive {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--border-active);
   font-weight: 700;
 }
 
-.answerActive:hover {
+.answerActive:hover,
+.answerBtn.answerActive:hover {
   background: var(--surface-3);
   color: var(--text);
-  border-color: var(--text);
+  border-color: var(--border-hover);
+}
+
+.answerActive:active,
+.answerBtn.answerActive:active {
+  background: var(--surface-3);
+  color: var(--text);
 }

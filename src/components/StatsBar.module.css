@@ -137,12 +137,40 @@
 
 .bookmark:hover {
   background: var(--surface-2);
-  border-color: var(--border);
+  border-color: var(--border-hover);
 }
 
-.bookmarkActive {
+.bookmark:active {
   background: var(--surface-3);
-  border-color: var(--text);
+}
+
+.bookmark:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.bookmarkActive,
+.bookmark.bookmarkActive {
+  background: var(--surface-3);
+  border-color: var(--border-active);
+  color: var(--text);
+}
+
+.bookmarkActive:hover,
+.bookmark.bookmarkActive:hover {
+  background: var(--surface-3);
+  border-color: var(--border-hover);
+}
+
+.bookmarkActive:active,
+.bookmark.bookmarkActive:active {
+  background: var(--surface-3);
+}
+
+.bookmarkActive:focus-visible,
+.bookmark.bookmarkActive:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .bookmarkIcon {
@@ -179,7 +207,17 @@
 
 .randomBtn:hover {
   background: var(--surface-2);
-  border-color: var(--border);
+  border-color: var(--border-hover);
+}
+
+.randomBtn:active {
+  background: var(--surface-3);
+  transform: translateY(1px);
+}
+
+.randomBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .randomIcon {

@@ -223,19 +223,43 @@
 .actionBtn:hover {
   background: var(--surface-3);
   color: var(--text);
-  border-color: var(--border);
+  border-color: var(--border-hover);
 }
 
-.solvedBtn {
+.actionBtn:active {
   background: var(--surface-3);
   color: var(--text);
-  border-color: var(--text);
 }
 
-.bookmarkedBtn {
+.actionBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.solvedBtn,
+.actionBtn.solvedBtn {
+  background: var(--surface-3);
+  color: #22c55e;
+  border-color: #22c55e;
+}
+
+.solvedBtn:hover,
+.actionBtn.solvedBtn:hover {
+  background: var(--surface-3);
+  border-color: #16a34a;
+}
+
+.bookmarkedBtn,
+.actionBtn.bookmarkedBtn {
   background: var(--surface-3);
   color: #facc15;
   border-color: #facc15;
+}
+
+.bookmarkedBtn:hover,
+.actionBtn.bookmarkedBtn:hover {
+  background: var(--surface-3);
+  border-color: #eab308;
 }
 
 .btnIcon {
@@ -359,7 +383,17 @@
 
 .prevBtn:hover:not(:disabled) {
   background: var(--surface-3);
-  border-color: var(--text);
+  border-color: var(--border-hover);
+}
+
+.prevBtn:active:not(:disabled) {
+  background: var(--surface-3);
+  transform: translateY(1px);
+}
+
+.prevBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .prevBtn:disabled {

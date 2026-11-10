@@ -55,6 +55,7 @@
   transition: all 0.16s ease;
   font-family: inherit;
   white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .sectionLink:hover {
@@ -62,12 +63,43 @@
   background: var(--surface-2);
 }
 
-.activeSection {
+.sectionLink:active {
   color: var(--text);
   background: var(--surface-3);
-  border-color: var(--text);
+  transform: translateY(1px);
+}
+
+.sectionLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.activeSection,
+.sectionLink.activeSection {
+  color: var(--text);
+  background: var(--surface-3);
+  border-color: var(--border-active);
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.activeSection:hover,
+.sectionLink.activeSection:hover {
+  color: var(--text);
+  background: var(--surface-3);
+  border-color: var(--border-hover);
+}
+
+.activeSection:active,
+.sectionLink.activeSection:active {
+  color: var(--text);
+  background: var(--surface-3);
+}
+
+.activeSection:focus-visible,
+.sectionLink.activeSection:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* ── Right side actions ────────────────────────────────────────────────────── */
@@ -107,7 +139,18 @@
 .loginBtn:hover,
 .logoutBtn:hover {
   background: var(--surface-2);
-  border-color: var(--accent);
+  border-color: var(--border-hover);
+}
+
+.loginBtn:active,
+.logoutBtn:active {
+  background: var(--surface-3);
+}
+
+.loginBtn:focus-visible,
+.logoutBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .themeBtn {
@@ -126,7 +169,17 @@
 
 .themeBtn:hover {
   background: var(--surface-3);
-  border-color: var(--accent);
+  border-color: var(--border-hover);
+}
+
+.themeBtn:active {
+  background: var(--surface-3);
+  transform: scale(0.95);
+}
+
+.themeBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 @media (max-width: 640px) {
