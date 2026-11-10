@@ -51,14 +51,34 @@ export function Auth({ onBack, onLoginSuccess, onOpenPrivacy }: Props) {
     } catch {}
   }, []);
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     setError(null);
-    window.location.href = '/api/auth/google';
+    try {
+      const check = await fetch('/api/auth/google', { redirect: 'manual' });
+      if (check.status === 503 || (!check.ok && check.type !== 'opaqueredirect')) {
+        const data = await check.json().catch(() => ({}));
+        setError(data.error || 'Google OAuth is not configured on this deployment yet (missing GOOGLE_CLIENT_ID).');
+        return;
+      }
+      window.location.href = '/api/auth/google';
+    } catch {
+      window.location.href = '/api/auth/google';
+    }
   };
 
-  const handleGithubLogin = () => {
+  const handleGithubLogin = async () => {
     setError(null);
-    window.location.href = '/api/auth/github';
+    try {
+      const check = await fetch('/api/auth/github', { redirect: 'manual' });
+      if (check.status === 503 || (!check.ok && check.type !== 'opaqueredirect')) {
+        const data = await check.json().catch(() => ({}));
+        setError(data.error || 'GitHub OAuth is not configured on this deployment yet (missing GITHUB_CLIENT_ID).');
+        return;
+      }
+      window.location.href = '/api/auth/github';
+    } catch {
+      window.location.href = '/api/auth/github';
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
