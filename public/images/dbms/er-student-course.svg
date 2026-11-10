@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" width="100%" height="100%">
+  <defs>
+    <marker id="er-arrow" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#38bdf8" />
+    </marker>
+  </defs>
+
+  <rect width="640" height="160" rx="10" fill="#090d16" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Student Box -->
+  <g transform="translate(25, 35)">
+    <rect width="145" height="90" rx="8" fill="#0f172a" stroke="#3b82f6" stroke-width="1.6"/>
+    <text x="72" y="32" fill="#93c5fd" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">STUDENT</text>
+    <rect x="15" y="46" width="115" height="26" rx="4" fill="#1e293b" stroke="#334155"/>
+    <text x="72" y="63" fill="#cbd5e1" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">student_id (PK)</text>
+  </g>
+
+  <!-- Left Arrow 1:N -->
+  <path d="M 175 80 L 225 80" fill="none" stroke="#38bdf8" stroke-width="1.6" marker-end="url(#er-arrow)"/>
+  <text x="200" y="70" fill="#38bdf8" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" text-anchor="middle">1 : N</text>
+
+  <!-- Enrollment Associative Box -->
+  <g transform="translate(235, 25)">
+    <rect width="170" height="110" rx="8" fill="#1e1b4b" stroke="#8b5cf6" stroke-width="1.8"/>
+    <text x="85" y="28" fill="#c4b5fd" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">ENROLLMENT</text>
+    <rect x="15" y="38" width="140" height="24" rx="4" fill="#2e1065" stroke="#7c3aed"/>
+    <text x="85" y="54" fill="#e0e7ff" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" text-anchor="middle">student_id (FK1)</text>
+    <rect x="15" y="66" width="140" height="24" rx="4" fill="#2e1065" stroke="#7c3aed"/>
+    <text x="85" y="82" fill="#e0e7ff" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" text-anchor="middle">course_id (FK2)</text>
+    <text x="85" y="102" fill="#a78bfa" font-family="system-ui, -apple-system, sans-serif" font-size="9" text-anchor="middle">grade, enrolled_at</text>
+  </g>
+
+  <!-- Right Arrow N:1 -->
+  <path d="M 465 80 L 415 80" fill="none" stroke="#34d399" stroke-width="1.6" marker-end="url(#er-arrow)"/>
+  <text x="440" y="70" fill="#34d399" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" text-anchor="middle">N : 1</text>
+
+  <!-- Course Box -->
+  <g transform="translate(470, 35)">
+    <rect width="145" height="90" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="1.6"/>
+    <text x="72" y="32" fill="#6ee7b7" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">COURSE</text>
+    <rect x="15" y="46" width="115" height="26" rx="4" fill="#022c22" stroke="#059669"/>
+    <text x="72" y="63" fill="#cbd5e1" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">course_id (PK)</text>
+  </g>
+</svg>

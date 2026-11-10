@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 150" width="100%" height="100%">
+  <defs>
+    <marker id="m-arrow" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#38bdf8" />
+    </marker>
+  </defs>
+
+  <rect width="640" height="150" rx="10" fill="#090d16" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Reader Snapshot Box -->
+  <g transform="translate(25, 30)">
+    <rect width="165" height="90" rx="8" fill="#0f172a" stroke="#38bdf8" stroke-width="1.6"/>
+    <text x="82" y="36" fill="#38bdf8" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Reader Snapshot</text>
+    <rect x="20" y="48" width="125" height="26" rx="4" fill="rgba(56, 189, 248, 0.1)"/>
+    <text x="82" y="65" fill="#e2e8f0" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Reads Version 1</text>
+  </g>
+
+  <!-- Arrow -->
+  <path d="M 195 75 L 230 75" fill="none" stroke="#64748b" stroke-width="1.6" marker-end="url(#m-arrow)"/>
+
+  <!-- Writer Box -->
+  <g transform="translate(235, 30)">
+    <rect width="170" height="90" rx="8" fill="#2e1065" stroke="#c084fc" stroke-width="1.6"/>
+    <text x="85" y="36" fill="#c084fc" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Concurrent Writer</text>
+    <rect x="20" y="48" width="130" height="26" rx="4" fill="rgba(192, 132, 252, 0.1)"/>
+    <text x="85" y="65" fill="#e2e8f0" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Creates Version 2</text>
+  </g>
+
+  <!-- Arrow -->
+  <path d="M 410 75 L 445 75" fill="none" stroke="#10b981" stroke-width="1.6" marker-end="url(#m-arrow)"/>
+
+  <!-- New Reader Box -->
+  <g transform="translate(450, 30)">
+    <rect width="165" height="90" rx="8" fill="#064e3b" stroke="#34d399" stroke-width="1.6"/>
+    <text x="82" y="36" fill="#34d399" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">New Transactions</text>
+    <rect x="20" y="48" width="125" height="26" rx="4" fill="rgba(52, 211, 153, 0.1)"/>
+    <text x="82" y="65" fill="#e2e8f0" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Reads V2 post-commit</text>
+  </g>
+</svg>

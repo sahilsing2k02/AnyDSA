@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 140" width="100%" height="100%">
+  <rect width="640" height="140" rx="10" fill="#090d16" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Atomicity -->
+  <g transform="translate(20, 25)">
+    <rect width="135" height="90" rx="8" fill="#0f172a" stroke="#38bdf8" stroke-width="1.6"/>
+    <text x="67" y="36" fill="#38bdf8" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" text-anchor="middle">Atomicity</text>
+    <rect x="15" y="48" width="105" height="26" rx="4" fill="rgba(56, 189, 248, 0.1)"/>
+    <text x="67" y="65" fill="#e2e8f0" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">All or Nothing</text>
+  </g>
+
+  <!-- Consistency -->
+  <g transform="translate(170, 25)">
+    <rect width="135" height="90" rx="8" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.6"/>
+    <text x="67" y="36" fill="#818cf8" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" text-anchor="middle">Consistency</text>
+    <rect x="15" y="48" width="105" height="26" rx="4" fill="rgba(129, 140, 248, 0.1)"/>
+    <text x="67" y="65" fill="#e2e8f0" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Valid Invariants</text>
+  </g>
+
+  <!-- Isolation -->
+  <g transform="translate(320, 25)">
+    <rect width="135" height="90" rx="8" fill="#2e1065" stroke="#c084fc" stroke-width="1.6"/>
+    <text x="67" y="36" fill="#c084fc" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" text-anchor="middle">Isolation</text>
+    <rect x="15" y="48" width="105" height="26" rx="4" fill="rgba(192, 132, 252, 0.1)"/>
+    <text x="67" y="65" fill="#e2e8f0" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">No Interference</text>
+  </g>
+
+  <!-- Durability -->
+  <g transform="translate(470, 25)">
+    <rect width="150" height="90" rx="8" fill="#064e3b" stroke="#34d399" stroke-width="1.6"/>
+    <text x="75" y="36" fill="#34d399" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" text-anchor="middle">Durability</text>
+    <rect x="15" y="48" width="120" height="26" rx="4" fill="rgba(52, 211, 153, 0.1)"/>
+    <text x="75" y="65" fill="#e2e8f0" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Survives Crashes</text>
+  </g>
+</svg>

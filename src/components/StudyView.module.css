@@ -106,9 +106,10 @@
   background: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 1.4rem;
+  padding: 1.35rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  min-height: 480px;
+  height: 485px;
+  box-sizing: border-box;
 }
 
 .columnHeader {
@@ -313,16 +314,18 @@
   background: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 1.4rem;
+  padding: 1.35rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  max-height: 720px;
-  min-height: 480px;
+  height: 485px;
+  box-sizing: border-box;
 }
 
 .answerScrollArea {
+  flex: 1;
   overflow-y: auto;
-  padding-right: 0.4rem;
+  padding-right: 0.45rem;
   margin-top: 0.75rem;
+  min-height: 0;
 }
 
 .answerScrollArea::-webkit-scrollbar {
@@ -335,11 +338,11 @@
 }
 
 .diagramWrapper {
-  margin-bottom: 1.25rem;
-  padding: 0.85rem;
+  margin-bottom: 0.85rem;
+  padding: 0.55rem 0.85rem;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -349,14 +352,14 @@
 .diagramImage {
   max-width: 100%;
   height: auto;
-  max-height: 240px;
+  max-height: 125px;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .diagramCaption {
-  margin-top: 0.5rem;
-  font-size: 0.76rem;
+  margin-top: 0.35rem;
+  font-size: 0.74rem;
   color: var(--text-muted);
   font-weight: 500;
   text-align: center;
@@ -491,7 +494,13 @@
     gap: 1.2rem;
   }
 
+  .questionColumn,
   .answerColumn {
-    max-height: none;
+    height: auto;
+    min-height: 360px;
+  }
+
+  .answerScrollArea {
+    max-height: 440px;
   }
 }
