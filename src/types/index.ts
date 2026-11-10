@@ -15,6 +15,7 @@ export interface Problem {
   difficulty: Difficulty;
   links: ProblemLink[];
   tags?: string[];
+  answer?: string;
 }
 
 export interface Pattern {
@@ -45,3 +46,6 @@ export interface AppState {
 
 export type FilterDifficulty = 'All' | Difficulty;
 export type FilterStatus = 'All' | 'Solved' | 'Unsolved' | 'Starred';
+
+export type MainSection = 'dsa' | 'cs-fundamentals' | 'sql' | 'lld';
+export type CSFundCategory = 'all' | 'cn' | 'os' | 'oops' | 'dbms';

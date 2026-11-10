@@ -34,6 +34,7 @@ function PlatformLink({ platform, url }: { platform: Platform; url: string }) {
 export function ProblemRow({ problem, index }: Props) {
   const { state, toggleSolved, toggleBookmark, setNote } = useApp();
   const [noteOpen, setNoteOpen] = useState(false);
+  const [answerOpen, setAnswerOpen] = useState(false);
   const [noteText, setNoteText] = useState(state.notes[problem.id]?.content ?? '');
 
   const isSolved = state.solvedProblems.has(problem.id);
@@ -78,6 +79,16 @@ export function ProblemRow({ problem, index }: Props) {
         </span>
 
         <div className={styles.actions}>
+          {problem.answer && (
+            <button
+              className={styles.answerBtn}
+              onClick={() => setAnswerOpen(v => !v)}
+              title={answerOpen ? "Hide answer" : "View explanation / answer"}
+            >
+              {answerOpen ? 'Hide' : 'Answer'}
+            </button>
+          )}
+
           {/* Platform links */}
           <div className={styles.links}>
             {problem.links.map(link => (
@@ -111,6 +122,13 @@ export function ProblemRow({ problem, index }: Props) {
           </button>
         </div>
       </div>
+
+      {/* Answer panel */}
+      {answerOpen && problem.answer && (
+        <div className={styles.answerPanel} id={`answer-panel-${problem.id}`}>
+          {problem.answer}
+        </div>
+      )}
 
       {/* Note panel */}
       {noteOpen && (

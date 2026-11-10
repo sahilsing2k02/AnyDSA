@@ -48,6 +48,13 @@ This document tracks all completed milestones, current production architecture, 
 - [x] **Git Push Automation:** Enabled automatic Vercel production deployments on push to `main`.
 - [x] **Live Verification:** Verified end-to-end user registration, login, note saving, and progress tracking on `https://anydsa.vercel.app`.
 
+### Section Module Expansion
+- [x] **DSA Section:** Pattern-wise algorithms (Two Pointers, Sliding Window, Trees, Graphs, DP, etc.).
+- [x] **CS Fundamentals Section:** Subdivided into Computer Networks (CN), Operating Systems (OS), Object-Oriented Programming (OOPS), and Database Management Systems (DBMS).
+- [x] **SQL Top 50 Section:** Curated LeetCode SQL 50 categorized into Select, Joins, Aggregates, Grouping/Subqueries, and Window Functions/CTEs with complete SQL solutions.
+- [x] **LLD Section:** Low-Level Design & Machine Coding (Parking Lot, LRU Cache, Snake & Ladder, Tic-Tac-Toe, Rate Limiter, Elevator, BookMyShow, Splitwise, Vending Machine, Logging, Notifications, and GoF Design Patterns).
+- [x] **Answer / Solution Drawer:** Added expandable "Answer" drawer in `ProblemRow.tsx` displaying in-depth explanations, code structures, and SQL queries.
+
 ---
 
 ## 3. Critical Guardrails (Never Repeat Past Mistakes)
@@ -95,3 +102,4 @@ Before promoting a release to production:
 3. [ ] Run `npm run lint` &rarr; verify Oxlint reports 0 errors.
 4. [ ] Check `vercel api /v9/projects/anydsa` &rarr; verify `framework` remains `vite` and `gitProviderOptions.createDeployments` is `enabled`.
 5. [ ] Verify `/api/health` returns `HTTP 200` with `database: postgresql_connected`.
+
