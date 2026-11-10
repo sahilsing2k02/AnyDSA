@@ -67,6 +67,7 @@ function MainLayout({
               setUser(loggedInUser);
               setView('home');
             }}
+            onOpenPrivacy={() => setView('privacy')}
           />
         )}
         {view === 'privacy' && (
