@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 220" width="100%" height="100%">
+  <defs>
+    <marker id="arrow" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <rect width="620" height="220" rx="12" fill="#090d16" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Process Container -->
+  <rect x="25" y="25" width="220" height="170" rx="10" fill="#0f172a" stroke="#3b82f6" stroke-width="1.6" stroke-dasharray="4 4"/>
+  <text x="40" y="50" fill="#93c5fd" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">Process Address Space</text>
+  <text x="40" y="70" fill="#64748b" font-family="system-ui, -apple-system, sans-serif" font-size="11">Isolated memory boundary (PCB)</text>
+
+  <!-- Thread 1 inside process -->
+  <g transform="translate(40, 85)">
+    <rect width="190" height="42" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.4"/>
+    <text x="15" y="26" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600">Thread 1: Private Stack &amp; PC</text>
+  </g>
+
+  <!-- Thread 2 inside process -->
+  <g transform="translate(40, 137)">
+    <rect width="190" height="42" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.4"/>
+    <text x="15" y="26" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600">Thread 2: Private Stack &amp; PC</text>
+  </g>
+
+  <!-- Connectors -->
+  <path d="M 235 106 L 375 106" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="305" y="98" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">shares</text>
+
+  <path d="M 235 158 L 375 125" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="305" y="150" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">shares</text>
+
+  <!-- Shared code / heap / data box -->
+  <g transform="translate(385, 45)">
+    <rect width="210" height="130" rx="10" fill="#111827" stroke="#10b981" stroke-width="1.6"/>
+    <text x="105" y="32" fill="#34d399" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" text-anchor="middle">Shared Process Memory</text>
+    <rect x="25" y="48" width="160" height="24" rx="4" fill="#1e293b" stroke="#334155"/>
+    <text x="105" y="64" fill="#cbd5e1" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Global Data &amp; Heap</text>
+    <rect x="25" y="80" width="160" height="24" rx="4" fill="#1e293b" stroke="#334155"/>
+    <text x="105" y="96" fill="#cbd5e1" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Code (Text) &amp; Open FDs</text>
+  </g>
+</svg>

@@ -193,6 +193,20 @@ export function StudyView({ problems, sectionName }: Props) {
           </div>
 
           <div className={styles.answerScrollArea}>
+            {currentProblem.imageUrl && (
+              <div className={styles.diagramWrapper}>
+                <img
+                  src={currentProblem.imageUrl}
+                  alt={currentProblem.imageAlt || currentProblem.title}
+                  className={styles.diagramImage}
+                  loading="lazy"
+                />
+                {currentProblem.imageCaption && (
+                  <span className={styles.diagramCaption}>{currentProblem.imageCaption}</span>
+                )}
+              </div>
+            )}
+
             {currentProblem.answer ? (
               <div className={styles.answerContent}>
                 {currentProblem.answer}

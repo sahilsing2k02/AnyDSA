@@ -334,6 +334,34 @@
   border-radius: 99px;
 }
 
+.diagramWrapper {
+  margin-bottom: 1.25rem;
+  padding: 0.85rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.diagramImage {
+  max-width: 100%;
+  height: auto;
+  max-height: 240px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.diagramCaption {
+  margin-top: 0.5rem;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-align: center;
+}
+
 .answerContent {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.88rem;

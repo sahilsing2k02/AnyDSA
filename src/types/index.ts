@@ -17,6 +17,9 @@ export interface Problem {
   tags?: string[];
   answer?: string;
   category?: 'theory' | 'commands';
+  imageUrl?: string;
+  imageAlt?: string;
+  imageCaption?: string;
 }
 
 export interface Pattern {

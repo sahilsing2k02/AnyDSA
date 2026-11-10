@@ -1,4 +1,5 @@
 import type { Pattern } from '../types';
+import { osQuestions } from './osQuestions';
 
 export const csFundamentals: Pattern[] = [
   {
@@ -76,50 +77,9 @@ export const csFundamentals: Pattern[] = [
   {
     id: 'cs-os',
     name: 'Operating Systems (OS)',
-    description: 'Process management, thread synchronization, deadlocks, virtual memory, and file systems.',
+    description: '30 Essential SDE-1 Interview Questions: Process management, CPU scheduling, concurrency, synchronization, deadlocks, virtual memory, paging, and kernel architecture.',
     icon: '💻',
-    problems: [
-      {
-        id: 'os-1',
-        title: 'Process vs Thread & Context Switching Internals',
-        difficulty: 'Easy',
-        links: [{ platform: 'GeeksForGeeks', url: 'https://www.geeksforgeeks.org/difference-between-process-and-thread/' }],
-        tags: ['Process', 'Threads', 'Concurrency'],
-        answer: '• Process: Independent program in execution with its own isolated address space (Text, Data, Heap, Stack, File Descriptors). High creation and context switch overhead; memory protection between processes.\n• Thread: Lightweight unit of execution within a process. Threads of the same process share Code, Data, Heap, and open files, but each has its own Program Counter (PC), Register set, and Stack.\n\nContext Switching:\nSaving the state of the current executing process/thread (PCB / TCB: registers, PC, stack pointer, page tables) and restoring the state of the next process from ready queue. Thread context switches are significantly faster because memory address space and TLB cache remain warm.'
-      },
-      {
-        id: 'os-2',
-        title: 'Process Synchronization: Critical Section, Mutex vs Semaphore',
-        difficulty: 'Medium',
-        links: [{ platform: 'GeeksForGeeks', url: 'https://www.geeksforgeeks.org/mutex-vs-semaphore/' }],
-        tags: ['Synchronization', 'Mutex', 'Semaphore', 'Concurrency'],
-        answer: 'Critical Section: Code segment accessing shared mutable resources that must not be executed concurrently by multiple threads.\n\nMutex (Mutual Exclusion):\n• Locking mechanism (binary flag 0 or 1).\n• Ownership: The thread that locks the mutex MUST be the one that unlocks it.\n• Strict serialization for protecting a single resource.\n\nSemaphore (Signaling Mechanism):\n• Counting integer variable manipulated via atomic wait() / P() and signal() / V() operations.\n• No ownership concept: One thread can signal while another waits.\n• Types: Binary Semaphore (values 0 and 1, acts as lock) and Counting Semaphore (integer N representing capacity of finite resource pool, e.g. connection pool).'
-      },
-      {
-        id: 'os-3',
-        title: 'Deadlocks: 4 Coffman Conditions & Handling Strategies',
-        difficulty: 'Medium',
-        links: [{ platform: 'GeeksForGeeks', url: 'https://www.geeksforgeeks.org/introduction-of-deadlock-in-operating-system/' }],
-        tags: ['Deadlock', 'ResourceAllocation'],
-        answer: 'Deadlock: A state where a set of processes are blocked because each holds a resource and waits for another resource held by another process.\n\n4 Necessary Conditions (Coffman):\n1. Mutual Exclusion: Resources cannot be shared simultaneously.\n2. Hold and Wait: Process holds at least one resource and waits for another.\n3. No Preemption: Resources cannot be forcibly revoked; must be released voluntarily.\n4. Circular Wait: A closed chain of processes P0 -> P1 -> ... -> Pn -> P0 exists.\n\nStrategies:\n• Prevention: Eliminate at least one condition (e.g. enforce global resource ordering to break circular wait).\n• Avoidance: Banker\'s Algorithm dynamically assesses safety before allocating.\n• Detection & Recovery: Build Resource Allocation Graph (RAG), detect cycles, and terminate victim process or preempt resources.\n• Ignorance (Ostrich Algorithm): Assume deadlocks rarely occur (used by general-purpose OS like Linux/Windows).'
-      },
-      {
-        id: 'os-4',
-        title: 'Virtual Memory, Paging, Page Faults & Thrashing',
-        difficulty: 'Hard',
-        links: [{ platform: 'GeeksForGeeks', url: 'https://www.geeksforgeeks.org/virtual-memory-in-operating-system/' }],
-        tags: ['Memory', 'Paging', 'VirtualMemory'],
-        answer: '• Virtual Memory: Memory management technique giving processes the illusion of contiguous, large memory space by mapping virtual addresses to physical RAM or secondary storage (swap/paging file).\n• Paging: Divides virtual address space into fixed-size Pages (typically 4KB) and physical RAM into Frames of identical size. The Page Table translates virtual page numbers (VPN) to physical frame numbers (PFN), cached in hardware Translation Lookaside Buffer (TLB).\n• Page Fault: Hardware interrupt triggered by MMU when a requested virtual page is not currently in physical RAM. OS catches the trap, loads the page from disk into a free frame, updates page table, and restarts instruction.\n• Thrashing: Condition where CPU spends more time swapping pages in/out of disk than executing instructions, caused by total working set of processes exceeding available physical RAM.'
-      },
-      {
-        id: 'os-5',
-        title: 'CPU Scheduling Algorithms: FCFS, SJF, Round Robin, Priority',
-        difficulty: 'Medium',
-        links: [{ platform: 'GeeksForGeeks', url: 'https://www.geeksforgeeks.org/cpu-scheduling-in-operating-systems/' }],
-        tags: ['Scheduling', 'CPU'],
-        answer: '1. FCFS (First Come First Serve): Non-preemptive. Simple FIFO queue. Suffering from Convoy Effect (short jobs stuck behind long job).\n2. SJF (Shortest Job First): Provably optimal average turnaround time. Requires knowledge of future burst times. Preemptive version is SRTF (Shortest Remaining Time First).\n3. Round Robin (RR): Preemptive. Each process gets a fixed time quantum. Fair and optimal for interactive time-sharing systems. Small quantum -> high context switch overhead; Large quantum -> degenerates into FCFS.\n4. Priority Scheduling: Each task assigned priority. Vulnerable to Starvation (low priority tasks never run). Solved via Aging (gradually increasing priority of waiting tasks).'
-      }
-    ]
+    problems: osQuestions
   },
   {
     id: 'cs-oops',

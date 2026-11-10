@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 210" width="100%" height="100%">
+  <defs>
+    <marker id="pm-arrow" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#38bdf8" />
+    </marker>
+  </defs>
+
+  <rect width="640" height="210" rx="12" fill="#090d16" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Virtual Pages -->
+  <g transform="translate(30, 35)">
+    <rect width="150" height="140" rx="8" fill="#0f172a" stroke="#3b82f6" stroke-width="1.6"/>
+    <text x="75" y="28" fill="#93c5fd" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Virtual Pages</text>
+    <rect x="20" y="42" width="110" height="24" rx="4" fill="#1e293b" stroke="#334155"/>
+    <text x="75" y="58" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Page 0 (P0)</text>
+    <rect x="20" y="72" width="110" height="24" rx="4" fill="#1e293b" stroke="#334155"/>
+    <text x="75" y="88" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Page 1 (P1)</text>
+    <rect x="20" y="102" width="110" height="24" rx="4" fill="#1e293b" stroke="#334155"/>
+    <text x="75" y="118" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Page 2 (P2)</text>
+  </g>
+
+  <!-- Arrow to Page Table -->
+  <path d="M 185 105 L 235 105" fill="none" stroke="#38bdf8" stroke-width="1.6" marker-end="url(#pm-arrow)"/>
+  <text x="210" y="95" fill="#38bdf8" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">map</text>
+
+  <!-- Page Table -->
+  <g transform="translate(245, 35)">
+    <rect width="150" height="140" rx="8" fill="#1e1b4b" stroke="#8b5cf6" stroke-width="1.6"/>
+    <text x="75" y="28" fill="#c4b5fd" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Page Table</text>
+    <rect x="20" y="42" width="110" height="24" rx="4" fill="#2e1065" stroke="#6d28d9"/>
+    <text x="75" y="58" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">P0 ➔ Frame 3</text>
+    <rect x="20" y="72" width="110" height="24" rx="4" fill="#2e1065" stroke="#6d28d9"/>
+    <text x="75" y="88" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">P1 ➔ Frame 1</text>
+    <rect x="20" y="102" width="110" height="24" rx="4" fill="#2e1065" stroke="#6d28d9"/>
+    <text x="75" y="118" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">P2 ➔ Frame 7</text>
+  </g>
+
+  <!-- Arrow to Physical Frames -->
+  <path d="M 400 105 L 450 105" fill="none" stroke="#10b981" stroke-width="1.6" marker-end="url(#pm-arrow)"/>
+  <text x="425" y="95" fill="#34d399" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">frame</text>
+
+  <!-- Physical Memory Frames -->
+  <g transform="translate(460, 35)">
+    <rect width="150" height="140" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="1.6"/>
+    <text x="75" y="28" fill="#6ee7b7" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Physical RAM</text>
+    <rect x="20" y="42" width="110" height="24" rx="4" fill="#022c22" stroke="#059669"/>
+    <text x="75" y="58" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Frame 1 (P1)</text>
+    <rect x="20" y="72" width="110" height="24" rx="4" fill="#022c22" stroke="#059669"/>
+    <text x="75" y="88" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Frame 3 (P0)</text>
+    <rect x="20" y="102" width="110" height="24" rx="4" fill="#022c22" stroke="#059669"/>
+    <text x="75" y="118" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">Frame 7 (P2)</text>
+  </g>
+</svg>
