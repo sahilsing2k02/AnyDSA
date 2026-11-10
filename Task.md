@@ -64,6 +64,7 @@ This document tracks all completed milestones, current production architecture, 
   - Question-first layout with dedicated `👁️ View Answer` / `▲ Hide Answer` drawer displaying formatted explanations, MySQL queries, and interview points.
 - [x] **LLD Section:** Low-Level Design & Machine Coding (Parking Lot, LRU Cache, Snake & Ladder, Tic-Tac-Toe, Rate Limiter, Elevator, BookMyShow, Splitwise, Vending Machine, Logging, Notifications, and GoF Design Patterns).
 - [x] **Navbar Navigation Shift (Emoji-Free):** Shifted all study section tabs (`DSA`, `CS Fundamentals`, `SQL Top 50`, `LLD`) into the global sticky top Navbar with `useApp()` state sync. Removed redundant in-page tab controls and guaranteed zero emojis in the navbar links. Stripped emojis from CS Fundamentals subcategory pills for a sleek, distraction-free aesthetic.
+- [x] **Section-Scoped Note Taking:** Restricted personal note taking (`📝` button and textarea) strictly to the DSA pattern section. Removed note buttons and panels from CS Fundamentals, SQL Top 50, and LLD sections while ensuring the `👁️ View Answer` solution drawer, solved toggles, and bookmarks remain fully functional across all sections.
 
 ---
 

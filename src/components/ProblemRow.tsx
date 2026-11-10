@@ -32,7 +32,7 @@ function PlatformLink({ platform, url }: { platform: Platform; url: string }) {
 }
 
 export function ProblemRow({ problem, index }: Props) {
-  const { state, toggleSolved, toggleBookmark, setNote } = useApp();
+  const { state, toggleSolved, toggleBookmark, setNote, activeSection } = useApp();
   const [noteOpen, setNoteOpen] = useState(false);
   const [answerOpen, setAnswerOpen] = useState(false);
   const [noteText, setNoteText] = useState(state.notes[problem.id]?.content ?? '');
@@ -40,6 +40,7 @@ export function ProblemRow({ problem, index }: Props) {
   const isSolved = state.solvedProblems.has(problem.id);
   const isBookmarked = state.bookmarkedProblems.has(problem.id);
   const hasNote = !!state.notes[problem.id]?.content;
+  const showNotes = activeSection === 'dsa';
 
   const handleNoteSave = () => {
     setNote(problem.id, noteText);
@@ -129,23 +130,25 @@ export function ProblemRow({ problem, index }: Props) {
             {isBookmarked ? '★' : '☆'}
           </button>
 
-          {/* Note */}
-          <button
-            id={`note-btn-${problem.id}`}
-            className={`${styles.iconBtn} ${hasNote ? styles.hasNote : ''}`}
-            onClick={() => {
-              setNoteText(state.notes[problem.id]?.content ?? '');
-              setNoteOpen(v => !v);
-            }}
-            title="Add / Edit note"
-            aria-label="Note"
-          >
-            {hasNote ? '📝' : '🗒️'}
-          </button>
+          {/* Note button (DSA Section only) */}
+          {showNotes && (
+            <button
+              id={`note-btn-${problem.id}`}
+              className={`${styles.iconBtn} ${hasNote ? styles.hasNote : ''}`}
+              onClick={() => {
+                setNoteText(state.notes[problem.id]?.content ?? '');
+                setNoteOpen(v => !v);
+              }}
+              title="Add / Edit note"
+              aria-label="Note"
+            >
+              {hasNote ? '📝' : '🗒️'}
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Answer panel */}
+      {/* Answer / Solution panel */}
       {answerOpen && problem.answer && (
         <div className={styles.answerPanel} id={`answer-panel-${problem.id}`}>
           <div className={styles.answerHeader}>
@@ -157,8 +160,8 @@ export function ProblemRow({ problem, index }: Props) {
         </div>
       )}
 
-      {/* Note panel */}
-      {noteOpen && (
+      {/* Note panel (DSA Section only) */}
+      {showNotes && noteOpen && (
         <div className={styles.notePanel} id={`note-panel-${problem.id}`}>
           <textarea
             className={styles.noteInput}
