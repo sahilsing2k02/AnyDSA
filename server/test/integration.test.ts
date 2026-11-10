@@ -212,6 +212,33 @@ async function runTests() {
     assert.equal(linkedUser.user.id, localUser.user.id, 'Google identity should link to existing local user account');
     console.log('✓ Account linking: Google login linked to existing local user');
 
+    // 10. GitHub OAuth 2.0 Registration, Login & Linking
+    console.log('[Test 10] GitHub OAuth Lifecycle...');
+    const githubUser = await AuthService.loginOrRegisterWithGithub({
+      githubId: 'github_id_77777',
+      email: 'github.coder@example.com',
+      name: 'GitHub Coder'
+    });
+    assert.ok(githubUser.sessionId);
+    assert.equal(githubUser.user.email, 'github.coder@example.com');
+
+    // Returning GitHub user login
+    const returningGithubUser = await AuthService.loginOrRegisterWithGithub({
+      githubId: 'github_id_77777',
+      email: 'github.coder@example.com',
+      name: 'GitHub Coder'
+    });
+    assert.equal(returningGithubUser.user.id, githubUser.user.id);
+    console.log('✓ GitHub OAuth new user and returning user login verified');
+
+    // Account linking: GitHub sign in with existing email
+    const linkedGithubUser = await AuthService.loginOrRegisterWithGithub({
+      githubId: 'github_id_88888',
+      email: 'hybrid.user@example.com'
+    });
+    assert.equal(linkedGithubUser.user.id, localUser.user.id, 'GitHub identity should link to existing local user account');
+    console.log('✓ Account linking: GitHub login linked to existing local user');
+
     console.log('\n======================================================');
     console.log(' ALL POSTGRESQL INTEGRATION & LIFECYCLE TESTS PASSED! ');
     console.log('======================================================\n');

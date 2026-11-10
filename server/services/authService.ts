@@ -28,6 +28,7 @@ export interface UserRow {
   password_hash: string | null;
   name: string;
   google_id: string | null;
+  github_id: string | null;
   auth_provider: string;
   created_at: string;
 }
@@ -130,6 +131,49 @@ export class AuthService {
     await pool.query(
       'INSERT INTO users (id, email, password_hash, name, google_id, auth_provider) VALUES ($1, $2, NULL, $3, $4, $5)',
       [userId, email, name, profile.googleId, 'google']
+    );
+
+    const { sessionId, expiresAt } = await this.createSession(userId);
+    return {
+      user: { id: userId, email, name },
+      sessionId,
+      expiresAt
+    };
+  }
+
+  static async loginOrRegisterWithGithub(profile: {
+    githubId: string;
+    email: string;
+    name?: string;
+  }): Promise<{ user: { id: string; email: string; name: string }; sessionId: string; expiresAt: number }> {
+    const email = validateEmail(profile.email);
+    const name = profile.name?.trim() || email.split('@')[0];
+    const pool = getPool();
+
+    // 1. Check if user already exists with this GitHub ID
+    let res = await pool.query('SELECT * FROM users WHERE github_id = $1', [profile.githubId]);
+    let user = res.rows[0] as UserRow | undefined;
+
+    if (user) {
+      const { sessionId, expiresAt } = await this.createSession(user.id);
+      return { user: { id: user.id, email: user.email, name: user.name }, sessionId, expiresAt };
+    }
+
+    // 2. Check if user already exists with the same email (account linking)
+    res = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    user = res.rows[0] as UserRow | undefined;
+
+    if (user) {
+      await pool.query('UPDATE users SET github_id = $1 WHERE id = $2', [profile.githubId, user.id]);
+      const { sessionId, expiresAt } = await this.createSession(user.id);
+      return { user: { id: user.id, email: user.email, name: user.name }, sessionId, expiresAt };
+    }
+
+    // 3. New user registration via GitHub
+    const userId = crypto.randomUUID();
+    await pool.query(
+      'INSERT INTO users (id, email, password_hash, name, github_id, auth_provider) VALUES ($1, $2, NULL, $3, $4, $5)',
+      [userId, email, name, profile.githubId, 'github']
     );
 
     const { sessionId, expiresAt } = await this.createSession(userId);

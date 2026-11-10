@@ -10,14 +10,17 @@ export async function runMigrations(pool = getPool()): Promise<void> {
         password_hash TEXT,
         name TEXT NOT NULL,
         google_id TEXT UNIQUE,
+        github_id TEXT UNIQUE,
         auth_provider TEXT NOT NULL DEFAULT 'local',
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
 
       ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id TEXT UNIQUE;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS github_id TEXT UNIQUE;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS auth_provider TEXT NOT NULL DEFAULT 'local';
       CREATE INDEX IF NOT EXISTS idx_users_google_id ON users(google_id);
+      CREATE INDEX IF NOT EXISTS idx_users_github_id ON users(github_id);
 
       CREATE TABLE IF NOT EXISTS sessions (
         id TEXT PRIMARY KEY,
