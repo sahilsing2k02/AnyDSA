@@ -7,11 +7,11 @@
 }
 
 .card:hover {
-  border-color: var(--accent);
+  border-color: var(--text-muted);
 }
 
 .card.completed {
-  border-color: var(--color-easy);
+  border-color: var(--border);
 }
 
 /* ── Header ───────────────────────────────────────────────────────────────── */
@@ -73,12 +73,12 @@
 
 .progressBar {
   height: 100%;
-  background: var(--accent);
+  background: var(--text);
   border-radius: 99px;
   transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.completed .progressBar { background: var(--color-easy); }
+.completed .progressBar { background: var(--text-muted); }
 
 .progressLabel {
   font-size: 0.72rem;
@@ -89,9 +89,9 @@
 
 .doneBadge {
   font-size: 0.68rem;
-  color: var(--color-easy);
+  color: var(--text);
   background: var(--surface-3);
-  border: 1px solid var(--color-easy);
+  border: 1px solid var(--border);
   border-radius: 99px;
   padding: 1px 7px;
   font-weight: 700;

@@ -32,7 +32,7 @@
 
 .ringFill {
   fill: none;
-  stroke: var(--accent);
+  stroke: var(--text);
   stroke-width: 5;
   stroke-linecap: round;
   transition: stroke-dasharray 0.6s cubic-bezier(0.4,0,0.2,1);
@@ -142,7 +142,7 @@
 
 .bookmarkActive {
   background: var(--surface-3);
-  border-color: var(--accent);
+  border-color: var(--text);
 }
 
 .bookmarkIcon {

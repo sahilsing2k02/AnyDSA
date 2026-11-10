@@ -39,15 +39,15 @@
 }
 
 .checkBtn.checked {
-  background: var(--color-easy);
-  border-color: var(--color-easy);
+  background: var(--text);
+  border-color: var(--text);
 }
 
-.checkBtn:hover { border-color: var(--accent); }
+.checkBtn:hover { border-color: var(--border); }
 
 .checkIcon {
   font-size: 11px;
-  color: #fff;
+  color: var(--bg);
   font-weight: 800;
   line-height: 1;
 }
@@ -325,7 +325,7 @@
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: 6px;
-  color: var(--accent);
+  color: var(--text-muted);
   padding: 4px 9px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -339,17 +339,20 @@
 
 .answerBtn:hover {
   background: var(--surface-3);
-  border-color: var(--accent);
+  color: var(--text);
+  border-color: var(--border);
   transform: translateY(-1px);
 }
 
 .answerActive {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--text);
+  font-weight: 700;
 }
 
 .answerActive:hover {
-  background: var(--accent-hover);
-  color: #fff;
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--text);
 }

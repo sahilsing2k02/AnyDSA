@@ -63,11 +63,11 @@
 }
 
 .activeSection {
-  color: var(--accent);
-  background: var(--surface-2);
-  border-color: var(--border);
+  color: var(--text);
+  background: var(--surface-3);
+  border-color: var(--text);
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* ── Right side actions ────────────────────────────────────────────────────── */
