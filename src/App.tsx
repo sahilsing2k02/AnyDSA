@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Navbar } from './components/Navbar';
+import { Footer } from './components/Footer';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Home } from './pages/Home';
 import { Auth } from './pages/Auth';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import './index.css';
 
 interface User {
@@ -11,14 +14,16 @@ interface User {
   name: string;
 }
 
+type ViewState = 'home' | 'login' | 'privacy';
+
 function MainLayout({
   view,
   setView,
   user,
   setUser
 }: {
-  view: 'home' | 'login';
-  setView: (v: 'home' | 'login') => void;
+  view: ViewState;
+  setView: (v: ViewState) => void;
   user: User | null;
   setUser: (u: User | null) => void;
 }) {
@@ -44,30 +49,44 @@ function MainLayout({
   };
 
   return (
-    <>
-      <Navbar
-        onLoginClick={() => setView('login')}
-        user={user}
-        onLogout={handleLogout}
-        onNavigateHome={() => setView('home')}
-      />
-      {view === 'login' ? (
-        <Auth
-          onBack={() => setView('home')}
-          onLoginSuccess={(loggedInUser) => {
-            setUser(loggedInUser);
-            setView('home');
-          }}
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <header role="banner">
+        <Navbar
+          onLoginClick={() => setView('login')}
+          user={user}
+          onLogout={handleLogout}
+          onNavigateHome={() => setView('home')}
         />
-      ) : (
-        <Home />
-      )}
-    </>
+      </header>
+
+      <div style={{ flex: 1 }}>
+        {view === 'login' && (
+          <Auth
+            onBack={() => setView('home')}
+            onLoginSuccess={(loggedInUser) => {
+              setUser(loggedInUser);
+              setView('home');
+            }}
+          />
+        )}
+        {view === 'privacy' && (
+          <PrivacyPolicy onBack={() => setView('home')} />
+        )}
+        {view === 'home' && <Home />}
+      </div>
+
+      <Footer onOpenPrivacy={() => setView('privacy')} />
+    </div>
   );
 }
 
 function App() {
-  const [view, setView] = useState<'home' | 'login'>('home');
+  const [view, setView] = useState<ViewState>(() => {
+    try {
+      if (window.location.pathname === '/privacy') return 'privacy';
+    } catch {}
+    return 'home';
+  });
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -86,14 +105,16 @@ function App() {
   }, []);
 
   return (
-    <AppProvider isAuthenticated={Boolean(user)}>
-      <MainLayout
-        view={view}
-        setView={setView}
-        user={user}
-        setUser={setUser}
-      />
-    </AppProvider>
+    <ErrorBoundary>
+      <AppProvider isAuthenticated={Boolean(user)}>
+        <MainLayout
+          view={view}
+          setView={setView}
+          user={user}
+          setUser={setUser}
+        />
+      </AppProvider>
+    </ErrorBoundary>
   );
 }
 

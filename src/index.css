@@ -123,3 +123,25 @@ button:focus:not(:focus-visible) {
   background: rgba(99, 102, 241, 0.3);
   color: var(--text);
 }
+
+/* ─── Accessibility Skip Link ────────────────────────────────────────────────*/
+.skip-link {
+  position: absolute;
+  top: -999px;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.75rem 1.25rem;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+  outline: 2px solid #ffffff;
+}
+

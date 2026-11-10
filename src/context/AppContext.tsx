@@ -20,6 +20,8 @@ interface AppContextValue {
   toggleTheme: () => void;
   resetProgress: () => Promise<void>;
   resetAllStateForLogout: () => void;
+  exportUserData: () => void;
+  importUserData: (jsonString: string) => Promise<{ success: boolean; message: string }>;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -65,6 +67,17 @@ function loadTheme(): Theme {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
+function getInitialSection(): MainSection {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const sec = params.get('section')?.toLowerCase();
+    if (sec === 'cs-fundamentals' || sec === 'sql' || sec === 'lld' || sec === 'dsa') {
+      return sec as MainSection;
+    }
+  } catch {}
+  return 'dsa';
+}
+
 export function AppProvider({ children, isAuthenticated }: { children: ReactNode; isAuthenticated?: boolean }) {
   const isAuthRef = useRef(isAuthenticated);
 
@@ -78,9 +91,30 @@ export function AppProvider({ children, isAuthenticated }: { children: ReactNode
     notes: loadNotes(),
     theme: loadTheme(),
   }));
-  const [activeSection, setActiveSection] = useState<MainSection>('dsa');
+  const [activeSection, setActiveSectionState] = useState<MainSection>(getInitialSection);
 
-  // Fetch persisted data from PostgreSQL relational database when authenticated
+  const setActiveSection = (section: MainSection) => {
+    setActiveSectionState(section);
+    try {
+      const url = new URL(window.location.href);
+      if (section === 'dsa') {
+        url.searchParams.delete('section');
+      } else {
+        url.searchParams.set('section', section);
+      }
+      window.history.pushState(null, '', url.toString());
+
+      const titles: Record<MainSection, string> = {
+        'dsa': 'AnyDSA — Pattern-wise DSA Problems',
+        'cs-fundamentals': 'AnyDSA — CS Fundamentals Interview Guide',
+        'sql': 'AnyDSA — Top 50 SQL Interview Questions',
+        'lld': 'AnyDSA — Low-Level System Design (LLD)'
+      };
+      document.title = titles[section] || 'AnyDSA';
+    } catch {}
+  };
+
+  // Fetch persisted data from PostgreSQL relational database when authenticated & merge guest data
   useEffect(() => {
     if (!isAuthenticated) return;
 
@@ -96,9 +130,30 @@ export function AppProvider({ children, isAuthenticated }: { children: ReactNode
           const progressData = await progressRes.json();
           const notesData = await notesRes.json();
 
-          const solved = new Set<string>(progressData.solvedProblems || []);
-          const bookmarked = new Set<string>(progressData.bookmarkedProblems || []);
-          const notes: Record<string, ProblemNote> = notesData.notes || {};
+          const guestSolved = loadSet(KEYS.SOLVED);
+          const guestBookmarked = loadSet(KEYS.BOOKMARKED);
+          const guestNotes = loadNotes();
+
+          // Merge guest data into server data (guest migration)
+          const solved = new Set<string>([...(progressData.solvedProblems || []), ...guestSolved]);
+          const bookmarked = new Set<string>([...(progressData.bookmarkedProblems || []), ...guestBookmarked]);
+          const notes: Record<string, ProblemNote> = { ...guestNotes, ...(notesData.notes || {}) };
+
+          // Sync merged guest data up to server if new
+          const hasNewGuestData = 
+            guestSolved.size > 0 && Array.from(guestSolved).some(id => !progressData.solvedProblems?.includes(id)) ||
+            guestBookmarked.size > 0 && Array.from(guestBookmarked).some(id => !progressData.bookmarkedProblems?.includes(id));
+
+          if (hasNewGuestData) {
+            fetch('/api/progress/atomic-sync', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                solvedProblems: Array.from(solved),
+                bookmarkedProblems: Array.from(bookmarked)
+              })
+            }).catch(() => {});
+          }
 
           saveSet(KEYS.SOLVED, solved);
           saveSet(KEYS.BOOKMARKED, bookmarked);
@@ -285,8 +340,92 @@ export function AppProvider({ children, isAuthenticated }: { children: ReactNode
     }
   };
 
+  const exportUserData = () => {
+    try {
+      const exportObject = {
+        app: 'AnyDSA',
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        solvedProblems: Array.from(state.solvedProblems),
+        bookmarkedProblems: Array.from(state.bookmarkedProblems),
+        notes: state.notes
+      };
+
+      const blob = new Blob([JSON.stringify(exportObject, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `anydsa-backup-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Export failed:', err);
+    }
+  };
+
+  const importUserData = async (jsonString: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const parsed = JSON.parse(jsonString);
+      if (!parsed || typeof parsed !== 'object') {
+        return { success: false, message: 'Invalid backup file format' };
+      }
+
+      const importedSolved = new Set<string>(Array.isArray(parsed.solvedProblems) ? parsed.solvedProblems : []);
+      const importedBookmarked = new Set<string>(Array.isArray(parsed.bookmarkedProblems) ? parsed.bookmarkedProblems : []);
+      const importedNotes: Record<string, ProblemNote> = (parsed.notes && typeof parsed.notes === 'object') ? parsed.notes : {};
+
+      const nextSolved = new Set<string>([...state.solvedProblems, ...importedSolved]);
+      const nextBookmarked = new Set<string>([...state.bookmarkedProblems, ...importedBookmarked]);
+      const nextNotes = { ...state.notes, ...importedNotes };
+
+      saveSet(KEYS.SOLVED, nextSolved);
+      saveSet(KEYS.BOOKMARKED, nextBookmarked);
+      saveNotes(nextNotes);
+
+      setState(prev => ({
+        ...prev,
+        solvedProblems: nextSolved,
+        bookmarkedProblems: nextBookmarked,
+        notes: nextNotes
+      }));
+
+      // If authenticated, sync imported data to server
+      if (isAuthRef.current) {
+        fetch('/api/progress/atomic-sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            solvedProblems: Array.from(nextSolved),
+            bookmarkedProblems: Array.from(nextBookmarked)
+          })
+        }).catch(() => {});
+      }
+
+      return {
+        success: true,
+        message: `Successfully imported ${importedSolved.size} solved and ${Object.keys(importedNotes).length} notes.`
+      };
+    } catch (err: any) {
+      return { success: false, message: err.message || 'Failed to parse JSON file' };
+    }
+  };
+
   return (
-    <AppContext.Provider value={{ state, activeSection, setActiveSection, toggleSolved, toggleBookmark, setNote, toggleTheme, resetProgress, resetAllStateForLogout }}>
+    <AppContext.Provider value={{
+      state,
+      activeSection,
+      setActiveSection,
+      toggleSolved,
+      toggleBookmark,
+      setNote,
+      toggleTheme,
+      resetProgress,
+      resetAllStateForLogout,
+      exportUserData,
+      importUserData
+    }}>
       {children}
     </AppContext.Provider>
   );

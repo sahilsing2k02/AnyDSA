@@ -15,8 +15,51 @@ export function Home() {
   const [csCategory, setCsCategory] = useState<CSFundCategory>('all');
   const [sqlCategory, setSqlCategory] = useState<SqlCategory>('all');
   const [schemaOpen, setSchemaOpen] = useState(true);
-  const [showStarredOnly, setShowStarredOnly] = useState(false);
   const [viewMode, setViewMode] = useState<'study' | 'list'>('study');
+
+  // Search & Filter state synced with URL query params
+  const [searchQuery, setSearchQuery] = useState(() => {
+    try {
+      return new URLSearchParams(window.location.search).get('q') || '';
+    } catch { return ''; }
+  });
+  const [difficultyFilter, setDifficultyFilter] = useState<'all' | 'Easy' | 'Medium' | 'Hard'>(() => {
+    try {
+      const diff = new URLSearchParams(window.location.search).get('difficulty');
+      return (diff === 'Easy' || diff === 'Medium' || diff === 'Hard') ? diff : 'all';
+    } catch { return 'all'; }
+  });
+  const [statusFilter, setStatusFilter] = useState<'all' | 'solved' | 'unsolved' | 'bookmarked' | 'notes'>(() => {
+    try {
+      const st = new URLSearchParams(window.location.search).get('status');
+      return (st === 'solved' || st === 'unsolved' || st === 'bookmarked' || st === 'notes') ? st : 'all';
+    } catch { return 'all'; }
+  });
+
+  const syncFiltersToUrl = (q: string, diff: string, st: string) => {
+    try {
+      const url = new URL(window.location.href);
+      if (q) url.searchParams.set('q', q); else url.searchParams.delete('q');
+      if (diff !== 'all') url.searchParams.set('difficulty', diff); else url.searchParams.delete('difficulty');
+      if (st !== 'all') url.searchParams.set('status', st); else url.searchParams.delete('status');
+      window.history.replaceState(null, '', url.toString());
+    } catch {}
+  };
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    syncFiltersToUrl(val, difficultyFilter, statusFilter);
+  };
+
+  const handleDifficultyChange = (diff: 'all' | 'Easy' | 'Medium' | 'Hard') => {
+    setDifficultyFilter(diff);
+    syncFiltersToUrl(searchQuery, diff, statusFilter);
+  };
+
+  const handleStatusChange = (st: 'all' | 'solved' | 'unsolved' | 'bookmarked' | 'notes') => {
+    setStatusFilter(st);
+    syncFiltersToUrl(searchQuery, difficultyFilter, st);
+  };
 
   const isStudySection = activeSection !== 'dsa';
 
@@ -40,18 +83,49 @@ export function Home() {
     }
   }, [activeSection, csCategory, sqlCategory]);
 
-  // Apply starred filter
+  // Apply search & multi-criteria filters
   const displayedPatterns = useMemo(() => {
-    if (!showStarredOnly) return currentSectionPatterns;
+    const q = searchQuery.trim().toLowerCase();
+
     return currentSectionPatterns
-      .map(pattern => ({
-        ...pattern,
-        problems: pattern.problems.filter(p => state.bookmarkedProblems.has(p.id))
-      }))
+      .map(pattern => {
+        const patternNameMatches = pattern.name.toLowerCase().includes(q);
+
+        const filteredProblems = pattern.problems.filter(problem => {
+          // Search query check
+          if (q) {
+            const titleMatches = problem.title.toLowerCase().includes(q);
+            const tagMatches = problem.tags?.some(tag => tag.toLowerCase().includes(q));
+            if (!titleMatches && !tagMatches && !patternNameMatches) return false;
+          }
+
+          // Difficulty filter check
+          if (difficultyFilter !== 'all' && problem.difficulty !== difficultyFilter) {
+            return false;
+          }
+
+          // Status filter check
+          if (statusFilter === 'solved' && !state.solvedProblems.has(problem.id)) return false;
+          if (statusFilter === 'unsolved' && state.solvedProblems.has(problem.id)) return false;
+          if (statusFilter === 'bookmarked' && !state.bookmarkedProblems.has(problem.id)) return false;
+          if (statusFilter === 'notes' && !state.notes[problem.id]?.content) return false;
+
+          return true;
+        });
+
+        return {
+          ...pattern,
+          problems: filteredProblems
+        };
+      })
       .filter(p => p.problems.length > 0);
-  }, [showStarredOnly, currentSectionPatterns, state.bookmarkedProblems]);
+  }, [currentSectionPatterns, searchQuery, difficultyFilter, statusFilter, state.solvedProblems, state.bookmarkedProblems, state.notes]);
 
   const hasResults = displayedPatterns.length > 0;
+
+  const totalMatchingProblems = useMemo(() => {
+    return displayedPatterns.reduce((acc, p) => acc + p.problems.length, 0);
+  }, [displayedPatterns]);
 
   const allSectionProblems = useMemo(() => {
     return displayedPatterns.flatMap(p => p.problems);
@@ -267,9 +341,55 @@ export function Home() {
       {/* Stats bar dynamic to active section */}
       <StatsBar 
         patterns={currentSectionPatterns} 
-        showStarredOnly={showStarredOnly} 
-        onToggleStarred={() => setShowStarredOnly(prev => !prev)} 
+        showStarredOnly={statusFilter === 'bookmarked'} 
+        onToggleStarred={() => handleStatusChange(statusFilter === 'bookmarked' ? 'all' : 'bookmarked')} 
       />
+
+      {/* Filter and Instant Search Toolbar */}
+      <div className={styles.filterToolbar} role="search" aria-label="Filter problems">
+        <div className={styles.searchWrap}>
+          <span className={styles.searchIcon} aria-hidden="true">🔍</span>
+          <input
+            type="search"
+            className={styles.searchInput}
+            placeholder={`Search ${sectionTitle} problems, tags, patterns...`}
+            value={searchQuery}
+            onChange={e => handleSearchChange(e.target.value)}
+            aria-label="Search problems by title, tag, or pattern"
+          />
+        </div>
+
+        <div className={styles.filterControls}>
+          <select
+            className={styles.filterSelect}
+            value={difficultyFilter}
+            onChange={e => handleDifficultyChange(e.target.value as any)}
+            aria-label="Filter by difficulty"
+          >
+            <option value="all">All Difficulties</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+
+          <select
+            className={styles.filterSelect}
+            value={statusFilter}
+            onChange={e => handleStatusChange(e.target.value as any)}
+            aria-label="Filter by problem status"
+          >
+            <option value="all">All Status</option>
+            <option value="solved">Solved</option>
+            <option value="unsolved">Unsolved</option>
+            <option value="bookmarked">Starred</option>
+            <option value="notes">Has Notes</option>
+          </select>
+
+          <span className={styles.resultsCount}>
+            {totalMatchingProblems} {totalMatchingProblems === 1 ? 'problem' : 'problems'}
+          </span>
+        </div>
+      </div>
 
       {/* View Mode Switcher for Study Sections (CS Fundamentals, SQL, LLD) */}
       {isStudySection && (
@@ -312,11 +432,18 @@ export function Home() {
             ))
           ) : (
             <div className={styles.empty} id="no-results">
-              <span className={styles.emptyIcon}>⭐</span>
-              <p className={styles.emptyText}>No starred items found in this section.</p>
-              {showStarredOnly && (
-                <button className={styles.emptyReset} onClick={() => setShowStarredOnly(false)}>
-                  Show All Items
+              <span className={styles.emptyIcon}>🔍</span>
+              <p className={styles.emptyText}>No problems match your current search or filter criteria.</p>
+              {(searchQuery || difficultyFilter !== 'all' || statusFilter !== 'all') && (
+                <button
+                  className={styles.emptyReset}
+                  onClick={() => {
+                    handleSearchChange('');
+                    handleDifficultyChange('all');
+                    handleStatusChange('all');
+                  }}
+                >
+                  Reset All Filters
                 </button>
               )}
             </div>

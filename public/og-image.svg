@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0f"/>
+      <stop offset="100%" stop-color="#141420"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid dots -->
+  <g fill="#2e2e42" opacity="0.4">
+    <circle cx="100" cy="80" r="2"/><circle cx="200" cy="80" r="2"/><circle cx="300" cy="80" r="2"/><circle cx="400" cy="80" r="2"/>
+    <circle cx="500" cy="80" r="2"/><circle cx="600" cy="80" r="2"/><circle cx="700" cy="80" r="2"/><circle cx="800" cy="80" r="2"/>
+    <circle cx="900" cy="80" r="2"/><circle cx="1000" cy="80" r="2"/><circle cx="1100" cy="80" r="2"/>
+    <circle cx="100" cy="180" r="2"/><circle cx="200" cy="180" r="2"/><circle cx="1000" cy="180" r="2"/><circle cx="1100" cy="180" r="2"/>
+  </g>
+
+  <!-- Brand Card -->
+  <g transform="translate(100, 140)">
+    <!-- Badge -->
+    <rect width="148" height="34" rx="17" fill="#1e1b4b" stroke="#4338ca" stroke-width="1.5"/>
+    <text x="74" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="700" fill="#a5b4fc" text-anchor="middle" letter-spacing="0.08em">INTERVIEW PREP</text>
+
+    <!-- Main Title -->
+    <text x="0" y="105" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="64" font-weight="900" fill="#ffffff" letter-spacing="-0.03em">
+      AnyDSA
+    </text>
+
+    <!-- Subheading -->
+    <text x="0" y="165" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="700" fill="url(#accent)">
+      Master DSA, CS Fundamentals &amp; SQL Pattern by Pattern
+    </text>
+
+    <!-- Description -->
+    <text x="0" y="225" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="400" fill="#94a3b8">
+      Curated problems organized by technique. Track progress across devices,
+    </text>
+    <text x="0" y="260" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="400" fill="#94a3b8">
+      bookmark key questions, and keep structured interview notes.
+    </text>
+
+    <!-- Pills -->
+    <g transform="translate(0, 310)">
+      <rect x="0" y="0" width="130" height="38" rx="8" fill="#1e293b" stroke="#334155"/>
+      <text x="65" y="24" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="600" fill="#e2e8f0" text-anchor="middle">DSA Patterns</text>
+
+      <rect x="145" y="0" width="160" height="38" rx="8" fill="#1e293b" stroke="#334155"/>
+      <text x="225" y="24" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="600" fill="#e2e8f0" text-anchor="middle">CS Fundamentals</text>
+
+      <rect x="320" y="0" width="130" height="38" rx="8" fill="#1e293b" stroke="#334155"/>
+      <text x="385" y="24" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="600" fill="#e2e8f0" text-anchor="middle">SQL Top 50</text>
+
+      <rect x="465" y="0" width="160" height="38" rx="8" fill="#1e293b" stroke="#334155"/>
+      <text x="545" y="24" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="600" fill="#e2e8f0" text-anchor="middle">Low-Level Design</text>
+    </g>
+  </g>
+
+  <!-- URL Footer -->
+  <text x="100" y="560" font-family="ui-monospace, monospace" font-size="18" font-weight="600" fill="#64748b">
+    anydsa.vercel.app
+  </text>
+</svg>
