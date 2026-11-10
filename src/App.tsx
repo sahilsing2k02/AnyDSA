@@ -48,7 +48,7 @@ function MainLayout({
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>
       <header role="banner">
         <Navbar
           onLoginClick={() => setView('login')}
@@ -58,7 +58,7 @@ function MainLayout({
         />
       </header>
 
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {view === 'login' && (
           <Auth
             onBack={() => setView('home')}

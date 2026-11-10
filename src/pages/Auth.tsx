@@ -143,11 +143,12 @@ export function Auth({ onBack, onLoginSuccess, onOpenPrivacy }: Props) {
 
   return (
     <main className={styles.authContainer} id="main-content">
-      <button className={styles.backBtn} onClick={onBack} aria-label="Back to main practice page">
-        <span>←</span> Back to Practice
-      </button>
+      <div className={styles.authCardWrapper}>
+        <button className={styles.backBtn} onClick={onBack} aria-label="Back to main practice page">
+          <span>←</span> Back to Practice
+        </button>
 
-      <div className={styles.card}>
+        <div className={styles.card}>
         {/* Top Tab Pill Switcher */}
         <div className={styles.tabSwitch} role="tablist" aria-label="Sign In or Create Account">
           <button
@@ -357,6 +358,7 @@ export function Auth({ onBack, onLoginSuccess, onOpenPrivacy }: Props) {
           </button>
         </div>
       </div>
-    </main>
+    </div>
+  </main>
   );
 }
