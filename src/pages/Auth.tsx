@@ -352,13 +352,6 @@ export function Auth({ onBack, onLoginSuccess, onOpenPrivacy }: Props) {
             Apple
           </button>
         </div>
-
-        {/* Corner Sparkle Star Decorator (from Reference) */}
-        <div className={styles.sparkleStar} aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-            <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" fill="white" />
-          </svg>
-        </div>
       </div>
     </main>
   );

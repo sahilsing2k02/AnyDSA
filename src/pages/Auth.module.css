@@ -463,15 +463,6 @@
   flex-shrink: 0;
 }
 
-/* ── Corner Sparkle Star (Reference Decorator) ─────────────────────────────── */
-.sparkleStar {
-  position: absolute;
-  bottom: 1.4rem;
-  right: 1.4rem;
-  opacity: 0.18;
-  pointer-events: none;
-}
-
 /* ── Subtle bottom sync note ────────────────────────────────────────────────── */
 .guestNote {
   margin-top: 1.4rem;
