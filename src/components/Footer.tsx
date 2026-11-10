@@ -118,3 +118,4 @@ export function Footer({ onOpenPrivacy }: Props) {
     </footer>
   );
 }
+

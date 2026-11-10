@@ -4,105 +4,178 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1.5rem 1rem 3rem;
   background: var(--bg);
 }
 
 .backBtn {
   align-self: flex-start;
+  max-width: 440px;
+  width: 100%;
+  margin: 0 auto 1.25rem;
   background: none;
   border: none;
   color: var(--text-muted);
   font-weight: 600;
+  font-size: 0.88rem;
   cursor: pointer;
-  margin-bottom: 2rem;
-  padding: 0.5rem 1rem;
+  padding: 0.45rem 0.6rem;
   border-radius: 8px;
-  transition: all 0.2s;
+  transition: all 0.18s ease;
   font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .backBtn:hover {
-  background: var(--surface-2);
   color: var(--text);
+  background: var(--surface-2);
 }
 
 .card {
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
   background: var(--surface-1);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  padding: 2.2rem 2rem;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  animation: fadeIn 0.2s ease;
+}
+
+/* ── Segmented Switcher Tabs ─────────────────────────────────────────────────── */
+.tabGroup {
+  display: flex;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 1.8rem;
+  gap: 4px;
+}
+
+.tabBtn {
+  flex: 1;
+  padding: 0.55rem 0.75rem;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+  text-align: center;
+}
+
+.tabBtn:hover {
+  color: var(--text);
+}
+
+.tabActive {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--border-active);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.headerText {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: var(--text);
-  margin-bottom: 0.5rem;
-  text-align: center;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   color: var(--text-muted);
-  margin-bottom: 1.5rem;
-  text-align: center;
+  margin: 0;
   line-height: 1.5;
 }
 
+/* ── Alerts ─────────────────────────────────────────────────────────────────── */
 .error {
-  background: #ffebee;
-  color: #c62828;
-  padding: 0.75rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.84rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   text-align: center;
+  line-height: 1.45;
 }
 
+.notice {
+  background: rgba(99, 102, 241, 0.12);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.28);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  margin-bottom: 1.25rem;
+  text-align: center;
+  line-height: 1.45;
+}
+
+/* ── Google OAuth Button ────────────────────────────────────────────────────── */
 .googleBtn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
   width: 100%;
-  padding: 0.75rem;
-  background: var(--surface-1);
+  padding: 0.75rem 1rem;
+  background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 0.95rem;
+  border-radius: 10px;
+  font-size: 0.92rem;
   font-weight: 600;
   color: var(--text);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.18s ease;
   font-family: inherit;
 }
 
 .googleBtn:hover {
-  background: var(--surface-2);
+  background: var(--surface-3);
+  border-color: var(--border-hover);
+}
+
+.googleBtn:active {
+  transform: translateY(1px);
 }
 
 .googleIcon {
   width: 18px;
   height: 18px;
-  color: var(--text);
+  flex-shrink: 0;
 }
 
+/* ── Divider ─────────────────────────────────────────────────────────────────── */
 .divider {
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 1.5rem 0;
+  margin: 1.4rem 0;
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 
 .divider::before,
@@ -113,36 +186,37 @@
 }
 
 .divider span {
-  padding: 0 1rem;
+  padding: 0 0.85rem;
 }
 
+/* ── Form Inputs ─────────────────────────────────────────────────────────────── */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.15rem;
 }
 
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
 .inputGroup label {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--text);
 }
 
 .inputGroup input {
-  padding: 0.75rem;
+  padding: 0.72rem 0.9rem;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 9px;
   background: var(--bg);
   color: var(--text);
   font-family: inherit;
-  font-size: 0.95rem;
-  transition: border-color 0.2s;
+  font-size: 0.92rem;
+  transition: border-color 0.18s ease;
 }
 
 .inputGroup input:focus {
@@ -150,41 +224,96 @@
   border-color: var(--accent);
 }
 
-.submitBtn {
-  margin-top: 0.5rem;
-  padding: 0.85rem;
-  background: var(--text);
-  color: var(--bg);
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordWrapper input {
+  width: 100%;
+  padding-right: 2.8rem;
+}
+
+.togglePasswordBtn {
+  position: absolute;
+  right: 0.6rem;
+  background: transparent;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 700;
+  color: var(--text-muted);
   cursor: pointer;
-  transition: opacity 0.2s;
-  font-family: inherit;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
 }
 
-.submitBtn:hover {
-  opacity: 0.9;
+.togglePasswordBtn:hover {
+  color: var(--text);
 }
 
-.switchMode {
-  margin-top: 1.5rem;
-  text-align: center;
-  font-size: 0.9rem;
+.passwordHint {
+  font-size: 0.76rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.2rem;
+}
+
+.hintValid {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.hintMuted {
   color: var(--text-muted);
 }
 
-.switchBtn {
-  background: none;
+/* ── Primary Submit Button ──────────────────────────────────────────────────── */
+.submitBtn {
+  margin-top: 0.6rem;
+  padding: 0.82rem;
+  background: var(--accent);
+  color: #ffffff;
   border: none;
-  color: var(--text);
+  border-radius: 10px;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
-  padding: 0;
+  transition: opacity 0.18s ease, transform 0.12s ease;
   font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.switchBtn:hover {
-  text-decoration: underline;
+.submitBtn:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.submitBtn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.guestNote {
+  margin-top: 1.4rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }

@@ -71,3 +71,4 @@ export function PrivacyPolicy({ onBack }: Props) {
     </main>
   );
 }
+

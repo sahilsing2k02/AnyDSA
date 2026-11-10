@@ -181,6 +181,37 @@ async function runTests() {
     assert.equal(Number(afterSessions.rows[0].count), 0, 'Sessions should be cascade deleted');
     console.log('✓ Foreign key ON DELETE CASCADE verified in PostgreSQL');
 
+    // 9. Google OAuth 2.0 Registration, Login & Linking
+    console.log('[Test 9] Google OAuth Lifecycle...');
+    const { AuthService } = await import('../services/authService.js');
+
+    // Brand new Google user
+    const googleUser = await AuthService.loginOrRegisterWithGoogle({
+      googleId: 'google_sub_12345',
+      email: 'oauth.engineer@example.com',
+      name: 'Google Engineer'
+    });
+    assert.ok(googleUser.sessionId);
+    assert.equal(googleUser.user.email, 'oauth.engineer@example.com');
+
+    // Returning Google user login
+    const returningGoogleUser = await AuthService.loginOrRegisterWithGoogle({
+      googleId: 'google_sub_12345',
+      email: 'oauth.engineer@example.com',
+      name: 'Google Engineer'
+    });
+    assert.equal(returningGoogleUser.user.id, googleUser.user.id);
+    console.log('✓ Google OAuth new user and returning user login verified');
+
+    // Account linking: register password user, then sign in with Google with same email
+    const localUser = await AuthService.register('hybrid.user@example.com', 'LocalPassword123!', 'Hybrid User');
+    const linkedUser = await AuthService.loginOrRegisterWithGoogle({
+      googleId: 'google_sub_99999',
+      email: 'hybrid.user@example.com'
+    });
+    assert.equal(linkedUser.user.id, localUser.user.id, 'Google identity should link to existing local user account');
+    console.log('✓ Account linking: Google login linked to existing local user');
+
     console.log('\n======================================================');
     console.log(' ALL POSTGRESQL INTEGRATION & LIFECYCLE TESTS PASSED! ');
     console.log('======================================================\n');
