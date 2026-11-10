@@ -76,50 +76,6 @@
   color: #fff;
 }
 
-/* ── Main Section Tabs ──────────────────────────────────────────────────────── */
-.sectionNav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  margin: 1.5rem auto 1rem;
-  flex-wrap: wrap;
-}
-
-.sectionTab {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.15rem;
-  border-radius: 12px;
-  border: 1.5px solid var(--border);
-  background: var(--surface-1);
-  color: var(--text-muted);
-  font-size: 0.92rem;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.18s ease;
-}
-
-.sectionTab:hover {
-  background: var(--surface-2);
-  color: var(--text);
-  border-color: var(--accent);
-}
-
-.activeTab {
-  background: var(--accent);
-  color: var(--bg);
-  border-color: var(--accent);
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
-}
-
-.activeTab:hover {
-  background: var(--accent-hover);
-  color: var(--bg);
-}
-
 /* ── Subcategory filter for CS Fundamentals ─────────────────────────────────── */
 .subCategoryNav {
   display: flex;

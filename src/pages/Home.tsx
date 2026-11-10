@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import type { MainSection, CSFundCategory } from '../types';
+import type { CSFundCategory } from '../types';
 import { patterns as dsaPatterns } from '../data/patterns';
 import { csFundamentals } from '../data/csFundamentals';
 import { sqlQuestions } from '../data/sqlQuestions';
@@ -10,8 +10,7 @@ import { useApp } from '../context/AppContext';
 import styles from './Home.module.css';
 
 export function Home() {
-  const { state } = useApp();
-  const [activeSection, setActiveSection] = useState<MainSection>('dsa');
+  const { state, activeSection } = useApp();
   const [csCategory, setCsCategory] = useState<CSFundCategory>('all');
   const [schemaOpen, setSchemaOpen] = useState(true);
   const [showStarredOnly, setShowStarredOnly] = useState(false);
@@ -96,42 +95,7 @@ export function Home() {
         )}
       </section>
 
-      {/* Main Section Switcher Tabs */}
-      <nav className={styles.sectionNav} aria-label="Study Sections">
-        <button
-          className={`${styles.sectionTab} ${activeSection === 'dsa' ? styles.activeTab : ''}`}
-          onClick={() => { setActiveSection('dsa'); setShowStarredOnly(false); }}
-        >
-          <span>⚡</span>
-          <span>DSA Patterns</span>
-        </button>
-
-        <button
-          className={`${styles.sectionTab} ${activeSection === 'cs-fundamentals' ? styles.activeTab : ''}`}
-          onClick={() => { setActiveSection('cs-fundamentals'); setShowStarredOnly(false); }}
-        >
-          <span>💻</span>
-          <span>CS Fundamentals</span>
-        </button>
-
-        <button
-          className={`${styles.sectionTab} ${activeSection === 'sql' ? styles.activeTab : ''}`}
-          onClick={() => { setActiveSection('sql'); setShowStarredOnly(false); }}
-        >
-          <span>🗄️</span>
-          <span>SQL Top 50</span>
-        </button>
-
-        <button
-          className={`${styles.sectionTab} ${activeSection === 'lld' ? styles.activeTab : ''}`}
-          onClick={() => { setActiveSection('lld'); setShowStarredOnly(false); }}
-        >
-          <span>🏗️</span>
-          <span>LLD & Patterns</span>
-        </button>
-      </nav>
-
-      {/* CS Fundamentals Subcategory Filter Pills */}
+      {/* CS Fundamentals Subcategory Filter Pills (No Emojis) */}
       {activeSection === 'cs-fundamentals' && (
         <div className={styles.subCategoryNav} aria-label="CS Fundamentals Categories">
           <button
@@ -144,25 +108,25 @@ export function Home() {
             className={`${styles.subCategoryPill} ${csCategory === 'cn' ? styles.activePill : ''}`}
             onClick={() => setCsCategory('cn')}
           >
-            🌐 Computer Networks
+            Computer Networks
           </button>
           <button
             className={`${styles.subCategoryPill} ${csCategory === 'os' ? styles.activePill : ''}`}
             onClick={() => setCsCategory('os')}
           >
-            💻 Operating Systems
+            Operating Systems
           </button>
           <button
             className={`${styles.subCategoryPill} ${csCategory === 'oops' ? styles.activePill : ''}`}
             onClick={() => setCsCategory('oops')}
           >
-            🧩 OOPS
+            OOPS
           </button>
           <button
             className={`${styles.subCategoryPill} ${csCategory === 'dbms' ? styles.activePill : ''}`}
             onClick={() => setCsCategory('dbms')}
           >
-            🗄️ DBMS
+            DBMS
           </button>
         </div>
       )}

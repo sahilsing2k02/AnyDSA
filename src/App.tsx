@@ -49,6 +49,7 @@ function MainLayout({
         onLoginClick={() => setView('login')}
         user={user}
         onLogout={handleLogout}
+        onNavigateHome={() => setView('home')}
       />
       {view === 'login' ? (
         <Auth

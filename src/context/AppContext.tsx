@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useRef, type ReactNode } from 'react';
-import type { AppState, Theme, ProblemNote } from '../types';
+import type { AppState, Theme, ProblemNote, MainSection } from '../types';
 
 // ─── Storage Keys ─────────────────────────────────────────────────────────────
 const KEYS = {
@@ -12,6 +12,8 @@ const KEYS = {
 // ─── Context Interface ────────────────────────────────────────────────────────
 interface AppContextValue {
   state: AppState;
+  activeSection: MainSection;
+  setActiveSection: (section: MainSection) => void;
   toggleSolved: (problemId: string) => Promise<void>;
   toggleBookmark: (problemId: string) => Promise<void>;
   setNote: (problemId: string, content: string) => Promise<void>;
@@ -76,6 +78,7 @@ export function AppProvider({ children, isAuthenticated }: { children: ReactNode
     notes: loadNotes(),
     theme: loadTheme(),
   }));
+  const [activeSection, setActiveSection] = useState<MainSection>('dsa');
 
   // Fetch persisted data from PostgreSQL relational database when authenticated
   useEffect(() => {
@@ -273,6 +276,7 @@ export function AppProvider({ children, isAuthenticated }: { children: ReactNode
       notes: {},
       theme: loadTheme(),
     });
+    setActiveSection('dsa');
     try {
       localStorage.clear();
       sessionStorage.clear();
@@ -282,7 +286,7 @@ export function AppProvider({ children, isAuthenticated }: { children: ReactNode
   };
 
   return (
-    <AppContext.Provider value={{ state, toggleSolved, toggleBookmark, setNote, toggleTheme, resetProgress, resetAllStateForLogout }}>
+    <AppContext.Provider value={{ state, activeSection, setActiveSection, toggleSolved, toggleBookmark, setNote, toggleTheme, resetProgress, resetAllStateForLogout }}>
       {children}
     </AppContext.Provider>
   );
