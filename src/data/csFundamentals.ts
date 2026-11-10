@@ -202,3 +202,4 @@ export const csFundamentals: Pattern[] = [
     ]
   }
 ];
+

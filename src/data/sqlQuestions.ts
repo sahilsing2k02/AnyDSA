@@ -2,442 +2,903 @@ import type { Pattern } from '../types';
 
 export const sqlQuestions: Pattern[] = [
   {
-    id: 'sql-select',
-    name: '1. Select & Filtering (SQL 50)',
-    description: 'Fundamental SQL queries: WHERE clauses, NULL checks, boolean logic, and regular expressions.',
-    icon: '🔍',
-    problems: [
+    "id": "sql-basics",
+    "name": "Section 1: SQL Basics (Q1–Q10)",
+    "description": "These questions establish your understanding of SQL commands, filtering, sorting and basic functions.",
+    "icon": "🔰",
+    "problems": [
       {
-        id: 'sql-1',
-        title: 'Recyclable and Low Fat Products (LC 1757)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/recyclable-and-low-fat-products/' }],
-        tags: ['SELECT', 'WHERE'],
-        answer: 'SELECT product_id\nFROM Products\nWHERE low_fats = \'Y\' AND recyclable = \'Y\';'
+        "id": "sql-q1",
+        "title": "Q1. What is SQL? What are the different types of SQL commands?",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/sql-statements.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "SQL Commands",
+          "DDL/DML"
+        ],
+        "answer": "Answer: SQL (Structured Query Language) is used to store, retrieve, manipulate and manage relational databases.\n\nFive Major Categories:\n• DDL (Data Definition Language): Defines and modifies table structures.\n  Commands: CREATE, ALTER, DROP, TRUNCATE\n• DML (Data Manipulation Language): Modifies and manages table records.\n  Commands: INSERT, UPDATE, DELETE\n• DQL (Data Query Language): Retrieves data from the database.\n  Commands: SELECT\n• DCL (Data Control Language): Controls permissions and access rights.\n  Commands: GRANT, REVOKE\n• TCL (Transaction Control Language): Manages transactional boundaries.\n  Commands: COMMIT, ROLLBACK, SAVEPOINT"
       },
       {
-        id: 'sql-2',
-        title: 'Find Customer Referee (LC 584)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/find-customer-referee/' }],
-        tags: ['WHERE', 'NULL'],
-        answer: '-- Crucial: In SQL, NULL != 2 evaluates to UNKNOWN, not TRUE.\nSELECT name\nFROM Customer\nWHERE referee_id != 2 OR referee_id IS NULL;'
+        "id": "sql-q2",
+        "title": "Q2. What is the difference between DELETE, TRUNCATE and DROP?",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/truncate-table.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Data Deletion",
+          "DDL vs DML"
+        ],
+        "answer": "Answer:\n• DELETE: Removes selected rows based on a WHERE condition (or all rows if omitted). Operates as DML, logs individual row deletions, and activates triggers.\n• TRUNCATE: Removes all rows while preserving table structure and columns. Operates as DDL, deallocates data pages directly, and is much faster than DELETE.\n• DROP: Completely removes the entire table along with its schema, constraints, indexes, and triggers from the database dictionary.\n\nSyntax:\n-- Delete selected rows\nDELETE FROM Employees WHERE emp_id = 1;\n\n-- Remove all records while retaining structure\nTRUNCATE TABLE Employees;\n\n-- Remove the entire table definition and data\nDROP TABLE Employees;\n\nInterview Point:\nDELETE supports the WHERE clause; TRUNCATE and DROP do not. In transaction-safe storage engines (like MySQL InnoDB), TRUNCATE implicitly commits the transaction and cannot be rolled back, whereas DELETE can be rolled back inside an active transaction."
       },
       {
-        id: 'sql-3',
-        title: 'Big Countries (LC 595)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/big-countries/' }],
-        tags: ['WHERE', 'OR'],
-        answer: 'SELECT name, population, area\nFROM World\nWHERE area >= 3000000 OR population >= 25000000;'
+        "id": "sql-q3",
+        "title": "Q3. What is the difference between WHERE and HAVING?",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Filtering",
+          "GROUP BY"
+        ],
+        "answer": "Answer:\n• WHERE: Filters individual rows before any grouping or aggregation takes place. It cannot evaluate aggregate functions directly.\n• HAVING: Filters aggregated groups after the GROUP BY clause has summarized the data.\n\nSyntax Examples:\n-- Employees earning above 50,000 (Row-level filter before grouping)\nSELECT * FROM Employees WHERE salary > 50000;\n\n-- Departments with average salary above 50,000 (Group-level filter on aggregated metric)\nSELECT dept_id, AVG(salary) AS avg_salary\nFROM Employees\nGROUP BY dept_id\nHAVING AVG(salary) > 50000;"
       },
       {
-        id: 'sql-4',
-        title: 'Article Views I (LC 1148)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/article-views-i/' }],
-        tags: ['DISTINCT', 'ORDER BY'],
-        answer: 'SELECT DISTINCT author_id AS id\nFROM Views\nWHERE author_id = viewer_id\nORDER BY id ASC;'
+        "id": "sql-q4",
+        "title": "Q4. What is the difference between PRIMARY KEY and UNIQUE KEY?",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Constraints",
+          "Keys"
+        ],
+        "answer": "Primary Key vs Unique Key Comparison:\n\nFeature           | PRIMARY KEY                    | UNIQUE KEY\n------------------+--------------------------------+----------------------------\nPurpose           | Uniquely identifies each row   | Prevents duplicate values\nNULL Handling     | Strictly NOT NULL              | Allows NULL (depends on DBMS)\nLimit per Table   | Exactly 1 per table            | Multiple constraints allowed\nIndex Type        | Clustered index by default     | Non-clustered index\nComposite Keys    | Can span multiple columns      | Can span multiple columns\n\nSyntax Example:\nCREATE TABLE Students (\n  id INT PRIMARY KEY,\n  email VARCHAR(100) UNIQUE\n);"
       },
       {
-        id: 'sql-5',
-        title: 'Invalid Tweets (LC 1683)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/invalid-tweets/' }],
-        tags: ['LENGTH', 'CHAR_LENGTH'],
-        answer: 'SELECT tweet_id\nFROM Tweets\nWHERE CHAR_LENGTH(content) > 15;'
+        "id": "sql-q5",
+        "title": "Q5. What is a FOREIGN KEY?",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Referential Integrity"
+        ],
+        "answer": "Answer:\nA FOREIGN KEY creates a relationship between two tables and preserves referential integrity. It guarantees that the foreign key column value in the child table must either match an existing primary key in the referenced parent table or be NULL.\n\nSyntax:\nCREATE TABLE Departments (\n  dept_id INT PRIMARY KEY,\n  dept_name VARCHAR(50)\n);\n\nCREATE TABLE Employees (\n  emp_id INT PRIMARY KEY,\n  name VARCHAR(50),\n  dept_id INT,\n  FOREIGN KEY (dept_id) REFERENCES Departments(dept_id)\n);\n\nExplanation:\nPrevents inserting a non-NULL department ID that does not exist in Departments, and prevents deleting a department while active employee rows still reference it (unless configured with ON DELETE CASCADE)."
+      },
+      {
+        "id": "sql-q6",
+        "title": "Q6. Write a query to fetch all employees earning more than 50,000.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/select.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "SELECT",
+          "WHERE"
+        ],
+        "answer": "SELECT * FROM Employees WHERE salary > 50000;\n\nExplanation:\nWHERE applies a boolean condition to each row in the Employees table and returns only matching employee records."
+      },
+      {
+        "id": "sql-q7",
+        "title": "Q7. Write a query to fetch employees whose names start with 'A'.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/pattern-matching.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "Pattern Matching",
+          "LIKE"
+        ],
+        "answer": "SELECT * FROM Employees WHERE name LIKE 'A%';\n\nExplanation:\nThe LIKE operator evaluates wildcard pattern matches:\n• % matches zero or more characters.\n• _ matches exactly one character.\n\nOther Pattern Matching Examples:\n-- Names ending with 'a'\nSELECT * FROM Employees WHERE name LIKE '%a';\n\n-- Names containing 'an' anywhere\nSELECT * FROM Employees WHERE name LIKE '%an%';\n\n-- Names with exactly 4 characters\nSELECT * FROM Employees WHERE name LIKE '____';"
+      },
+      {
+        "id": "sql-q8",
+        "title": "Q8. How do you find distinct department IDs?",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/distinct-optimization.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "DISTINCT",
+          "Deduplication"
+        ],
+        "answer": "SELECT DISTINCT dept_id FROM Employees;\n\nExplanation:\nDISTINCT eliminates duplicate values from the query result set, returning each unique dept_id exactly once."
+      },
+      {
+        "id": "sql-q9",
+        "title": "Q9. How do you sort employees by salary in descending order?",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/sorting-rows.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "ORDER BY",
+          "Sorting"
+        ],
+        "answer": "SELECT * FROM Employees ORDER BY salary DESC;\n\n-- For multiple columns (descending by salary, ascending by name for ties)\nSELECT * FROM Employees ORDER BY salary DESC, name ASC;\n\nExplanation:\nORDER BY sorts the returned records. ASC denotes ascending order (default), while DESC denotes descending order."
+      },
+      {
+        "id": "sql-q10",
+        "title": "Q10. What is NULL? How do you handle NULL values?",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/working-with-null.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "NULL Handling",
+          "COALESCE"
+        ],
+        "answer": "Answer:\nNULL represents missing, unknown, or unassigned data. It is fundamentally not equivalent to zero (0) or an empty string ('').\n\nQuery Examples:\n-- Find employees without a manager\nSELECT * FROM Employees WHERE manager_id IS NULL;\n\n-- Find employees having a manager\nSELECT * FROM Employees WHERE manager_id IS NOT NULL;\n\n-- Using COALESCE() to substitute a fallback value for NULL\nSELECT name, COALESCE(manager_id, 0) AS manager FROM Employees;\n\nImportant:\nNever compare NULL using = NULL or != NULL. In three-valued logic, comparison with NULL evaluates to UNKNOWN. Always use IS NULL or IS NOT NULL."
       }
     ]
   },
   {
-    id: 'sql-joins',
-    name: '2. Basic Joins & Relationships (SQL 50)',
-    description: 'INNER JOIN, LEFT JOIN, self joins, and multi-table entity relationships.',
-    icon: '🔗',
-    problems: [
+    "id": "sql-aggregates",
+    "name": "Section 2: Aggregate Functions & GROUP BY (Q11–Q17)",
+    "description": "These questions test your ability to analyze data and calculate statistics.",
+    "icon": "📊",
+    "problems": [
       {
-        id: 'sql-6',
-        title: 'Replace Employee ID With Unique Identifier (LC 1378)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/replace-employee-id-with-the-unique-identifier/' }],
-        tags: ['LEFT JOIN'],
-        answer: 'SELECT u.unique_id, e.name\nFROM Employees e\nLEFT JOIN EmployeeUNI u ON e.id = u.id;'
+        "id": "sql-q11",
+        "title": "Q11. What are aggregate functions in SQL?",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Aggregate Functions",
+          "Analytics"
+        ],
+        "answer": "Answer:\nAggregate functions perform calculations across multiple rows and return a single summary value per group.\n\nCommon Aggregate Functions:\nFunction | Purpose\n---------+----------------------------------------------\nCOUNT()  | Counts the number of rows or non-NULL values\nSUM()    | Calculates the total sum of a numeric column\nAVG()    | Calculates the arithmetic mean\nMIN()    | Finds the minimum value\nMAX()    | Finds the maximum value\n\nExample:\nSELECT \n  COUNT(*) AS total_employees,\n  SUM(salary) AS total_salary,\n  AVG(salary) AS average_salary,\n  MIN(salary) AS minimum_salary,\n  MAX(salary) AS maximum_salary\nFROM Employees;"
       },
       {
-        id: 'sql-7',
-        title: 'Product Sales Analysis I (LC 1068)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/product-sales-analysis-i/' }],
-        tags: ['INNER JOIN'],
-        answer: 'SELECT p.product_name, s.year, s.price\nFROM Sales s\nJOIN Product p ON s.product_id = p.product_id;'
+        "id": "sql-q12",
+        "title": "Q12. Find the total number of employees in each department.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "COUNT",
+          "GROUP BY"
+        ],
+        "answer": "SELECT dept_id, COUNT(*) AS employee_count\nFROM Employees\nGROUP BY dept_id;\n\nExplanation:\nGROUP BY partitions rows with matching department IDs into groups, and COUNT(*) calculates the total number of employees within each department."
       },
       {
-        id: 'sql-8',
-        title: 'Customer Who Visited but Did Not Make Any Transactions (LC 1581)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/customer-who-visited-but-did-not-make-any-transactions/' }],
-        tags: ['LEFT JOIN', 'GROUP BY', 'IS NULL'],
-        answer: 'SELECT v.customer_id, COUNT(v.visit_id) AS count_no_trans\nFROM Visits v\nLEFT JOIN Transactions t ON v.visit_id = t.visit_id\nWHERE t.transaction_id IS NULL\nGROUP BY v.customer_id;'
+        "id": "sql-q13",
+        "title": "Q13. Find the average salary of each department.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "AVG",
+          "GROUP BY"
+        ],
+        "answer": "SELECT dept_id, AVG(salary) AS avg_salary\nFROM Employees\nGROUP BY dept_id;\n\nExplanation:\nComputes the mean salary across all employees sharing the same dept_id."
       },
       {
-        id: 'sql-9',
-        title: 'Rising Temperature (LC 197)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/rising-temperature/' }],
-        tags: ['Self Join', 'DATEDIFF'],
-        answer: 'SELECT w1.id\nFROM Weather w1\nJOIN Weather w2 ON DATEDIFF(w1.recordDate, w2.recordDate) = 1\nWHERE w1.temperature > w2.temperature;'
+        "id": "sql-q14",
+        "title": "Q14. Find departments having more than 2 employees.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "HAVING",
+          "GROUP BY"
+        ],
+        "answer": "SELECT dept_id, COUNT(*) AS total_employees\nFROM Employees\nGROUP BY dept_id\nHAVING COUNT(*) > 2;\n\nExplanation:\nUse HAVING instead of WHERE because the condition evaluates an aggregate function result (COUNT(*)) after grouping."
       },
       {
-        id: 'sql-10',
-        title: 'Average Time of Process per Machine (LC 1661)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/average-time-of-process-per-machine/' }],
-        tags: ['Self Join', 'AVG', 'ROUND'],
-        answer: 'SELECT a1.machine_id, ROUND(AVG(a2.timestamp - a1.timestamp), 3) AS processing_time\nFROM Activity a1\nJOIN Activity a2 \n  ON a1.machine_id = a2.machine_id \n  AND a1.process_id = a2.process_id\n  AND a1.activity_type = \'start\' \n  AND a2.activity_type = \'end\'\nGROUP BY a1.machine_id;'
+        "id": "sql-q15",
+        "title": "Q15. Find the highest and lowest salary in the company.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "MAX",
+          "MIN"
+        ],
+        "answer": "SELECT \n  MAX(salary) AS highest_salary,\n  MIN(salary) AS lowest_salary\nFROM Employees;\n\nExplanation:\nMAX() scans all salary values to return the peak salary, while MIN() returns the minimum salary."
       },
       {
-        id: 'sql-11',
-        title: 'Employee Bonus (LC 577)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/employee-bonus/' }],
-        tags: ['LEFT JOIN', 'IS NULL'],
-        answer: 'SELECT e.name, b.bonus\nFROM Employee e\nLEFT JOIN Bonus b ON e.empId = b.empId\nWHERE b.bonus < 1000 OR b.bonus IS NULL;'
+        "id": "sql-q16",
+        "title": "Q16. Find the total salary paid by each department.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "SUM",
+          "GROUP BY"
+        ],
+        "answer": "SELECT dept_id, SUM(salary) AS total_salary\nFROM Employees\nGROUP BY dept_id;\n\nExplanation:\nSums the compensation of all employees assigned to each respective department."
       },
       {
-        id: 'sql-12',
-        title: 'Students and Examinations (LC 1280)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/students-and-examinations/' }],
-        tags: ['CROSS JOIN', 'LEFT JOIN', 'COUNT'],
-        answer: 'SELECT s.student_id, s.student_name, sub.subject_name, COUNT(e.subject_name) AS attended_exams\nFROM Students s\nCROSS JOIN Subjects sub\nLEFT JOIN Examinations e \n  ON s.student_id = e.student_id AND sub.subject_name = e.subject_name\nGROUP BY s.student_id, s.student_name, sub.subject_name\nORDER BY s.student_id, sub.subject_name;'
-      },
-      {
-        id: 'sql-13',
-        title: 'Managers with at Least 5 Direct Reports (LC 570)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/managers-with-at-least-5-direct-reports/' }],
-        tags: ['GROUP BY', 'HAVING', 'JOIN'],
-        answer: 'SELECT m.name\nFROM Employee e\nJOIN Employee m ON e.managerId = m.id\nGROUP BY m.id, m.name\nHAVING COUNT(e.id) >= 5;'
-      },
-      {
-        id: 'sql-14',
-        title: 'Confirmation Rate (LC 1934)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/confirmation-rate/' }],
-        tags: ['LEFT JOIN', 'CASE', 'ROUND', 'AVG'],
-        answer: 'SELECT s.user_id, \n       ROUND(AVG(CASE WHEN c.action = \'confirmed\' THEN 1.0 ELSE 0.0 END), 2) AS confirmation_rate\nFROM Signups s\nLEFT JOIN Confirmations c ON s.user_id = c.user_id\nGROUP BY s.user_id;'
+        "id": "sql-q17",
+        "title": "Q17. Find departments whose average salary is greater than the company's overall average salary.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "HAVING",
+          "Subquery"
+        ],
+        "answer": "SELECT dept_id, AVG(salary) AS avg_salary\nFROM Employees\nGROUP BY dept_id\nHAVING AVG(salary) > (\n  SELECT AVG(salary) FROM Employees\n);\n\nExplanation:\nThe inner scalar subquery calculates the company-wide average salary. The outer query groups employees by department and uses HAVING to compare each department's average against that benchmark."
       }
     ]
   },
   {
-    id: 'sql-aggregates',
-    name: '3. Basic Aggregate Functions (SQL 50)',
-    description: 'COUNT, SUM, AVG, MIN, MAX, GROUP BY, and conditional aggregation with CASE WHEN.',
-    icon: '📊',
-    problems: [
+    "id": "sql-joins",
+    "name": "Section 3: SQL Joins (Q18–Q25)",
+    "description": "Joins are among the most important SQL interview topics. Understand how tables are connected using common columns.",
+    "icon": "🔗",
+    "problems": [
       {
-        id: 'sql-15',
-        title: 'Not Boring Movies (LC 620)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/not-boring-movies/' }],
-        tags: ['MOD', 'ORDER BY'],
-        answer: 'SELECT id, movie, description, rating\nFROM Cinema\nWHERE id % 2 != 0 AND description != \'boring\'\nORDER BY rating DESC;'
+        "id": "sql-q18",
+        "title": "Q18. What are SQL Joins? Explain their types.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Joins Overview",
+          "Relational"
+        ],
+        "answer": "Answer:\nJoins combine records from two or more tables based on a related column between them.\n\nTypes of SQL Joins:\nJoin Type       | Function / Result\n----------------+-------------------------------------------------------------\nINNER JOIN      | Returns only matching records present in both tables\nLEFT JOIN       | Returns all records from left table + matching right records\nRIGHT JOIN      | Returns all records from right table + matching left records\nFULL OUTER JOIN | Returns all records from both tables (matched or NULL)\nCROSS JOIN      | Returns the Cartesian product of all rows from both tables\nSELF JOIN       | Joins a table with itself using distinct aliases\n\nNote:\nMySQL does not natively support FULL OUTER JOIN syntax. In MySQL, you simulate FULL OUTER JOIN by combining a LEFT JOIN and a RIGHT JOIN using UNION."
       },
       {
-        id: 'sql-16',
-        title: 'Average Selling Price (LC 1251)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/average-selling-price/' }],
-        tags: ['LEFT JOIN', 'SUM', 'COALESCE'],
-        answer: 'SELECT p.product_id, \n       COALESCE(ROUND(SUM(p.price * u.units) * 1.0 / NULLIF(SUM(u.units), 0), 2), 0) AS average_price\nFROM Prices p\nLEFT JOIN UnitsSold u \n  ON p.product_id = u.product_id \n  AND u.purchase_date BETWEEN p.start_date AND p.end_date\nGROUP BY p.product_id;'
+        "id": "sql-q19",
+        "title": "Q19. Find employee names along with their department names.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "INNER JOIN",
+          "Relational"
+        ],
+        "answer": "SELECT e.name, d.dept_name\nFROM Employees e\nINNER JOIN Departments d ON e.dept_id = d.dept_id;\n\nExplanation:\nINNER JOIN matches employee records with department records having the identical dept_id, omitting employees without departments and departments without employees."
       },
       {
-        id: 'sql-17',
-        title: 'Project Employees I (LC 1075)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/project-employees-i/' }],
-        tags: ['JOIN', 'AVG', 'ROUND'],
-        answer: 'SELECT p.project_id, ROUND(AVG(e.experience_years), 2) AS average_years\nFROM Project p\nJOIN Employee e ON p.employee_id = e.employee_id\nGROUP BY p.project_id;'
+        "id": "sql-q20",
+        "title": "Q20. Find all employees, including those who do not belong to any department.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "LEFT JOIN",
+          "Preserving Rows"
+        ],
+        "answer": "SELECT e.name, d.dept_name\nFROM Employees e\nLEFT JOIN Departments d ON e.dept_id = d.dept_id;\n\nExplanation:\nLEFT JOIN preserves every employee from the left table (Employees). If an employee has no matching department, dept_name will be returned as NULL."
       },
       {
-        id: 'sql-18',
-        title: 'Percentage of Users Attended a Contest (LC 1633)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/percentage-of-users-attended-a-contest/' }],
-        tags: ['Aggregation', 'ROUND', 'Subquery'],
-        answer: 'SELECT contest_id, \n       ROUND(COUNT(user_id) * 100.0 / (SELECT COUNT(*) FROM Users), 2) AS percentage\nFROM Register\nGROUP BY contest_id\nORDER BY percentage DESC, contest_id ASC;'
+        "id": "sql-q21",
+        "title": "Q21. Find departments that have no employees.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "LEFT JOIN",
+          "Anti-Join"
+        ],
+        "answer": "SELECT d.dept_id, d.dept_name\nFROM Departments d\nLEFT JOIN Employees e ON d.dept_id = e.dept_id\nWHERE e.emp_id IS NULL;\n\nExplanation:\nBy LEFT JOINing Departments with Employees, departments without matching workers yield NULL in e.emp_id. Filtering WHERE e.emp_id IS NULL isolates empty departments (anti-join pattern)."
       },
       {
-        id: 'sql-19',
-        title: 'Queries Quality and Percentage (LC 1211)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/queries-quality-and-percentage/' }],
-        tags: ['AVG', 'CASE', 'ROUND'],
-        answer: 'SELECT query_name,\n       ROUND(AVG(rating * 1.0 / position), 2) AS quality,\n       ROUND(AVG(CASE WHEN rating < 3 THEN 1.0 ELSE 0.0 END) * 100, 2) AS poor_query_percentage\nFROM Queries\nWHERE query_name IS NOT NULL\nGROUP BY query_name;'
+        "id": "sql-q22",
+        "title": "Q22. What is a SELF JOIN? Find employees along with their manager names.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "SELF JOIN",
+          "Hierarchies"
+        ],
+        "answer": "Answer:\nA SELF JOIN joins a table with itself. It is particularly useful for modeling hierarchical and recursive relationships, such as employee-manager structures.\n\nQuery:\nSELECT \n  e.name AS employee,\n  m.name AS manager\nFROM Employees e\nLEFT JOIN Employees m ON e.manager_id = m.emp_id;\n\nExplanation:\nTwo aliases of the same Employees table are used: 'e' represents the employee, and 'm' represents their manager. A LEFT JOIN ensures top-level employees without managers (where manager_id IS NULL) are still displayed."
       },
       {
-        id: 'sql-20',
-        title: 'Monthly Transactions I (LC 1193)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/monthly-transactions-i/' }],
-        tags: ['DATE_FORMAT', 'GROUP BY', 'SUM'],
-        answer: 'SELECT SUBSTRING(trans_date, 1, 7) AS month,\n       country,\n       COUNT(id) AS trans_count,\n       SUM(CASE WHEN state = \'approved\' THEN 1 ELSE 0 END) AS approved_count,\n       SUM(amount) AS trans_total_amount,\n       SUM(CASE WHEN state = \'approved\' THEN amount ELSE 0 END) AS approved_total_amount\nFROM Transactions\nGROUP BY month, country;'
+        "id": "sql-q23",
+        "title": "Q23. Find employees who work in the IT department.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "JOIN",
+          "Filtering"
+        ],
+        "answer": "SELECT e.name, d.dept_name\nFROM Employees e\nJOIN Departments d ON e.dept_id = d.dept_id\nWHERE d.dept_name = 'IT';\n\nExplanation:\nJoins the tables on dept_id and filters the resulting rows where dept_name equals 'IT'."
       },
       {
-        id: 'sql-21',
-        title: 'Immediate Food Delivery II (LC 1174)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/immediate-food-delivery-ii/' }],
-        tags: ['Subquery', 'MIN', 'ROUND'],
-        answer: 'SELECT ROUND(AVG(order_date = customer_pref_delivery_date) * 100.0, 2) AS immediate_percentage\nFROM Delivery\nWHERE (customer_id, order_date) IN (\n  SELECT customer_id, MIN(order_date)\n  FROM Delivery\n  GROUP BY customer_id\n);'
+        "id": "sql-q24",
+        "title": "Q24. What is the difference between INNER JOIN and LEFT JOIN?",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "INNER vs LEFT",
+          "Comparison"
+        ],
+        "answer": "Answer:\n• INNER JOIN returns only records where the join condition matches in both tables.\n• LEFT JOIN returns all records from the left table, plus matched records from the right table (unmatched right columns return NULL).\n\nExample:\n-- Returns only matching employees and departments\nSELECT * FROM Employees e\nINNER JOIN Departments d ON e.dept_id = d.dept_id;\n\n-- Returns all employees, even if dept_id does not exist in Departments\nSELECT * FROM Employees e\nLEFT JOIN Departments d ON e.dept_id = d.dept_id;"
       },
       {
-        id: 'sql-22',
-        title: 'Game Play Analysis IV (LC 550)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/game-play-analysis-iv/' }],
-        tags: ['DATEDIFF', 'MIN', 'Self Join'],
-        answer: 'SELECT ROUND(COUNT(DISTINCT a.player_id) * 1.0 / (SELECT COUNT(DISTINCT player_id) FROM Activity), 2) AS fraction\nFROM Activity a\nJOIN (\n  SELECT player_id, MIN(event_date) AS first_login\n  FROM Activity\n  GROUP BY player_id\n) f ON a.player_id = f.player_id AND DATEDIFF(a.event_date, f.first_login) = 1;'
+        "id": "sql-q25",
+        "title": "Q25. Find pairs of employees working in the same department.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "SELF JOIN",
+          "Pairs"
+        ],
+        "answer": "SELECT \n  e1.name AS employee1,\n  e2.name AS employee2,\n  e1.dept_id\nFROM Employees e1\nJOIN Employees e2 \n  ON e1.dept_id = e2.dept_id \n AND e1.emp_id < e2.emp_id;\n\nExplanation:\nA SELF JOIN matches employees who share the same dept_id. Using e1.emp_id < e2.emp_id prevents pairing an employee with themselves and prevents symmetric duplicates (e.g. (Rahul, Priya) and (Priya, Rahul))."
       }
     ]
   },
   {
-    id: 'sql-sorting-subqueries',
-    name: '4. Sorting, Grouping & Subqueries (SQL 50)',
-    description: 'HAVING filters, nested queries, subqueries, and multi-column grouping.',
-    icon: '⚡',
-    problems: [
+    "id": "sql-subqueries",
+    "name": "Section 4: Subqueries and Nested Queries (Q26–Q32)",
+    "description": "A subquery is a query written inside another SQL query. It is useful when the result of one query is required by another.",
+    "icon": "🎯",
+    "problems": [
       {
-        id: 'sql-23',
-        title: 'Number of Unique Subjects Taught by Each Teacher (LC 2356)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/number-of-unique-subjects-taught-by-each-teacher/' }],
-        tags: ['COUNT DISTINCT'],
-        answer: 'SELECT teacher_id, COUNT(DISTINCT subject_id) AS cnt\nFROM Teacher\nGROUP BY teacher_id;'
+        "id": "sql-q26",
+        "title": "Q26. Find the employee receiving the highest salary.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Subquery",
+          "MAX"
+        ],
+        "answer": "SELECT * FROM Employees\nWHERE salary = (\n  SELECT MAX(salary) FROM Employees\n);\n\nExplanation:\nThe inner scalar subquery evaluates the maximum salary in the table. The outer query then returns all employees earning that exact salary."
       },
       {
-        id: 'sql-24',
-        title: 'User Activity for the Past 30 Days I (LC 1141)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/user-activity-for-the-past-30-days-i/' }],
-        tags: ['COUNT DISTINCT', 'DATEDIFF'],
-        answer: 'SELECT activity_date AS day, COUNT(DISTINCT user_id) AS active_users\nFROM Activity\nWHERE activity_date BETWEEN DATE_SUB(\'2019-07-27\', INTERVAL 29 DAY) AND \'2019-07-27\'\nGROUP BY activity_date;'
+        "id": "sql-q27",
+        "title": "Q27. Find employees earning more than the average company salary.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Subquery",
+          "AVG"
+        ],
+        "answer": "SELECT * FROM Employees\nWHERE salary > (\n  SELECT AVG(salary) FROM Employees\n);\n\nExplanation:\nThe subquery calculates the company-wide average salary, and the outer WHERE filters employees earning above that threshold."
       },
       {
-        id: 'sql-25',
-        title: 'Product Sales Analysis III (LC 1070)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/product-sales-analysis-iii/' }],
-        tags: ['Subquery', 'MIN'],
-        answer: 'SELECT product_id, year AS first_year, quantity, price\nFROM Sales\nWHERE (product_id, year) IN (\n  SELECT product_id, MIN(year)\n  FROM Sales\n  GROUP BY product_id\n);'
+        "id": "sql-q28",
+        "title": "Q28. Find the second-highest salary.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Nth Highest",
+          "Subquery"
+        ],
+        "answer": "SELECT MAX(salary) AS second_highest_salary\nFROM Employees\nWHERE salary < (\n  SELECT MAX(salary) FROM Employees\n);\n\nExplanation:\nFirst identifies the overall maximum salary, then finds the highest salary strictly less than that maximum.\n\nInterview Follow-up:\nThis returns the second-highest distinct salary value. If multiple employees share the top salary, they are all excluded, correctly identifying the next highest value."
       },
       {
-        id: 'sql-26',
-        title: 'Classes More Than 5 Students (LC 596)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/classes-more-than-5-students/' }],
-        tags: ['HAVING'],
-        answer: 'SELECT class\nFROM Courses\nGROUP BY class\nHAVING COUNT(student) >= 5;'
+        "id": "sql-q29",
+        "title": "Q29. Find the third-highest distinct salary.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/select.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "LIMIT",
+          "OFFSET"
+        ],
+        "answer": "SELECT DISTINCT salary\nFROM Employees\nORDER BY salary DESC\nLIMIT 1 OFFSET 2;\n\nExplanation:\nORDER BY salary DESC orders salaries from highest to lowest. DISTINCT removes duplicates. OFFSET 2 skips the top two distinct values, and LIMIT 1 retrieves the third distinct salary."
       },
       {
-        id: 'sql-27',
-        title: 'Find Followers Count (LC 1729)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/find-followers-count/' }],
-        tags: ['GROUP BY', 'ORDER BY'],
-        answer: 'SELECT user_id, COUNT(follower_id) AS followers_count\nFROM Followers\nGROUP BY user_id\nORDER BY user_id ASC;'
+        "id": "sql-q30",
+        "title": "Q30. Find employees earning more than their department's average salary.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/correlated-subqueries.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Correlated Subquery"
+        ],
+        "answer": "SELECT e.*\nFROM Employees e\nWHERE e.salary > (\n  SELECT AVG(e2.salary)\n  FROM Employees e2\n  WHERE e2.dept_id = e.dept_id\n);\n\nExplanation:\nThis is a correlated subquery because the inner query references e.dept_id from the outer row. For each candidate employee, the inner query computes their specific department's average salary."
       },
       {
-        id: 'sql-28',
-        title: 'Biggest Single Number (LC 619)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/biggest-single-number/' }],
-        tags: ['HAVING', 'MAX'],
-        answer: 'SELECT MAX(num) AS num\nFROM (\n  SELECT num\n  FROM MyNumbers\n  GROUP BY num\n  HAVING COUNT(num) = 1\n) AS single_nums;'
+        "id": "sql-q31",
+        "title": "Q31. Find employees who belong to departments present in the Departments table using IN.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/any-in-some-subqueries.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "IN Operator",
+          "Subquery"
+        ],
+        "answer": "SELECT * FROM Employees\nWHERE dept_id IN (\n  SELECT dept_id FROM Departments\n);\n\nExplanation:\nThe IN operator tests membership in the result set produced by the subquery, returning only employees whose dept_id exists in Departments."
       },
       {
-        id: 'sql-29',
-        title: 'Customers Who Bought All Products (LC 1045)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/customers-who-bought-all-products/' }],
-        tags: ['HAVING', 'COUNT DISTINCT'],
-        answer: 'SELECT customer_id\nFROM Customer\nGROUP BY customer_id\nHAVING COUNT(DISTINCT product_key) = (SELECT COUNT(*) FROM Product);'
-      },
-      {
-        id: 'sql-30',
-        title: 'The Number of Employees Which Report to Each Employee (LC 1731)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/the-number-of-employees-which-report-to-each-employee/' }],
-        tags: ['Self Join', 'GROUP BY'],
-        answer: 'SELECT m.employee_id, m.name, COUNT(e.employee_id) AS reports_count, ROUND(AVG(e.age)) AS average_age\nFROM Employees e\nJOIN Employees m ON e.reports_to = m.employee_id\nGROUP BY m.employee_id, m.name\nORDER BY m.employee_id ASC;'
-      },
-      {
-        id: 'sql-31',
-        title: 'Primary Department for Each Employee (LC 1789)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/primary-department-for-each-employee/' }],
-        tags: ['UNION', 'OR'],
-        answer: 'SELECT employee_id, department_id\nFROM Employee\nWHERE primary_flag = \'Y\'\nUNION\nSELECT employee_id, department_id\nFROM Employee\nGROUP BY employee_id\nHAVING COUNT(department_id) = 1;'
-      },
-      {
-        id: 'sql-32',
-        title: 'Triangle Judgement (LC 610)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/triangle-judgement/' }],
-        tags: ['CASE'],
-        answer: 'SELECT x, y, z, \n       CASE WHEN x + y > z AND x + z > y AND y + z > x THEN \'Yes\' ELSE \'No\' END AS triangle\nFROM Triangle;'
-      },
-      {
-        id: 'sql-33',
-        title: 'Consecutive Numbers (LC 180)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/consecutive-numbers/' }],
-        tags: ['Self Join', 'LEAD', 'LAG'],
-        answer: 'SELECT DISTINCT l1.num AS ConsecutiveNums\nFROM Logs l1\nJOIN Logs l2 ON l1.id = l2.id - 1 AND l1.num = l2.num\nJOIN Logs l3 ON l1.id = l3.id - 2 AND l1.num = l3.num;'
-      },
-      {
-        id: 'sql-34',
-        title: 'Product Price at a Given Date (LC 1164)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/product-price-at-a-given-date/' }],
-        tags: ['UNION', 'Subquery'],
-        answer: 'SELECT product_id, new_price AS price\nFROM Products\nWHERE (product_id, change_date) IN (\n  SELECT product_id, MAX(change_date)\n  FROM Products\n  WHERE change_date <= \'2019-08-16\'\n  GROUP BY product_id\n)\nUNION\nSELECT product_id, 10 AS price\nFROM Products\nWHERE product_id NOT IN (\n  SELECT product_id\n  FROM Products\n  WHERE change_date <= \'2019-08-16\'\n);'
-      },
-      {
-        id: 'sql-35',
-        title: 'Last Person to Fit in the Bus (LC 1204)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/last-person-to-fit-in-the-bus/' }],
-        tags: ['Window Function', 'SUM OVER'],
-        answer: 'SELECT person_name\nFROM (\n  SELECT person_name, \n         SUM(weight) OVER (ORDER BY turn) AS cumulative_weight\n  FROM Queue\n) q\nWHERE cumulative_weight <= 1000\nORDER BY cumulative_weight DESC\nLIMIT 1;'
-      },
-      {
-        id: 'sql-36',
-        title: 'Count Salary Categories (LC 1907)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/count-salary-categories/' }],
-        tags: ['UNION ALL', 'CASE'],
-        answer: 'SELECT \'Low Salary\' AS category, SUM(income < 20000) AS accounts_count FROM Accounts\nUNION ALL\nSELECT \'Average Salary\' AS category, SUM(income >= 20000 AND income <= 50000) AS accounts_count FROM Accounts\nUNION ALL\nSELECT \'High Salary\' AS category, SUM(income > 50000) AS accounts_count FROM Accounts;'
+        "id": "sql-q32",
+        "title": "Q32. What is the difference between IN and EXISTS?",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/exists-and-not-exists-subqueries.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "IN vs EXISTS",
+          "Performance"
+        ],
+        "answer": "Answer:\n• IN evaluates the subquery, builds an in-memory set of values, and checks whether the outer column matches any item in the list.\n• EXISTS evaluates the correlated subquery row-by-row and terminates immediately (short-circuits) upon finding the first matching row.\n\nUsing EXISTS:\nSELECT * FROM Employees e\nWHERE EXISTS (\n  SELECT 1 FROM Departments d \n  WHERE d.dept_id = e.dept_id\n);\n\nInterview Point:\nEXISTS is ideal for correlated presence checks and handles NULLs safely (never returns UNKNOWN). Modern SQL optimizers often rewrite IN to EXISTS or SEMI-JOINs internally, but EXISTS is widely favored when working with large indexed parent tables."
       }
     ]
   },
   {
-    id: 'sql-advanced-windows',
-    name: '5. Advanced Select, Window Functions & CTEs (SQL 50)',
-    description: 'DENSE_RANK, ROW_NUMBER, CTEs, self joins, and advanced interview query patterns.',
-    icon: '👑',
-    problems: [
+    "id": "sql-advanced-interview",
+    "name": "Section 5: Advanced SQL Interview Questions (Q33–Q42)",
+    "description": "These questions cover window functions, ranking, CTEs and analytical SQL queries. These are especially useful for SDE-1 interviews.",
+    "icon": "⚡",
+    "problems": [
       {
-        id: 'sql-37',
-        title: 'Employees Whose Manager Left the Company (LC 1978)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/employees-whose-manager-left-the-company/' }],
-        tags: ['NOT IN', 'WHERE'],
-        answer: 'SELECT employee_id\nFROM Employees\nWHERE salary < 30000 \n  AND manager_id IS NOT NULL \n  AND manager_id NOT IN (SELECT employee_id FROM Employees)\nORDER BY employee_id ASC;'
+        "id": "sql-q33",
+        "title": "Q33. What are Window Functions in SQL?",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "🚀 Advanced",
+          "Window Functions"
+        ],
+        "answer": "Answer:\nWindow functions perform calculations across a set of table rows that are related to the current row, without collapsing the individual rows into a single summary output like GROUP BY does.\n\nCommon Window Functions:\n• ROW_NUMBER(): Assigns a sequential integer to rows\n• RANK(): Assigns rank with gaps for ties\n• DENSE_RANK(): Assigns rank without gaps for ties\n• LAG(): Accesses data from a preceding row\n• LEAD(): Accesses data from a subsequent row\n• SUM() OVER(): Computes running/partitioned sums\n• AVG() OVER(): Computes moving/partitioned averages\n\nExample:\nSELECT \n  name, \n  salary, \n  AVG(salary) OVER() AS company_avg\nFROM Employees;\n\nExplanation:\nEach employee retains their individual row and salary, while the company-wide average salary is calculated across the entire window and displayed on every row."
       },
       {
-        id: 'sql-38',
-        title: 'Exchange Seats (LC 626)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/exchange-seats/' }],
-        tags: ['CASE', 'MOD'],
-        answer: 'SELECT \n  CASE \n    WHEN id % 2 != 0 AND id = (SELECT COUNT(*) FROM Seat) THEN id\n    WHEN id % 2 != 0 THEN id + 1\n    ELSE id - 1\n  END AS id,\n  student\nFROM Seat\nORDER BY id ASC;'
+        "id": "sql-q34",
+        "title": "Q34. Find the second-highest salary using DENSE_RANK().",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "🚀 Advanced",
+          "DENSE_RANK",
+          "CTE"
+        ],
+        "answer": "WITH RankedEmployees AS (\n  SELECT \n    name, \n    salary,\n    DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk\n  FROM Employees\n)\nSELECT name, salary\nFROM RankedEmployees\nWHERE rnk = 2;\n\nExplanation:\nDENSE_RANK() orders distinct salaries from highest to lowest. Equal salaries share the same rank, and no rank values are skipped. Filtering rnk = 2 reliably yields the second-highest compensation."
       },
       {
-        id: 'sql-39',
-        title: 'Movie Rating (LC 1341)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/movie-rating/' }],
-        tags: ['UNION ALL', 'AVG', 'COUNT'],
-        answer: '(SELECT u.name AS results\n FROM MovieRating mr\n JOIN Users u ON mr.user_id = u.user_id\n GROUP BY u.user_id, u.name\n ORDER BY COUNT(mr.movie_id) DESC, u.name ASC\n LIMIT 1)\nUNION ALL\n(SELECT m.title AS results\n FROM MovieRating mr\n JOIN Movies m ON mr.movie_id = m.movie_id\n WHERE mr.created_at BETWEEN \'2020-02-01\' AND \'2020-02-29\'\n GROUP BY m.movie_id, m.title\n ORDER BY AVG(mr.rating) DESC, m.title ASC\n LIMIT 1);'
+        "id": "sql-q35",
+        "title": "Q35. What is the difference between ROW_NUMBER(), RANK() and DENSE_RANK()?",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Ranking Functions",
+          "Comparison"
+        ],
+        "answer": "Suppose salaries are 90000, 80000, 80000, and 70000:\n\nSalary | ROW_NUMBER() | RANK() | DENSE_RANK()\n-------+--------------+--------+-------------\n90000  | 1            | 1      | 1\n80000  | 2            | 2      | 2\n80000  | 3            | 2      | 2\n70000  | 4            | 4      | 3\n\nKey Rules to Remember:\n• ROW_NUMBER(): Always assigns a strictly unique sequential integer (1, 2, 3, 4).\n• RANK(): Assigns duplicate ranks to ties, then skips subsequent ranks (1, 2, 2, 4).\n• DENSE_RANK(): Assigns duplicate ranks to ties, but never skips subsequent ranks (1, 2, 2, 3)."
       },
       {
-        id: 'sql-40',
-        title: 'Restaurant Growth (LC 1321)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/restaurant-growth/' }],
-        tags: ['Window Function', 'SUM OVER'],
-        answer: 'SELECT visited_on, amount, average_amount\nFROM (\n  SELECT visited_on,\n         SUM(day_amount) OVER (ORDER BY visited_on ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS amount,\n         ROUND(AVG(day_amount) OVER (ORDER BY visited_on ROWS BETWEEN 6 PRECEDING AND CURRENT ROW), 2) AS average_amount,\n         ROW_NUMBER() OVER (ORDER BY visited_on) AS rn\n  FROM (\n    SELECT visited_on, SUM(amount) AS day_amount\n    FROM Customer\n    GROUP BY visited_on\n  ) d\n) t\nWHERE rn >= 7;'
+        "id": "sql-q36",
+        "title": "Q36. Find the highest-paid employee in each department.",
+        "difficulty": "Hard",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "🚀 Advanced",
+          "PARTITION BY",
+          "DENSE_RANK"
+        ],
+        "answer": "WITH RankedEmployees AS (\n  SELECT \n    name, \n    dept_id, \n    salary,\n    DENSE_RANK() OVER (\n      PARTITION BY dept_id \n      ORDER BY salary DESC\n    ) AS rnk\n  FROM Employees\n)\nSELECT name, dept_id, salary\nFROM RankedEmployees\nWHERE rnk = 1;\n\nExplanation:\n• PARTITION BY dept_id divides employees by department.\n• ORDER BY salary DESC ranks salaries within each partition.\n• DENSE_RANK assigns rank 1 to the highest earner(s). If multiple employees tie for the top salary, all are returned."
       },
       {
-        id: 'sql-41',
-        title: 'Friend Requests II: Who Has the Most Friends (LC 602)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/friend-requests-ii-who-has-the-most-friends/' }],
-        tags: ['UNION ALL', 'GROUP BY'],
-        answer: 'SELECT id, COUNT(*) AS num\nFROM (\n  SELECT requester_id AS id FROM RequestAccepted\n  UNION ALL\n  SELECT accepter_id AS id FROM RequestAccepted\n) all_friends\nGROUP BY id\nORDER BY num DESC\nLIMIT 1;'
+        "id": "sql-q37",
+        "title": "Q37. Find the top 3 highest-paid employees in each department.",
+        "difficulty": "Hard",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "🚀 Advanced",
+          "Top N per Group"
+        ],
+        "answer": "WITH RankedEmployees AS (\n  SELECT \n    name, \n    dept_id, \n    salary,\n    DENSE_RANK() OVER (\n      PARTITION BY dept_id \n      ORDER BY salary DESC\n    ) AS rnk\n  FROM Employees\n)\nSELECT name, dept_id, salary, rnk\nFROM RankedEmployees\nWHERE rnk <= 3;\n\nExplanation:\nPARTITION BY independently evaluates ranks within each department. Filtering rnk <= 3 retrieves the top 3 salary tiers.\n\nInterview Note:\nDENSE_RANK can return more than 3 employee records per department if salaries are tied. If an interview requires strictly at most 3 rows per department, use ROW_NUMBER() instead."
       },
       {
-        id: 'sql-42',
-        title: 'Investments in 2016 (LC 585)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/investments-in-2016/' }],
-        tags: ['Subquery', 'COUNT OVER'],
-        answer: 'SELECT ROUND(SUM(tiv_2016), 2) AS tiv_2016\nFROM Insurance\nWHERE tiv_2015 IN (\n  SELECT tiv_2015 FROM Insurance GROUP BY tiv_2015 HAVING COUNT(*) > 1\n)\nAND (lat, lon) IN (\n  SELECT lat, lon FROM Insurance GROUP BY lat, lon HAVING COUNT(*) = 1\n);'
+        "id": "sql-q38",
+        "title": "Q38. What is a CTE (Common Table Expression)?",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/with.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "🚀 Advanced",
+          "CTE",
+          "WITH Clause"
+        ],
+        "answer": "Answer:\nA Common Table Expression (CTE) is a temporary named result set defined within the scope of a single SQL statement using the WITH clause. It simplifies complex nested joins, supports recursion, and dramatically improves query readability and maintainability.\n\nSyntax Example:\nWITH HighSalary AS (\n  SELECT * FROM Employees WHERE salary > 50000\n)\nSELECT * FROM HighSalary;\n\nExplanation:\nThe CTE is evaluated and aliased first, making it reusable within the main SELECT, INSERT, UPDATE, or DELETE statement that follows."
       },
       {
-        id: 'sql-43',
-        title: 'Department Top Three Salaries (LC 185)',
-        difficulty: 'Hard',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/department-top-three-salaries/' }],
-        tags: ['DENSE_RANK', 'Window Function'],
-        answer: 'WITH RankedSalaries AS (\n  SELECT d.name AS Department,\n         e.name AS Employee,\n         e.salary AS Salary,\n         DENSE_RANK() OVER (PARTITION BY e.departmentId ORDER BY e.salary DESC) AS rnk\n  FROM Employee e\n  JOIN Department d ON e.departmentId = d.id\n)\nSELECT Department, Employee, Salary\nFROM RankedSalaries\nWHERE rnk <= 3;'
+        "id": "sql-q39",
+        "title": "Q39. Find the employees whose salary is higher than the previous employee in employee ID order.",
+        "difficulty": "Hard",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-function-descriptions.html#function_lag"
+          }
+        ],
+        "tags": [
+          "🚀 Advanced",
+          "LAG()",
+          "Window Functions"
+        ],
+        "answer": "WITH SalaryComparison AS (\n  SELECT \n    emp_id, \n    name, \n    salary,\n    LAG(salary) OVER (ORDER BY emp_id) AS previous_salary\n  FROM Employees\n)\nSELECT emp_id, name, salary, previous_salary\nFROM SalaryComparison\nWHERE salary > previous_salary;\n\nExplanation:\nThe LAG() window function accesses the salary from the immediately preceding row according to the ORDER BY emp_id sequence without requiring a cumbersome SELF JOIN."
       },
       {
-        id: 'sql-44',
-        title: 'Second Highest Salary (LC 176)',
-        difficulty: 'Medium',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/second-highest-salary/' }],
-        tags: ['MAX', 'LIMIT', 'NULL check'],
-        answer: 'SELECT (\n  SELECT DISTINCT salary\n  FROM Employee\n  ORDER BY salary DESC\n  LIMIT 1 OFFSET 1\n) AS SecondHighestSalary;'
+        "id": "sql-q40",
+        "title": "Q40. Calculate the running total of employee salaries.",
+        "difficulty": "Hard",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "🚀 Advanced",
+          "Running Total",
+          "SUM OVER"
+        ],
+        "answer": "SELECT \n  emp_id, \n  name, \n  salary,\n  SUM(salary) OVER (\n    ORDER BY emp_id \n    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n  ) AS running_total\nFROM Employees;\n\nExplanation:\nThe cumulative sum aggregates the current employee's salary with all previous salaries ordered by emp_id."
       },
       {
-        id: 'sql-45',
-        title: 'Delete Duplicate Emails (LC 196)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/delete-duplicate-emails/' }],
-        tags: ['DELETE', 'Self Join'],
-        answer: 'DELETE p1\nFROM Person p1\nJOIN Person p2 ON p1.email = p2.email AND p1.id > p2.id;'
+        "id": "sql-q41",
+        "title": "Q41. Find the difference between each employee's salary and the company's average salary.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "🚀 Advanced",
+          "AVG OVER",
+          "Analytics"
+        ],
+        "answer": "SELECT \n  name, \n  salary,\n  salary - AVG(salary) OVER() AS difference\nFROM Employees;\n\nExplanation:\nAVG(salary) OVER() calculates the overall company average across all records without collapsing rows, allowing row-level arithmetic directly in the SELECT list."
       },
       {
-        id: 'sql-46',
-        title: 'Fix Names in a Table (LC 1667)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/fix-names-in-a-table/' }],
-        tags: ['CONCAT', 'UPPER', 'LOWER', 'SUBSTRING'],
-        answer: 'SELECT user_id,\n       CONCAT(UPPER(SUBSTRING(name, 1, 1)), LOWER(SUBSTRING(name, 2))) AS name\nFROM Users\nORDER BY user_id ASC;'
+        "id": "sql-q42",
+        "title": "Q42. What is the difference between a CTE, a subquery and a temporary table?",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/with.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "Architecture",
+          "CTE vs Temp Table"
+        ],
+        "answer": "Feature         | CTE (WITH clause)       | Subquery (Nested SELECT) | Temporary Table\n----------------+-------------------------+--------------------------+------------------------------\nDefinition      | WITH cte_name AS (...)  | Inside (SELECT ...)      | CREATE TEMPORARY TABLE ...\nScope           | Single SQL statement    | Clause / statement part  | Entire database session\nReusability     | Across statement        | Nested query only        | Multiple queries in session\nReadability     | High (top-down)         | Low (deeply nested)      | Modular across scripts\nStorage         | Optimizer-managed (RAM) | Optimizer-managed (RAM)  | Stored on temp disk/RAM\n\nTemporary Table Example:\nCREATE TEMPORARY TABLE HighSalary AS\nSELECT * FROM Employees WHERE salary > 50000;"
+      }
+    ]
+  },
+  {
+    "id": "sql-advanced-problems",
+    "name": "Section 6: Advanced SQL Problem-Solving (Q43–Q50)",
+    "description": "Practical interview-style problems that test your ability to combine multiple SQL concepts.",
+    "icon": "🏆",
+    "problems": [
+      {
+        "id": "sql-q43",
+        "title": "Q43. Find duplicate records based on employee name.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "HAVING",
+          "Duplicates"
+        ],
+        "answer": "SELECT name, COUNT(*) AS total\nFROM Employees\nGROUP BY name\nHAVING COUNT(*) > 1;\n\nExplanation:\nGROUP BY groups employees sharing the exact same name, and HAVING filters only those groups with a row count exceeding 1."
       },
       {
-        id: 'sql-47',
-        title: 'Group Sold Products By The Date (LC 1484)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/group-sold-products-by-the-date/' }],
-        tags: ['GROUP_CONCAT', 'COUNT DISTINCT'],
-        answer: 'SELECT sell_date,\n       COUNT(DISTINCT product) AS num_sold,\n       GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR \',\') AS products\nFROM Activities\nGROUP BY sell_date\nORDER BY sell_date ASC;'
+        "id": "sql-q44",
+        "title": "Q44. Delete duplicate records while keeping one record.",
+        "difficulty": "Hard",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/delete.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "🚀 Advanced",
+          "Deduplication",
+          "DELETE CTE"
+        ],
+        "answer": "Assume duplicate employees are identified by the same name and salary, and the lowest emp_id should be retained:\n\nWITH DuplicateRecords AS (\n  SELECT \n    emp_id,\n    ROW_NUMBER() OVER (\n      PARTITION BY name, salary \n      ORDER BY emp_id ASC\n    ) AS rn\n  FROM Employees\n)\nDELETE FROM Employees\nWHERE emp_id IN (\n  SELECT emp_id FROM DuplicateRecords WHERE rn > 1\n);\n\nExplanation:\n• PARTITION BY groups duplicates by name and salary.\n• ROW_NUMBER() assigns sequential numbers starting at 1 for the lowest emp_id.\n• Rows with rn > 1 represent duplicates and are deleted, preserving the lowest ID.\n\nImportant:\nAlways run the equivalent SELECT first and ensure you have a database snapshot before running destructive DELETE scripts in production."
       },
       {
-        id: 'sql-48',
-        title: 'List the Products Ordered in a Period (LC 1327)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/list-the-products-ordered-in-a-period/' }],
-        tags: ['HAVING', 'SUM', 'BETWEEN'],
-        answer: 'SELECT p.product_name, SUM(o.unit) AS unit\nFROM Products p\nJOIN Orders o ON p.product_id = o.product_id\nWHERE o.order_date BETWEEN \'2020-02-01\' AND \'2020-02-29\'\nGROUP BY p.product_id, p.product_name\nHAVING SUM(o.unit) >= 100;'
+        "id": "sql-q45",
+        "title": "Q45. Find employees who have the same salary.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "GROUP BY",
+          "HAVING"
+        ],
+        "answer": "SELECT * FROM Employees\nWHERE salary IN (\n  SELECT salary\n  FROM Employees\n  GROUP BY salary\n  HAVING COUNT(*) > 1\n);\n\nExplanation:\nThe inner query finds all salary figures earned by more than one person. The outer query returns every employee who earns one of those shared salaries."
       },
       {
-        id: 'sql-49',
-        title: 'Find Users With Valid E-Mails (LC 1517)',
-        difficulty: 'Easy',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/find-users-with-valid-e-mails/' }],
-        tags: ['REGEXP'],
-        answer: 'SELECT user_id, name, mail\nFROM Users\nWHERE mail REGEXP \'^[a-zA-Z][a-zA-Z0-9_.-]*@leetcode[.]com$\';'
+        "id": "sql-q46",
+        "title": "Q46. Find the department with the highest average salary.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/select.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Aggregates",
+          "LIMIT"
+        ],
+        "answer": "SELECT dept_id, AVG(salary) AS avg_salary\nFROM Employees\nGROUP BY dept_id\nORDER BY avg_salary DESC\nLIMIT 1;\n\nExplanation:\nCalculates the average salary for each department, sorts them in descending order (highest first), and uses LIMIT 1 to return the top department."
       },
       {
-        id: 'sql-50',
-        title: 'Trips and Users (LC 262)',
-        difficulty: 'Hard',
-        links: [{ platform: 'LeetCode', url: 'https://leetcode.com/problems/trips-and-users/' }],
-        tags: ['JOIN', 'CASE', 'ROUND', 'Cancellation Rate'],
-        answer: 'SELECT t.request_at AS Day,\n       ROUND(SUM(CASE WHEN t.status != \'completed\' THEN 1.0 ELSE 0.0 END) / COUNT(*), 2) AS \'Cancellation Rate\'\nFROM Trips t\nJOIN Users c ON t.client_id = c.users_id AND c.banned = \'No\'\nJOIN Users d ON t.driver_id = d.users_id AND d.banned = \'No\'\nWHERE t.request_at BETWEEN \'2013-10-01\' AND \'2013-10-03\'\nGROUP BY t.request_at;'
+        "id": "sql-q47",
+        "title": "Q47. Find employees who earn the same salary as at least one other employee.",
+        "difficulty": "Medium",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "SELF JOIN",
+          "Non-Equi Join"
+        ],
+        "answer": "SELECT DISTINCT e1.name, e1.salary\nFROM Employees e1\nJOIN Employees e2 \n  ON e1.salary = e2.salary \n AND e1.emp_id <> e2.emp_id;\n\nExplanation:\nA SELF JOIN matches employees on identical salaries while ensuring e1.emp_id <> e2.emp_id to exclude self-matches. DISTINCT ensures each employee name is reported only once if multiple peers share their salary."
+      },
+      {
+        "id": "sql-q48",
+        "title": "Q48. Find the percentage contribution of each department to the total company salary.",
+        "difficulty": "Hard",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "🚀 Advanced",
+          "Percentages",
+          "Analytics"
+        ],
+        "answer": "SELECT \n  dept_id,\n  SUM(salary) AS dept_salary,\n  ROUND(\n    SUM(salary) * 100.0 / (SELECT SUM(salary) FROM Employees), \n    2\n  ) AS percentage\nFROM Employees\nGROUP BY dept_id;\n\nExplanation:\nComputes the department's aggregate salary, divides it by the scalar total company payroll subquery, and rounds the percentage to 2 decimal places."
+      },
+      {
+        "id": "sql-q49",
+        "title": "Q49. Find employees who do not have a manager.",
+        "difficulty": "Easy",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/working-with-null.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "NULL Check",
+          "Hierarchies"
+        ],
+        "answer": "SELECT * FROM Employees WHERE manager_id IS NULL;\n\nExplanation:\nThe IS NULL operator checks for records where the manager_id field is NULL (representing top-level executives or unassigned personnel)."
+      },
+      {
+        "id": "sql-q50",
+        "title": "Q50. Find the median salary of employees.",
+        "difficulty": "Hard",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "🚀 Advanced",
+          "Median",
+          "Statistical Functions"
+        ],
+        "answer": "WITH RankedSalaries AS (\n  SELECT \n    salary,\n    ROW_NUMBER() OVER (ORDER BY salary ASC) AS rn,\n    COUNT(*) OVER() AS total\n  FROM Employees\n)\nSELECT AVG(salary) AS median_salary\nFROM RankedSalaries\nWHERE rn IN (\n  FLOOR((total + 1) / 2),\n  FLOOR((total + 2) / 2)\n);\n\nExplanation:\n• Sorts all salaries in ascending order and assigns a sequential row number (rn).\n• Computes the overall count (total) using COUNT(*) OVER().\n• For odd numbers of records (e.g. 5): FLOOR(6/2)=3 and FLOOR(7/2)=3, selecting the middle row.\n• For even numbers of records (e.g. 6): FLOOR(7/2)=3 and FLOOR(8/2)=4, averaging the two central values.\nThis MySQL 8.0 query accurately calculates the mathematical median for both even and odd dataset lengths."
       }
     ]
   }

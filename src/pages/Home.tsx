@@ -13,6 +13,7 @@ export function Home() {
   const { state } = useApp();
   const [activeSection, setActiveSection] = useState<MainSection>('dsa');
   const [csCategory, setCsCategory] = useState<CSFundCategory>('all');
+  const [schemaOpen, setSchemaOpen] = useState(true);
   const [showStarredOnly, setShowStarredOnly] = useState(false);
 
   // Select base pattern set depending on active section
@@ -75,10 +76,10 @@ export function Home() {
         {activeSection === 'sql' && (
           <>
             <h1 className={styles.heroTitle}>
-              SQL 50 <span className={styles.highlight}>Interview Mastery</span>
+              Top 50 SQL <span className={styles.highlight}>Interview Questions & Answers</span>
             </h1>
             <p className={styles.heroSubtitle}>
-              Top 50 curated SQL questions covering joins, window functions, aggregations, and subqueries with full solutions.
+              Curated for SDE-1 interviews, fresher placements, and technical assessments. Starts with basic SQL syntax and moves to joins, aggregations, subqueries, CTEs, and window functions in MySQL 8.0 syntax.
             </p>
           </>
         )}
@@ -164,6 +165,91 @@ export function Home() {
             🗄️ DBMS
           </button>
         </div>
+      )}
+
+      {/* SQL Schema Reference Card & Priority Tags */}
+      {activeSection === 'sql' && (
+        <section className={styles.sqlSchemaCard} aria-label="SQL Schema Reference">
+          <div className={styles.sqlSchemaHeader}>
+            <div className={styles.sqlSchemaTitleWrap}>
+              <span className={styles.sqlSchemaIcon}>📋</span>
+              <div>
+                <h3 className={styles.sqlSchemaTitle}>Assumed Database Schema & Context</h3>
+                <p className={styles.sqlSchemaSubtitle}>
+                  Throughout Q1–Q50, queries operate on these relational MySQL 8.0 tables:
+                </p>
+              </div>
+            </div>
+            <div className={styles.sqlHeaderActions}>
+              <div className={styles.sqlPriorityLegend}>
+                <span className={styles.pillHot}>🔥 Frequently Asked</span>
+                <span className={styles.pillStar}>⭐ Important</span>
+                <span className={styles.pillAdv}>🚀 Advanced</span>
+              </div>
+              <button 
+                className={styles.toggleSchemaBtn}
+                onClick={() => setSchemaOpen(v => !v)}
+                title={schemaOpen ? "Collapse tables" : "Expand tables"}
+              >
+                {schemaOpen ? 'Hide Tables ▲' : 'View Tables ▼'}
+              </button>
+            </div>
+          </div>
+
+          {schemaOpen && (
+            <div className={styles.sqlTablesGrid}>
+              <div className={styles.sqlTableWrapper}>
+                <div className={styles.tableName}>
+                  <span>Employees</span>
+                  <span className={styles.tableMeta}>emp_id PK, dept_id FK, manager_id FK</span>
+                </div>
+                <div className={styles.tableScroll}>
+                  <table className={styles.schemaTable}>
+                    <thead>
+                      <tr>
+                        <th>emp_id</th>
+                        <th>name</th>
+                        <th>salary</th>
+                        <th>dept_id</th>
+                        <th>manager_id</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>1</td><td>Rahul</td><td>60000</td><td>101</td><td>NULL</td></tr>
+                      <tr><td>2</td><td>Aman</td><td>45000</td><td>102</td><td>1</td></tr>
+                      <tr><td>3</td><td>Priya</td><td>75000</td><td>101</td><td>1</td></tr>
+                      <tr><td>4</td><td>Neha</td><td>50000</td><td>103</td><td>2</td></tr>
+                      <tr><td>5</td><td>Karan</td><td>60000</td><td>102</td><td>2</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className={styles.sqlTableWrapper}>
+                <div className={styles.tableName}>
+                  <span>Departments</span>
+                  <span className={styles.tableMeta}>dept_id PK</span>
+                </div>
+                <div className={styles.tableScroll}>
+                  <table className={styles.schemaTable}>
+                    <thead>
+                      <tr>
+                        <th>dept_id</th>
+                        <th>dept_name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>101</td><td>IT</td></tr>
+                      <tr><td>102</td><td>HR</td></tr>
+                      <tr><td>103</td><td>Finance</td></tr>
+                      <tr><td>104</td><td>Marketing</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
       )}
 
       {/* Stats bar dynamic to active section */}

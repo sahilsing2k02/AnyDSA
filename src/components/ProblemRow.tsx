@@ -63,10 +63,32 @@ export function ProblemRow({ problem, index }: Props) {
           <span className={styles.checkIcon}>{isSolved ? '✓' : ''}</span>
         </button>
 
-        {/* Title */}
-        <span className={styles.title}>
-          {problem.title}
-        </span>
+        {/* Title & Priority Tags */}
+        <div className={styles.contentWrap}>
+          <span className={styles.title}>
+            {problem.title}
+          </span>
+          {problem.tags && problem.tags.length > 0 && (
+            <div className={styles.tagList}>
+              {problem.tags.map(t => (
+                <span
+                  key={t}
+                  className={`${styles.tagBadge} ${
+                    t.includes('🔥')
+                      ? styles.tagHot
+                      : t.includes('⭐')
+                      ? styles.tagStar
+                      : t.includes('Advanced') || t.includes('🚀')
+                      ? styles.tagAdv
+                      : ''
+                  }`}
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Difficulty badge */}
         <span
@@ -81,11 +103,11 @@ export function ProblemRow({ problem, index }: Props) {
         <div className={styles.actions}>
           {problem.answer && (
             <button
-              className={styles.answerBtn}
+              className={`${styles.answerBtn} ${answerOpen ? styles.answerActive : ''}`}
               onClick={() => setAnswerOpen(v => !v)}
-              title={answerOpen ? "Hide answer" : "View explanation / answer"}
+              title={answerOpen ? "Hide answer" : "View explanation and answer"}
             >
-              {answerOpen ? 'Hide' : 'Answer'}
+              {answerOpen ? '▲ Hide Answer' : '👁️ View Answer'}
             </button>
           )}
 
@@ -126,7 +148,12 @@ export function ProblemRow({ problem, index }: Props) {
       {/* Answer panel */}
       {answerOpen && problem.answer && (
         <div className={styles.answerPanel} id={`answer-panel-${problem.id}`}>
-          {problem.answer}
+          <div className={styles.answerHeader}>
+            <span className={styles.answerBadge}>💡 Solution & Explanation</span>
+          </div>
+          <div className={styles.answerBody}>
+            {problem.answer}
+          </div>
         </div>
       )}
 

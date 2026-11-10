@@ -51,9 +51,18 @@ This document tracks all completed milestones, current production architecture, 
 ### Section Module Expansion
 - [x] **DSA Section:** Pattern-wise algorithms (Two Pointers, Sliding Window, Trees, Graphs, DP, etc.).
 - [x] **CS Fundamentals Section:** Subdivided into Computer Networks (CN), Operating Systems (OS), Object-Oriented Programming (OOPS), and Database Management Systems (DBMS).
-- [x] **SQL Top 50 Section:** Curated LeetCode SQL 50 categorized into Select, Joins, Aggregates, Grouping/Subqueries, and Window Functions/CTEs with complete SQL solutions.
+- [x] **Top 50 SQL Interview Questions Curriculum (Beginner to Advanced):**
+  - Section 1: SQL Basics (Q1–Q10) — Commands (DDL/DML/DQL/DCL/TCL), DELETE vs TRUNCATE vs DROP, WHERE vs HAVING, PRIMARY vs UNIQUE KEY, FOREIGN KEY, basic queries, LIKE patterns, DISTINCT, ORDER BY, NULL logic & COALESCE.
+  - Section 2: Aggregate Functions & GROUP BY (Q11–Q17) — Aggregate definitions, department counts, department averages, HAVING filters, MAX/MIN, SUM, and nested aggregates.
+  - Section 3: SQL Joins (Q18–Q25) — Inner, Left, Right, Full Outer (MySQL simulation), Cross, Self Joins, anti-joins with NULL checks, and employee pairs without duplicate symmetry.
+  - Section 4: Subqueries and Nested Queries (Q26–Q32) — Scalar, multi-row, correlated subqueries, Nth highest salary calculations (LIMIT/OFFSET), and IN vs EXISTS short-circuiting.
+  - Section 5: Advanced SQL Interview Questions (Q33–Q42) — MySQL 8.0 Window Functions, DENSE_RANK vs RANK vs ROW_NUMBER, PARTITION BY, Top-N per department, CTEs (WITH clause), LAG(), running totals, and CTE vs Subquery vs Temporary Table.
+  - Section 6: Advanced SQL Problem-Solving (Q43–Q50) — Duplicate detection, deduplication via CTE + ROW_NUMBER + DELETE, salary parity, department percentage contributions, and mathematical median for even/odd counts.
+- [x] **Student Reading Convenience Layout:**
+  - Interactive assumed schema card for `Employees` & `Departments` with sample records and foreign key relationships.
+  - Priority badge indicators (`🔥 Frequently Asked`, `⭐ Important`, `🚀 Advanced`).
+  - Question-first layout with dedicated `👁️ View Answer` / `▲ Hide Answer` drawer displaying formatted explanations, MySQL queries, and interview points.
 - [x] **LLD Section:** Low-Level Design & Machine Coding (Parking Lot, LRU Cache, Snake & Ladder, Tic-Tac-Toe, Rate Limiter, Elevator, BookMyShow, Splitwise, Vending Machine, Logging, Notifications, and GoF Design Patterns).
-- [x] **Answer / Solution Drawer:** Added expandable "Answer" drawer in `ProblemRow.tsx` displaying in-depth explanations, code structures, and SQL queries.
 
 ---
 
