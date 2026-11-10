@@ -2,6 +2,11 @@
   max-width: 860px;
   margin: 0 auto;
   padding: 2rem 1.2rem 4rem;
+  transition: max-width 0.25s ease;
+}
+
+.mainWide {
+  max-width: 1240px;
 }
 
 .hero {

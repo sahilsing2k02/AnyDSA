@@ -71,7 +71,7 @@ export function Home() {
   }, [activeSection, csCategory, sqlCategory]);
 
   return (
-    <main className={styles.main} id="home-page">
+    <main className={`${styles.main} ${isStudySection && viewMode === 'study' ? styles.mainWide : ''}`} id="home-page">
       {/* Hero section */}
       <section className={styles.hero} id="hero-section">
         {activeSection === 'dsa' && (

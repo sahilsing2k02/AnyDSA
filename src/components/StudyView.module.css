@@ -93,9 +93,9 @@
 /* ── 2-Column Study Grid ───────────────────────────────────────────────────── */
 .studyGrid {
   display: grid;
-  grid-template-columns: minmax(320px, 1fr) minmax(400px, 1.4fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1.5rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 /* ── Left Column: Question ─────────────────────────────────────────────────── */
@@ -108,6 +108,7 @@
   border-radius: 14px;
   padding: 1.4rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  min-height: 480px;
 }
 
 .columnHeader {
@@ -291,7 +292,7 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.75rem 0.9rem;
-  margin-top: 0.5rem;
+  margin-top: auto;
 }
 
 .hintIcon {
@@ -315,6 +316,7 @@
   padding: 1.4rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   max-height: 720px;
+  min-height: 480px;
 }
 
 .answerScrollArea {
