@@ -51,6 +51,12 @@ This document tracks all completed milestones, current production architecture, 
 ### Section Module Expansion
 - [x] **DSA Section:** Pattern-wise algorithms (Two Pointers, Sliding Window, Trees, Graphs, DP, etc.).
 - [x] **CS Fundamentals Section:** Subdivided into Computer Networks (CN), Operating Systems (OS), Object-Oriented Programming (OOPS), and Database Management Systems (DBMS).
+  - **Comprehensive 25-Question DBMS Overhaul:**
+    - Section 1: DBMS Fundamentals (Q1–Q7) — DBMS vs File System, Physical/Logical Data Independence, Schema vs Instance, Primary vs Candidate Keys, Referential Integrity & cascading actions, Students/Courses/Enrollment modeling, and Associative Entities.
+    - Section 2: Normalization and Database Design (Q8–Q11) — Insertion/Update/Deletion Anomalies, 1NF/2NF/3NF/BCNF requirements with decomposition proofs, 3NF vs BCNF superkey criteria, and read vs write denormalization trade-offs.
+    - Section 3: Transactions and Concurrency Control (Q12–Q19) — ACID properties, Lost Update race conditions & prevention, Serial vs Serializable schedules & precedence graphs, Dirty Reads & ANSI SQL isolation levels, Non-Repeatable Reads vs Phantoms, Deadlock detection via Wait-For Graphs (Coffman criteria), Two-Phase Locking (Basic/Strict/Rigorous 2PL), and MVCC vs Strict 2PL.
+    - Section 4: Indexing and Query Optimization (Q20–Q23) — Indexing for slow queries & the Leftmost Prefix Rule, B+ Tree internals & low height fan-out advantages, Clustered vs Non-Clustered indexes & double lookups, and the 5 penalties of over-indexing.
+    - Section 5: Database Recovery and Crash Management (Q24–Q25) — Log-based crash recovery (REDO committed work, UNDO uncommitted work, Checkpoint pruning), and Write-Ahead Logging (WAL) append-only durability.
 - [x] **Top 50 SQL Interview Questions Curriculum (Beginner to Advanced):**
   - Section 1: SQL Basics (Q1–Q10) — Commands (DDL/DML/DQL/DCL/TCL), DELETE vs TRUNCATE vs DROP, WHERE vs HAVING, PRIMARY vs UNIQUE KEY, FOREIGN KEY, basic queries, LIKE patterns, DISTINCT, ORDER BY, NULL logic & COALESCE.
   - Section 2: Aggregate Functions & GROUP BY (Q11–Q17) — Aggregate definitions, department counts, department averages, HAVING filters, MAX/MIN, SUM, and nested aggregates.
