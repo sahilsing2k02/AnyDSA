@@ -16,6 +16,7 @@ export interface Problem {
   links: ProblemLink[];
   tags?: string[];
   answer?: string;
+  category?: 'theory' | 'commands';
 }
 
 export interface Pattern {
@@ -23,6 +24,7 @@ export interface Pattern {
   name: string;
   description: string;
   icon: string;
+  category?: 'theory' | 'commands';
   problems: Problem[];
 }
 
@@ -49,3 +51,4 @@ export type FilterStatus = 'All' | 'Solved' | 'Unsolved' | 'Starred';
 
 export type MainSection = 'dsa' | 'cs-fundamentals' | 'sql' | 'lld';
 export type CSFundCategory = 'all' | 'cn' | 'os' | 'oops' | 'dbms';
+export type SqlCategory = 'all' | 'theory' | 'commands';

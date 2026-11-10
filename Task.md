@@ -65,6 +65,11 @@ This document tracks all completed milestones, current production architecture, 
 - [x] **LLD Section:** Low-Level Design & Machine Coding (Parking Lot, LRU Cache, Snake & Ladder, Tic-Tac-Toe, Rate Limiter, Elevator, BookMyShow, Splitwise, Vending Machine, Logging, Notifications, and GoF Design Patterns).
 - [x] **Navbar Navigation Shift (Emoji-Free):** Shifted all study section tabs (`DSA`, `CS Fundamentals`, `SQL Top 50`, `LLD`) into the global sticky top Navbar with `useApp()` state sync. Removed redundant in-page tab controls and guaranteed zero emojis in the navbar links. Stripped emojis from CS Fundamentals subcategory pills for a sleek, distraction-free aesthetic.
 - [x] **Section-Scoped Note Taking:** Restricted personal note taking (`📝` button and textarea) strictly to the DSA pattern section. Removed note buttons and panels from CS Fundamentals, SQL Top 50, and LLD sections while ensuring the `👁️ View Answer` solution drawer, solved toggles, and bookmarks remain fully functional across all sections.
+- [x] **SQL Sub-Section Separation (Theory vs SQL Commands):**
+  - Split the SQL curriculum into two dedicated modes:
+    1. **Theory (15 Concepts):** Architectural, conceptual, and relational database interview theory with structured comparison matrices.
+    2. **SQL Commands (35 Queries):** Practical MySQL 8.0 query problems with complete query code and rich visual ASCII representations (result set tables, Venn diagrams, partition breakdowns, and running total accumulation flows).
+  - Added clean subcategory switcher pills (`All Questions (50)`, `Theory (15)`, `SQL Commands (35)`) above the database schema card with zero emojis.
 
 ---
 

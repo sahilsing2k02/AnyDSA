@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import type { CSFundCategory } from '../types';
+import type { CSFundCategory, SqlCategory } from '../types';
 import { patterns as dsaPatterns } from '../data/patterns';
 import { csFundamentals } from '../data/csFundamentals';
 import { sqlQuestions } from '../data/sqlQuestions';
@@ -12,6 +12,7 @@ import styles from './Home.module.css';
 export function Home() {
   const { state, activeSection } = useApp();
   const [csCategory, setCsCategory] = useState<CSFundCategory>('all');
+  const [sqlCategory, setSqlCategory] = useState<SqlCategory>('all');
   const [schemaOpen, setSchemaOpen] = useState(true);
   const [showStarredOnly, setShowStarredOnly] = useState(false);
 
@@ -24,14 +25,16 @@ export function Home() {
         if (csCategory === 'all') return csFundamentals;
         return csFundamentals.filter(p => p.id === `cs-${csCategory}`);
       }
-      case 'sql':
-        return sqlQuestions;
+      case 'sql': {
+        if (sqlCategory === 'all') return sqlQuestions;
+        return sqlQuestions.filter(p => p.category === sqlCategory);
+      }
       case 'lld':
         return lldQuestions;
       default:
         return dsaPatterns;
     }
-  }, [activeSection, csCategory]);
+  }, [activeSection, csCategory, sqlCategory]);
 
   // Apply starred filter
   const displayedPatterns = useMemo(() => {
@@ -127,6 +130,30 @@ export function Home() {
             onClick={() => setCsCategory('dbms')}
           >
             DBMS
+          </button>
+        </div>
+      )}
+
+      {/* SQL Subcategory Filter Pills (Theory vs SQL Commands) */}
+      {activeSection === 'sql' && (
+        <div className={styles.subCategoryNav} aria-label="SQL Subcategories">
+          <button
+            className={`${styles.subCategoryPill} ${sqlCategory === 'all' ? styles.activePill : ''}`}
+            onClick={() => setSqlCategory('all')}
+          >
+            All Questions (50)
+          </button>
+          <button
+            className={`${styles.subCategoryPill} ${sqlCategory === 'theory' ? styles.activePill : ''}`}
+            onClick={() => setSqlCategory('theory')}
+          >
+            Theory (15)
+          </button>
+          <button
+            className={`${styles.subCategoryPill} ${sqlCategory === 'commands' ? styles.activePill : ''}`}
+            onClick={() => setSqlCategory('commands')}
+          >
+            SQL Commands (35)
           </button>
         </div>
       )}

@@ -2,15 +2,17 @@ import type { Pattern } from '../types';
 
 export const sqlQuestions: Pattern[] = [
   {
-    "id": "sql-basics",
-    "name": "Section 1: SQL Basics (Q1–Q10)",
-    "description": "These questions establish your understanding of SQL commands, filtering, sorting and basic functions.",
-    "icon": "🔰",
+    "id": "sql-theory-basics",
+    "name": "Theory 1: SQL Architecture & Commands (Q1–Q5, Q10, Q11)",
+    "description": "Foundational database theory: SQL command categories (DDL/DML/DQL/DCL/TCL), deletion mechanics, keys, constraints, NULL logic, and aggregate definitions.",
+    "icon": "📚",
+    "category": "theory",
     "problems": [
       {
         "id": "sql-q1",
         "title": "Q1. What is SQL? What are the different types of SQL commands?",
         "difficulty": "Easy",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -19,15 +21,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "SQL Commands",
-          "DDL/DML"
+          "Theory",
+          "DDL/DML/DQL"
         ],
-        "answer": "Answer: SQL (Structured Query Language) is used to store, retrieve, manipulate and manage relational databases.\n\nFive Major Categories:\n• DDL (Data Definition Language): Defines and modifies table structures.\n  Commands: CREATE, ALTER, DROP, TRUNCATE\n• DML (Data Manipulation Language): Modifies and manages table records.\n  Commands: INSERT, UPDATE, DELETE\n• DQL (Data Query Language): Retrieves data from the database.\n  Commands: SELECT\n• DCL (Data Control Language): Controls permissions and access rights.\n  Commands: GRANT, REVOKE\n• TCL (Transaction Control Language): Manages transactional boundaries.\n  Commands: COMMIT, ROLLBACK, SAVEPOINT"
+        "answer": "Answer:\nSQL (Structured Query Language) is the standard declarative language used to store, manipulate, retrieve, and manage data within Relational Database Management Systems (RDBMS).\n\nFive Major Command Categories:\n┌──────────┬─────────────────────────────┬────────────────────────────────┐\n│ Category │ Purpose                     │ Commands                       │\n├──────────┼─────────────────────────────┼────────────────────────────────┤\n│ DDL      │ Defines and alters schemas  │ CREATE, ALTER, DROP, TRUNCATE  │\n│ DML      │ Modifies table records      │ INSERT, UPDATE, DELETE         │\n│ DQL      │ Retrieves query records     │ SELECT                         │\n│ DCL      │ Manages user privileges     │ GRANT, REVOKE                  │\n│ TCL      │ Controls transaction states │ COMMIT, ROLLBACK, SAVEPOINT    │\n└──────────┴─────────────────────────────┴────────────────────────────────┘\n\nVisual Lifecycle:\n  [Client Query]\n       │\n       ├─ DQL (SELECT) ─────────> Read data pages\n       ├─ DML (INSERT/UPDATE) ──> Write to buffer pool + Undo/Redo logs\n       ├─ TCL (COMMIT) ─────────> Flush transaction log to disk\n       └─ DDL (ALTER/CREATE) ───> Update Database Data Dictionary"
       },
       {
         "id": "sql-q2",
         "title": "Q2. What is the difference between DELETE, TRUNCATE and DROP?",
         "difficulty": "Easy",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -36,15 +39,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "Data Deletion",
-          "DDL vs DML"
+          "Theory",
+          "Data Deletion"
         ],
-        "answer": "Answer:\n• DELETE: Removes selected rows based on a WHERE condition (or all rows if omitted). Operates as DML, logs individual row deletions, and activates triggers.\n• TRUNCATE: Removes all rows while preserving table structure and columns. Operates as DDL, deallocates data pages directly, and is much faster than DELETE.\n• DROP: Completely removes the entire table along with its schema, constraints, indexes, and triggers from the database dictionary.\n\nSyntax:\n-- Delete selected rows\nDELETE FROM Employees WHERE emp_id = 1;\n\n-- Remove all records while retaining structure\nTRUNCATE TABLE Employees;\n\n-- Remove the entire table definition and data\nDROP TABLE Employees;\n\nInterview Point:\nDELETE supports the WHERE clause; TRUNCATE and DROP do not. In transaction-safe storage engines (like MySQL InnoDB), TRUNCATE implicitly commits the transaction and cannot be rolled back, whereas DELETE can be rolled back inside an active transaction."
+        "answer": "Answer:\n• DELETE: A DML command that removes rows one-by-one based on a WHERE predicate (or all rows if omitted). Fires triggers and logs individual row deletions in the Undo log, allowing ROLLBACK.\n• TRUNCATE: A DDL command that deallocates all data pages in the table. Preserves table definition and column constraints. Much faster than DELETE, resets AUTO_INCREMENT counters, and bypasses row-level delete triggers.\n• DROP: A DDL command that completely destroys the table, its schema definition, constraints, triggers, and indices from the database catalog.\n\nComparison Matrix:\n┌────────────┬─────────┬───────────────┬──────────────────┬──────────────┐\n│ Command    │ Type    │ WHERE Clause? │ Rollback Safe?   │ Speed        │\n├────────────┼─────────┼───────────────┼──────────────────┼──────────────┤\n│ DELETE     │ DML     │ Yes           │ Yes (in txn)     │ Slow (logged)│\n│ TRUNCATE   │ DDL     │ No            │ Engine-dependent │ Fast         │\n│ DROP       │ DDL     │ No            │ No               │ Instant      │\n└────────────┴─────────┴───────────────┴──────────────────┴──────────────┘\n\nVisual Memory Representation:\n  Initial Table:  [Row 1] [Row 2] [Row 3] [Schema Def]\n  After DELETE:   [Empty] [Row 2] [Row 3] [Schema Def]  <-- WHERE id=1\n  After TRUNCATE: [Empty Data Extents]    [Schema Def]  <-- Pages deallocated\n  After DROP:     [------------------ Completely Erased ------------------]"
       },
       {
         "id": "sql-q3",
         "title": "Q3. What is the difference between WHERE and HAVING?",
         "difficulty": "Easy",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -53,15 +57,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "Filtering",
-          "GROUP BY"
+          "Theory",
+          "Filtering"
         ],
-        "answer": "Answer:\n• WHERE: Filters individual rows before any grouping or aggregation takes place. It cannot evaluate aggregate functions directly.\n• HAVING: Filters aggregated groups after the GROUP BY clause has summarized the data.\n\nSyntax Examples:\n-- Employees earning above 50,000 (Row-level filter before grouping)\nSELECT * FROM Employees WHERE salary > 50000;\n\n-- Departments with average salary above 50,000 (Group-level filter on aggregated metric)\nSELECT dept_id, AVG(salary) AS avg_salary\nFROM Employees\nGROUP BY dept_id\nHAVING AVG(salary) > 50000;"
+        "answer": "Answer:\n• WHERE filters individual records before aggregation or grouping takes place. It cannot contain aggregate functions (e.g. WHERE AVG(salary) > 5000 is invalid).\n• HAVING filters groups after the GROUP BY clause has calculated summary values.\n\nVisual Query Processing Pipeline:\n  [Raw Table Rows]\n        │\n        ▼ (1) WHERE Filter: eliminates non-matching rows\n  [Filtered Rows]\n        │\n        ▼ (2) GROUP BY: groups matching rows by key\n  [Grouped Partitions]\n        │\n        ▼ (3) Aggregation (SUM, AVG, COUNT)\n  [Aggregated Metric Buckets]\n        │\n        ▼ (4) HAVING Filter: eliminates groups failing threshold\n  [Final Output Result]"
       },
       {
         "id": "sql-q4",
         "title": "Q4. What is the difference between PRIMARY KEY and UNIQUE KEY?",
         "difficulty": "Easy",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -70,15 +75,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "Constraints",
-          "Keys"
+          "Theory",
+          "Constraints"
         ],
-        "answer": "Primary Key vs Unique Key Comparison:\n\nFeature           | PRIMARY KEY                    | UNIQUE KEY\n------------------+--------------------------------+----------------------------\nPurpose           | Uniquely identifies each row   | Prevents duplicate values\nNULL Handling     | Strictly NOT NULL              | Allows NULL (depends on DBMS)\nLimit per Table   | Exactly 1 per table            | Multiple constraints allowed\nIndex Type        | Clustered index by default     | Non-clustered index\nComposite Keys    | Can span multiple columns      | Can span multiple columns\n\nSyntax Example:\nCREATE TABLE Students (\n  id INT PRIMARY KEY,\n  email VARCHAR(100) UNIQUE\n);"
+        "answer": "Answer:\nBoth enforce entity uniqueness, but have key structural differences:\n\n┌─────────────────┬──────────────────────────┬──────────────────────────┐\n│ Feature         │ PRIMARY KEY              │ UNIQUE KEY               │\n├─────────────────┼──────────────────────────┼──────────────────────────┤\n│ Purpose         │ Identifies each record   │ Prevents duplicate values│\n│ NULL Support    │ Disallowed (Strictly NOT)│ Allowed (engine rules)   │\n│ Limit per Table │ Exactly 1 per table      │ Multiple per table       │\n│ Default Index   │ Clustered Index (B-Tree) │ Secondary Non-Clustered  │\n│ Foreign Key Ref │ Ideal parent target      │ Can also be targeted     │\n└─────────────────┴──────────────────────────┴──────────────────────────┘\n\nVisual Representation (B-Tree Storage):\n  Primary Key (Clustered):\n  [Leaf Node] -> Stores the ENTIRE row data on leaf data pages.\n\n  Unique Key (Non-Clustered):\n  [Leaf Node] -> Stores the indexed column value + pointer to the Primary Key."
       },
       {
         "id": "sql-q5",
         "title": "Q5. What is a FOREIGN KEY?",
         "difficulty": "Easy",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -87,82 +93,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
+          "Theory",
           "Referential Integrity"
         ],
-        "answer": "Answer:\nA FOREIGN KEY creates a relationship between two tables and preserves referential integrity. It guarantees that the foreign key column value in the child table must either match an existing primary key in the referenced parent table or be NULL.\n\nSyntax:\nCREATE TABLE Departments (\n  dept_id INT PRIMARY KEY,\n  dept_name VARCHAR(50)\n);\n\nCREATE TABLE Employees (\n  emp_id INT PRIMARY KEY,\n  name VARCHAR(50),\n  dept_id INT,\n  FOREIGN KEY (dept_id) REFERENCES Departments(dept_id)\n);\n\nExplanation:\nPrevents inserting a non-NULL department ID that does not exist in Departments, and prevents deleting a department while active employee rows still reference it (unless configured with ON DELETE CASCADE)."
-      },
-      {
-        "id": "sql-q6",
-        "title": "Q6. Write a query to fetch all employees earning more than 50,000.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/select.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "SELECT",
-          "WHERE"
-        ],
-        "answer": "SELECT * FROM Employees WHERE salary > 50000;\n\nExplanation:\nWHERE applies a boolean condition to each row in the Employees table and returns only matching employee records."
-      },
-      {
-        "id": "sql-q7",
-        "title": "Q7. Write a query to fetch employees whose names start with 'A'.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/pattern-matching.html"
-          }
-        ],
-        "tags": [
-          "⭐ Important",
-          "Pattern Matching",
-          "LIKE"
-        ],
-        "answer": "SELECT * FROM Employees WHERE name LIKE 'A%';\n\nExplanation:\nThe LIKE operator evaluates wildcard pattern matches:\n• % matches zero or more characters.\n• _ matches exactly one character.\n\nOther Pattern Matching Examples:\n-- Names ending with 'a'\nSELECT * FROM Employees WHERE name LIKE '%a';\n\n-- Names containing 'an' anywhere\nSELECT * FROM Employees WHERE name LIKE '%an%';\n\n-- Names with exactly 4 characters\nSELECT * FROM Employees WHERE name LIKE '____';"
-      },
-      {
-        "id": "sql-q8",
-        "title": "Q8. How do you find distinct department IDs?",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/distinct-optimization.html"
-          }
-        ],
-        "tags": [
-          "⭐ Important",
-          "DISTINCT",
-          "Deduplication"
-        ],
-        "answer": "SELECT DISTINCT dept_id FROM Employees;\n\nExplanation:\nDISTINCT eliminates duplicate values from the query result set, returning each unique dept_id exactly once."
-      },
-      {
-        "id": "sql-q9",
-        "title": "Q9. How do you sort employees by salary in descending order?",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/sorting-rows.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "ORDER BY",
-          "Sorting"
-        ],
-        "answer": "SELECT * FROM Employees ORDER BY salary DESC;\n\n-- For multiple columns (descending by salary, ascending by name for ties)\nSELECT * FROM Employees ORDER BY salary DESC, name ASC;\n\nExplanation:\nORDER BY sorts the returned records. ASC denotes ascending order (default), while DESC denotes descending order."
+        "answer": "Answer:\nA FOREIGN KEY is a relational constraint that maps a column (or set of columns) in a child table to the PRIMARY KEY (or UNIQUE KEY) of a parent table, guaranteeing Referential Integrity.\n\nVisual Entity-Relationship Map:\n  Departments Table (Parent)\n  ┌──────────┬──────────────┐\n  │ dept_id  │ dept_name    │  <-- Primary Key\n  └──────────┴──────────────┘\n       ▲\n       │ Foreign Key (REFERENCES Departments(dept_id))\n       │\n  Employees Table (Child)\n  ┌────────┬─────────┬────────┬──────────┬────────────┐\n  │ emp_id │ name    │ salary │ dept_id  │ manager_id │\n  └────────┴─────────┴────────┴──────────┴────────────┘\n\nReferential Rules:\n1. Cannot insert a child row with dept_id=999 if 999 does not exist in Departments.\n2. Cannot delete a department if active employee rows point to it (unless configured with ON DELETE CASCADE or ON DELETE SET NULL)."
       },
       {
         "id": "sql-q10",
-        "title": "Q10. What is NULL? How do you handle NULL values?",
+        "title": "Q10. What is NULL? How do you handle NULL values in SQL?",
         "difficulty": "Easy",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -171,23 +111,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "NULL Handling",
-          "COALESCE"
+          "Theory",
+          "NULL Logic"
         ],
-        "answer": "Answer:\nNULL represents missing, unknown, or unassigned data. It is fundamentally not equivalent to zero (0) or an empty string ('').\n\nQuery Examples:\n-- Find employees without a manager\nSELECT * FROM Employees WHERE manager_id IS NULL;\n\n-- Find employees having a manager\nSELECT * FROM Employees WHERE manager_id IS NOT NULL;\n\n-- Using COALESCE() to substitute a fallback value for NULL\nSELECT name, COALESCE(manager_id, 0) AS manager FROM Employees;\n\nImportant:\nNever compare NULL using = NULL or != NULL. In three-valued logic, comparison with NULL evaluates to UNKNOWN. Always use IS NULL or IS NOT NULL."
-      }
-    ]
-  },
-  {
-    "id": "sql-aggregates",
-    "name": "Section 2: Aggregate Functions & GROUP BY (Q11–Q17)",
-    "description": "These questions test your ability to analyze data and calculate statistics.",
-    "icon": "📊",
-    "problems": [
+        "answer": "Answer:\nNULL indicates the absence of any data value (missing, unknown, or inapplicable). It is NOT equivalent to zero (0), FALSE, or an empty string ('').\n\nThree-Valued Logic (3VL) Truth Matrix:\n┌───────────┬───────────┬─────────────┐\n│ Condition │ Evaluates │ Included?   │\n├───────────┼───────────┼─────────────┤\n│ 5 = 5     │ TRUE      │ Yes         │\n│ 5 = 4     │ FALSE     │ No          │\n│ 5 = NULL  │ UNKNOWN   │ No          │\n│ NULL=NULL │ UNKNOWN   │ No          │\n└───────────┴───────────┴─────────────┘\n\nGolden Rule:\nNever check NULL with '=' or '!='. Always use 'IS NULL' or 'IS NOT NULL'.\n\nCOALESCE Fallback Example:\nSELECT name, COALESCE(manager_id, 0) AS manager FROM Employees;"
+      },
       {
         "id": "sql-q11",
         "title": "Q11. What are aggregate functions in SQL?",
         "difficulty": "Easy",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -196,125 +129,25 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "Aggregate Functions",
-          "Analytics"
+          "Theory",
+          "Aggregates"
         ],
-        "answer": "Answer:\nAggregate functions perform calculations across multiple rows and return a single summary value per group.\n\nCommon Aggregate Functions:\nFunction | Purpose\n---------+----------------------------------------------\nCOUNT()  | Counts the number of rows or non-NULL values\nSUM()    | Calculates the total sum of a numeric column\nAVG()    | Calculates the arithmetic mean\nMIN()    | Finds the minimum value\nMAX()    | Finds the maximum value\n\nExample:\nSELECT \n  COUNT(*) AS total_employees,\n  SUM(salary) AS total_salary,\n  AVG(salary) AS average_salary,\n  MIN(salary) AS minimum_salary,\n  MAX(salary) AS maximum_salary\nFROM Employees;"
-      },
-      {
-        "id": "sql-q12",
-        "title": "Q12. Find the total number of employees in each department.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "COUNT",
-          "GROUP BY"
-        ],
-        "answer": "SELECT dept_id, COUNT(*) AS employee_count\nFROM Employees\nGROUP BY dept_id;\n\nExplanation:\nGROUP BY partitions rows with matching department IDs into groups, and COUNT(*) calculates the total number of employees within each department."
-      },
-      {
-        "id": "sql-q13",
-        "title": "Q13. Find the average salary of each department.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "AVG",
-          "GROUP BY"
-        ],
-        "answer": "SELECT dept_id, AVG(salary) AS avg_salary\nFROM Employees\nGROUP BY dept_id;\n\nExplanation:\nComputes the mean salary across all employees sharing the same dept_id."
-      },
-      {
-        "id": "sql-q14",
-        "title": "Q14. Find departments having more than 2 employees.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "HAVING",
-          "GROUP BY"
-        ],
-        "answer": "SELECT dept_id, COUNT(*) AS total_employees\nFROM Employees\nGROUP BY dept_id\nHAVING COUNT(*) > 2;\n\nExplanation:\nUse HAVING instead of WHERE because the condition evaluates an aggregate function result (COUNT(*)) after grouping."
-      },
-      {
-        "id": "sql-q15",
-        "title": "Q15. Find the highest and lowest salary in the company.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html"
-          }
-        ],
-        "tags": [
-          "⭐ Important",
-          "MAX",
-          "MIN"
-        ],
-        "answer": "SELECT \n  MAX(salary) AS highest_salary,\n  MIN(salary) AS lowest_salary\nFROM Employees;\n\nExplanation:\nMAX() scans all salary values to return the peak salary, while MIN() returns the minimum salary."
-      },
-      {
-        "id": "sql-q16",
-        "title": "Q16. Find the total salary paid by each department.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
-          }
-        ],
-        "tags": [
-          "⭐ Important",
-          "SUM",
-          "GROUP BY"
-        ],
-        "answer": "SELECT dept_id, SUM(salary) AS total_salary\nFROM Employees\nGROUP BY dept_id;\n\nExplanation:\nSums the compensation of all employees assigned to each respective department."
-      },
-      {
-        "id": "sql-q17",
-        "title": "Q17. Find departments whose average salary is greater than the company's overall average salary.",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "HAVING",
-          "Subquery"
-        ],
-        "answer": "SELECT dept_id, AVG(salary) AS avg_salary\nFROM Employees\nGROUP BY dept_id\nHAVING AVG(salary) > (\n  SELECT AVG(salary) FROM Employees\n);\n\nExplanation:\nThe inner scalar subquery calculates the company-wide average salary. The outer query groups employees by department and uses HAVING to compare each department's average against that benchmark."
+        "answer": "Answer:\nAggregate functions accept multiple input rows across a column partition and distill them into a single scalar summary value.\n\nSummary Table:\n┌──────────┬────────────────────────────────────────────────────────┐\n│ Function │ Purpose & Behavior                                     │\n├──────────┼────────────────────────────────────────────────────────┤\n│ COUNT()  │ Counts rows. COUNT(*) counts all; COUNT(col) skips NULL│\n│ SUM()    │ Calculates numerical total sum (skips NULLs)           │\n│ AVG()    │ Calculates arithmetic mean (SUM / COUNT non-NULL)      │\n│ MIN()    │ Returns smallest numerical/alphabetical/date value     │\n│ MAX()    │ Returns largest numerical/alphabetical/date value      │\n└──────────┴────────────────────────────────────────────────────────┘\n\nVisual Fan-In:\n  Input Rows:      Aggregator:      Output:\n  [60,000] ───┐\n  [45,000] ───┼──>  AVG(salary) ──>  [58,000]  (Single scalar result)\n  [75,000] ───┘"
       }
     ]
   },
   {
-    "id": "sql-joins",
-    "name": "Section 3: SQL Joins (Q18–Q25)",
-    "description": "Joins are among the most important SQL interview topics. Understand how tables are connected using common columns.",
+    "id": "sql-theory-joins",
+    "name": "Theory 2: Relational Joins & Set Operations (Q18, Q22, Q24, Q32)",
+    "description": "Relational algebra: Inner, Outer, Self, Cross joins, anti-joins, set inclusion (IN) vs correlated existence checks (EXISTS).",
     "icon": "🔗",
+    "category": "theory",
     "problems": [
       {
         "id": "sql-q18",
-        "title": "Q18. What are SQL Joins? Explain their types.",
+        "title": "Q18. What are SQL Joins? Explain all join types.",
         "difficulty": "Medium",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -323,66 +156,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "Joins Overview",
-          "Relational"
+          "Theory",
+          "Joins Overview"
         ],
-        "answer": "Answer:\nJoins combine records from two or more tables based on a related column between them.\n\nTypes of SQL Joins:\nJoin Type       | Function / Result\n----------------+-------------------------------------------------------------\nINNER JOIN      | Returns only matching records present in both tables\nLEFT JOIN       | Returns all records from left table + matching right records\nRIGHT JOIN      | Returns all records from right table + matching left records\nFULL OUTER JOIN | Returns all records from both tables (matched or NULL)\nCROSS JOIN      | Returns the Cartesian product of all rows from both tables\nSELF JOIN       | Joins a table with itself using distinct aliases\n\nNote:\nMySQL does not natively support FULL OUTER JOIN syntax. In MySQL, you simulate FULL OUTER JOIN by combining a LEFT JOIN and a RIGHT JOIN using UNION."
-      },
-      {
-        "id": "sql-q19",
-        "title": "Q19. Find employee names along with their department names.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "INNER JOIN",
-          "Relational"
-        ],
-        "answer": "SELECT e.name, d.dept_name\nFROM Employees e\nINNER JOIN Departments d ON e.dept_id = d.dept_id;\n\nExplanation:\nINNER JOIN matches employee records with department records having the identical dept_id, omitting employees without departments and departments without employees."
-      },
-      {
-        "id": "sql-q20",
-        "title": "Q20. Find all employees, including those who do not belong to any department.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "LEFT JOIN",
-          "Preserving Rows"
-        ],
-        "answer": "SELECT e.name, d.dept_name\nFROM Employees e\nLEFT JOIN Departments d ON e.dept_id = d.dept_id;\n\nExplanation:\nLEFT JOIN preserves every employee from the left table (Employees). If an employee has no matching department, dept_name will be returned as NULL."
-      },
-      {
-        "id": "sql-q21",
-        "title": "Q21. Find departments that have no employees.",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "LEFT JOIN",
-          "Anti-Join"
-        ],
-        "answer": "SELECT d.dept_id, d.dept_name\nFROM Departments d\nLEFT JOIN Employees e ON d.dept_id = e.dept_id\nWHERE e.emp_id IS NULL;\n\nExplanation:\nBy LEFT JOINing Departments with Employees, departments without matching workers yield NULL in e.emp_id. Filtering WHERE e.emp_id IS NULL isolates empty departments (anti-join pattern)."
+        "answer": "Answer:\nJoins combine columns from one or more tables by evaluating matching values across designated relational key columns.\n\nVisual ASCII Venn Diagrams:\n1. INNER JOIN (Intersection):\n      Table A       Table B\n     ┌───────┐     ┌───────┐\n     │   A   │ ─── │   B   │   ===> Only matching rows (A ∩ B)\n     └───────┘     └───────┘\n\n2. LEFT JOIN (Left inclusive):\n     ┌───────────────┐\n     │ Table A       │ ───> All rows from Table A\n     │ ┌───────────┐ │\n     │ │ Matching B│ │ ───> Matching rows from Table B (NULL if none)\n     └─┴───────────┴─┘\n\n3. RIGHT JOIN:\n     All rows from Table B + matching columns from Table A (NULL if none).\n\n4. FULL OUTER JOIN:\n     All rows from Table A and Table B. (Simulated in MySQL via LEFT JOIN UNION RIGHT JOIN).\n\n5. CROSS JOIN (Cartesian Product):\n     Every row in A paired with every row in B (Size: N × M rows)."
       },
       {
         "id": "sql-q22",
-        "title": "Q22. What is a SELF JOIN? Find employees along with their manager names.",
+        "title": "Q22. What is a SELF JOIN? When is it used?",
         "difficulty": "Medium",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -391,32 +174,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "SELF JOIN",
-          "Hierarchies"
+          "Theory",
+          "SELF JOIN"
         ],
-        "answer": "Answer:\nA SELF JOIN joins a table with itself. It is particularly useful for modeling hierarchical and recursive relationships, such as employee-manager structures.\n\nQuery:\nSELECT \n  e.name AS employee,\n  m.name AS manager\nFROM Employees e\nLEFT JOIN Employees m ON e.manager_id = m.emp_id;\n\nExplanation:\nTwo aliases of the same Employees table are used: 'e' represents the employee, and 'm' represents their manager. A LEFT JOIN ensures top-level employees without managers (where manager_id IS NULL) are still displayed."
-      },
-      {
-        "id": "sql-q23",
-        "title": "Q23. Find employees who work in the IT department.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
-          }
-        ],
-        "tags": [
-          "⭐ Important",
-          "JOIN",
-          "Filtering"
-        ],
-        "answer": "SELECT e.name, d.dept_name\nFROM Employees e\nJOIN Departments d ON e.dept_id = d.dept_id\nWHERE d.dept_name = 'IT';\n\nExplanation:\nJoins the tables on dept_id and filters the resulting rows where dept_name equals 'IT'."
+        "answer": "Answer:\nA SELF JOIN is a regular join where a table is joined with itself using distinct table aliases. It is primarily used to represent hierarchical, tree, or graph relationships stored within a single table.\n\nVisual Hierarchy Representation:\n               [Rahul (emp_id: 1, manager_id: NULL)]\n                               ▲\n             ┌─────────────────┴─────────────────┐\n             │                                   │\n   [Aman (emp_id: 2, mgr: 1)]          [Priya (emp_id: 3, mgr: 1)]\n             ▲\n     ┌───────┴───────┐\n     │               │\n  [Neha]          [Karan]\n\nAlias Mapping:\n  FROM Employees e (as Employee role)\n  LEFT JOIN Employees m (as Manager role) ON e.manager_id = m.emp_id"
       },
       {
         "id": "sql-q24",
         "title": "Q24. What is the difference between INNER JOIN and LEFT JOIN?",
         "difficulty": "Easy",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -425,141 +192,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "INNER vs LEFT",
-          "Comparison"
+          "Theory",
+          "INNER vs LEFT"
         ],
-        "answer": "Answer:\n• INNER JOIN returns only records where the join condition matches in both tables.\n• LEFT JOIN returns all records from the left table, plus matched records from the right table (unmatched right columns return NULL).\n\nExample:\n-- Returns only matching employees and departments\nSELECT * FROM Employees e\nINNER JOIN Departments d ON e.dept_id = d.dept_id;\n\n-- Returns all employees, even if dept_id does not exist in Departments\nSELECT * FROM Employees e\nLEFT JOIN Departments d ON e.dept_id = d.dept_id;"
-      },
-      {
-        "id": "sql-q25",
-        "title": "Q25. Find pairs of employees working in the same department.",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
-          }
-        ],
-        "tags": [
-          "⭐ Important",
-          "SELF JOIN",
-          "Pairs"
-        ],
-        "answer": "SELECT \n  e1.name AS employee1,\n  e2.name AS employee2,\n  e1.dept_id\nFROM Employees e1\nJOIN Employees e2 \n  ON e1.dept_id = e2.dept_id \n AND e1.emp_id < e2.emp_id;\n\nExplanation:\nA SELF JOIN matches employees who share the same dept_id. Using e1.emp_id < e2.emp_id prevents pairing an employee with themselves and prevents symmetric duplicates (e.g. (Rahul, Priya) and (Priya, Rahul))."
-      }
-    ]
-  },
-  {
-    "id": "sql-subqueries",
-    "name": "Section 4: Subqueries and Nested Queries (Q26–Q32)",
-    "description": "A subquery is a query written inside another SQL query. It is useful when the result of one query is required by another.",
-    "icon": "🎯",
-    "problems": [
-      {
-        "id": "sql-q26",
-        "title": "Q26. Find the employee receiving the highest salary.",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "Subquery",
-          "MAX"
-        ],
-        "answer": "SELECT * FROM Employees\nWHERE salary = (\n  SELECT MAX(salary) FROM Employees\n);\n\nExplanation:\nThe inner scalar subquery evaluates the maximum salary in the table. The outer query then returns all employees earning that exact salary."
-      },
-      {
-        "id": "sql-q27",
-        "title": "Q27. Find employees earning more than the average company salary.",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "Subquery",
-          "AVG"
-        ],
-        "answer": "SELECT * FROM Employees\nWHERE salary > (\n  SELECT AVG(salary) FROM Employees\n);\n\nExplanation:\nThe subquery calculates the company-wide average salary, and the outer WHERE filters employees earning above that threshold."
-      },
-      {
-        "id": "sql-q28",
-        "title": "Q28. Find the second-highest salary.",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "Nth Highest",
-          "Subquery"
-        ],
-        "answer": "SELECT MAX(salary) AS second_highest_salary\nFROM Employees\nWHERE salary < (\n  SELECT MAX(salary) FROM Employees\n);\n\nExplanation:\nFirst identifies the overall maximum salary, then finds the highest salary strictly less than that maximum.\n\nInterview Follow-up:\nThis returns the second-highest distinct salary value. If multiple employees share the top salary, they are all excluded, correctly identifying the next highest value."
-      },
-      {
-        "id": "sql-q29",
-        "title": "Q29. Find the third-highest distinct salary.",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/select.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "LIMIT",
-          "OFFSET"
-        ],
-        "answer": "SELECT DISTINCT salary\nFROM Employees\nORDER BY salary DESC\nLIMIT 1 OFFSET 2;\n\nExplanation:\nORDER BY salary DESC orders salaries from highest to lowest. DISTINCT removes duplicates. OFFSET 2 skips the top two distinct values, and LIMIT 1 retrieves the third distinct salary."
-      },
-      {
-        "id": "sql-q30",
-        "title": "Q30. Find employees earning more than their department's average salary.",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/correlated-subqueries.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "Correlated Subquery"
-        ],
-        "answer": "SELECT e.*\nFROM Employees e\nWHERE e.salary > (\n  SELECT AVG(e2.salary)\n  FROM Employees e2\n  WHERE e2.dept_id = e.dept_id\n);\n\nExplanation:\nThis is a correlated subquery because the inner query references e.dept_id from the outer row. For each candidate employee, the inner query computes their specific department's average salary."
-      },
-      {
-        "id": "sql-q31",
-        "title": "Q31. Find employees who belong to departments present in the Departments table using IN.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/any-in-some-subqueries.html"
-          }
-        ],
-        "tags": [
-          "⭐ Important",
-          "IN Operator",
-          "Subquery"
-        ],
-        "answer": "SELECT * FROM Employees\nWHERE dept_id IN (\n  SELECT dept_id FROM Departments\n);\n\nExplanation:\nThe IN operator tests membership in the result set produced by the subquery, returning only employees whose dept_id exists in Departments."
+        "answer": "Answer:\n• INNER JOIN discards rows from either table that do not satisfy the join predicate.\n• LEFT JOIN preserves 100% of the rows from the left table regardless of whether a matching record exists on the right side.\n\nVisual Comparison:\n  Left: Employees [dept_id: 101, 102, 999]\n  Right: Departments [dept_id: 101, 102, 103]\n\n  INNER JOIN Output:\n  dept_id 101, 102  <-- Only matching IDs\n\n  LEFT JOIN Output:\n  dept_id 101, 102  <-- Matched with Department names\n  dept_id 999       <-- Preserved, dept_name filled with NULL"
       },
       {
         "id": "sql-q32",
         "title": "Q32. What is the difference between IN and EXISTS?",
         "difficulty": "Medium",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -568,23 +210,25 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "IN vs EXISTS",
-          "Performance"
+          "Theory",
+          "IN vs EXISTS"
         ],
-        "answer": "Answer:\n• IN evaluates the subquery, builds an in-memory set of values, and checks whether the outer column matches any item in the list.\n• EXISTS evaluates the correlated subquery row-by-row and terminates immediately (short-circuits) upon finding the first matching row.\n\nUsing EXISTS:\nSELECT * FROM Employees e\nWHERE EXISTS (\n  SELECT 1 FROM Departments d \n  WHERE d.dept_id = e.dept_id\n);\n\nInterview Point:\nEXISTS is ideal for correlated presence checks and handles NULLs safely (never returns UNKNOWN). Modern SQL optimizers often rewrite IN to EXISTS or SEMI-JOINs internally, but EXISTS is widely favored when working with large indexed parent tables."
+        "answer": "Answer:\n• IN evaluates the subquery first, collects the entire value set into memory, and tests membership. It can fail unexpectedly with NULLs (NOT IN with a single NULL returns empty).\n• EXISTS executes as a boolean condition that short-circuits (stops scanning) as soon as the first matching row is found. It handles NULLs cleanly without returning UNKNOWN.\n\nExecution Flow:\n  IN:\n    Step 1: Execute subquery -> Set = {101, 102, 103}\n    Step 2: Check each outer row: WHERE dept_id IN ({101, 102, 103})\n\n  EXISTS:\n    For each outer row:\n    Scan child index -> Found 1 matching row? -> TRUE (Halt search immediately)."
       }
     ]
   },
   {
-    "id": "sql-advanced-interview",
-    "name": "Section 5: Advanced SQL Interview Questions (Q33–Q42)",
-    "description": "These questions cover window functions, ranking, CTEs and analytical SQL queries. These are especially useful for SDE-1 interviews.",
+    "id": "sql-theory-advanced",
+    "name": "Theory 3: Window Functions, CTEs & Internals (Q33, Q35, Q38, Q42)",
+    "description": "Advanced relational architecture: Window calculations vs GROUP BY, analytical ranking semantics, Common Table Expressions, and temporary storage models.",
     "icon": "⚡",
+    "category": "theory",
     "problems": [
       {
         "id": "sql-q33",
         "title": "Q33. What are Window Functions in SQL?",
         "difficulty": "Medium",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -593,33 +237,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "🚀 Advanced",
+          "Theory",
           "Window Functions"
         ],
-        "answer": "Answer:\nWindow functions perform calculations across a set of table rows that are related to the current row, without collapsing the individual rows into a single summary output like GROUP BY does.\n\nCommon Window Functions:\n• ROW_NUMBER(): Assigns a sequential integer to rows\n• RANK(): Assigns rank with gaps for ties\n• DENSE_RANK(): Assigns rank without gaps for ties\n• LAG(): Accesses data from a preceding row\n• LEAD(): Accesses data from a subsequent row\n• SUM() OVER(): Computes running/partitioned sums\n• AVG() OVER(): Computes moving/partitioned averages\n\nExample:\nSELECT \n  name, \n  salary, \n  AVG(salary) OVER() AS company_avg\nFROM Employees;\n\nExplanation:\nEach employee retains their individual row and salary, while the company-wide average salary is calculated across the entire window and displayed on every row."
-      },
-      {
-        "id": "sql-q34",
-        "title": "Q34. Find the second-highest salary using DENSE_RANK().",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "🚀 Advanced",
-          "DENSE_RANK",
-          "CTE"
-        ],
-        "answer": "WITH RankedEmployees AS (\n  SELECT \n    name, \n    salary,\n    DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk\n  FROM Employees\n)\nSELECT name, salary\nFROM RankedEmployees\nWHERE rnk = 2;\n\nExplanation:\nDENSE_RANK() orders distinct salaries from highest to lowest. Equal salaries share the same rank, and no rank values are skipped. Filtering rnk = 2 reliably yields the second-highest compensation."
+        "answer": "Answer:\nWindow functions perform calculations across a designated set of rows (the \"window frame\") related to the current row, without collapsing multiple rows into a single output row like GROUP BY.\n\nVisual Comparison:\n  GROUP BY (Collapsing):\n  Row 1 (Dept 101, 60k) ──┐\n  Row 2 (Dept 101, 75k) ──┴──> Output: [Dept 101, AVG: 67.5k] (1 row)\n\n  WINDOW FUNCTION (Preserving Rows):\n  Row 1 (Rahul, 60k)  ───────> Output: [Rahul, 60k, Dept_Avg: 67.5k]\n  Row 2 (Priya, 75k)  ───────> Output: [Priya, 75k, Dept_Avg: 67.5k]"
       },
       {
         "id": "sql-q35",
         "title": "Q35. What is the difference between ROW_NUMBER(), RANK() and DENSE_RANK()?",
         "difficulty": "Medium",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -628,50 +255,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "Ranking Functions",
-          "Comparison"
+          "Theory",
+          "Ranking"
         ],
-        "answer": "Suppose salaries are 90000, 80000, 80000, and 70000:\n\nSalary | ROW_NUMBER() | RANK() | DENSE_RANK()\n-------+--------------+--------+-------------\n90000  | 1            | 1      | 1\n80000  | 2            | 2      | 2\n80000  | 3            | 2      | 2\n70000  | 4            | 4      | 3\n\nKey Rules to Remember:\n• ROW_NUMBER(): Always assigns a strictly unique sequential integer (1, 2, 3, 4).\n• RANK(): Assigns duplicate ranks to ties, then skips subsequent ranks (1, 2, 2, 4).\n• DENSE_RANK(): Assigns duplicate ranks to ties, but never skips subsequent ranks (1, 2, 2, 3)."
-      },
-      {
-        "id": "sql-q36",
-        "title": "Q36. Find the highest-paid employee in each department.",
-        "difficulty": "Hard",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "🚀 Advanced",
-          "PARTITION BY",
-          "DENSE_RANK"
-        ],
-        "answer": "WITH RankedEmployees AS (\n  SELECT \n    name, \n    dept_id, \n    salary,\n    DENSE_RANK() OVER (\n      PARTITION BY dept_id \n      ORDER BY salary DESC\n    ) AS rnk\n  FROM Employees\n)\nSELECT name, dept_id, salary\nFROM RankedEmployees\nWHERE rnk = 1;\n\nExplanation:\n• PARTITION BY dept_id divides employees by department.\n• ORDER BY salary DESC ranks salaries within each partition.\n• DENSE_RANK assigns rank 1 to the highest earner(s). If multiple employees tie for the top salary, all are returned."
-      },
-      {
-        "id": "sql-q37",
-        "title": "Q37. Find the top 3 highest-paid employees in each department.",
-        "difficulty": "Hard",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "🚀 Advanced",
-          "Top N per Group"
-        ],
-        "answer": "WITH RankedEmployees AS (\n  SELECT \n    name, \n    dept_id, \n    salary,\n    DENSE_RANK() OVER (\n      PARTITION BY dept_id \n      ORDER BY salary DESC\n    ) AS rnk\n  FROM Employees\n)\nSELECT name, dept_id, salary, rnk\nFROM RankedEmployees\nWHERE rnk <= 3;\n\nExplanation:\nPARTITION BY independently evaluates ranks within each department. Filtering rnk <= 3 retrieves the top 3 salary tiers.\n\nInterview Note:\nDENSE_RANK can return more than 3 employee records per department if salaries are tied. If an interview requires strictly at most 3 rows per department, use ROW_NUMBER() instead."
+        "answer": "Visual Ranking Matrix (For Salaries: 90k, 80k, 80k, 70k):\n\n┌────────┬──────────────┬────────┬────────────┐\n│ Salary │ ROW_NUMBER() │ RANK() │ DENSE_RANK │\n├────────┼──────────────┼────────┼────────────┤\n│ 90,000 │ 1            │ 1      │ 1          │\n│ 80,000 │ 2 (tie #1)   │ 2      │ 2          │\n│ 80,000 │ 3 (tie #2)   │ 2      │ 2          │\n│ 70,000 │ 4            │ 4      │ 3          │\n└────────┴──────────────┴────────┴────────────┘\n\nRules to Memorize:\n• ROW_NUMBER(): Unique, strictly sequential integers with no duplicates (1, 2, 3, 4).\n• RANK(): Duplicate ranks on ties, leaves gaps in subsequent numbers (1, 2, 2, 4).\n• DENSE_RANK(): Duplicate ranks on ties, NO gaps in subsequent numbers (1, 2, 2, 3)."
       },
       {
         "id": "sql-q38",
         "title": "Q38. What is a CTE (Common Table Expression)?",
         "difficulty": "Medium",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -680,68 +273,16 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "🚀 Advanced",
-          "CTE",
-          "WITH Clause"
+          "Theory",
+          "CTE"
         ],
-        "answer": "Answer:\nA Common Table Expression (CTE) is a temporary named result set defined within the scope of a single SQL statement using the WITH clause. It simplifies complex nested joins, supports recursion, and dramatically improves query readability and maintainability.\n\nSyntax Example:\nWITH HighSalary AS (\n  SELECT * FROM Employees WHERE salary > 50000\n)\nSELECT * FROM HighSalary;\n\nExplanation:\nThe CTE is evaluated and aliased first, making it reusable within the main SELECT, INSERT, UPDATE, or DELETE statement that follows."
-      },
-      {
-        "id": "sql-q39",
-        "title": "Q39. Find the employees whose salary is higher than the previous employee in employee ID order.",
-        "difficulty": "Hard",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-function-descriptions.html#function_lag"
-          }
-        ],
-        "tags": [
-          "🚀 Advanced",
-          "LAG()",
-          "Window Functions"
-        ],
-        "answer": "WITH SalaryComparison AS (\n  SELECT \n    emp_id, \n    name, \n    salary,\n    LAG(salary) OVER (ORDER BY emp_id) AS previous_salary\n  FROM Employees\n)\nSELECT emp_id, name, salary, previous_salary\nFROM SalaryComparison\nWHERE salary > previous_salary;\n\nExplanation:\nThe LAG() window function accesses the salary from the immediately preceding row according to the ORDER BY emp_id sequence without requiring a cumbersome SELF JOIN."
-      },
-      {
-        "id": "sql-q40",
-        "title": "Q40. Calculate the running total of employee salaries.",
-        "difficulty": "Hard",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
-          }
-        ],
-        "tags": [
-          "⭐ Important",
-          "🚀 Advanced",
-          "Running Total",
-          "SUM OVER"
-        ],
-        "answer": "SELECT \n  emp_id, \n  name, \n  salary,\n  SUM(salary) OVER (\n    ORDER BY emp_id \n    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n  ) AS running_total\nFROM Employees;\n\nExplanation:\nThe cumulative sum aggregates the current employee's salary with all previous salaries ordered by emp_id."
-      },
-      {
-        "id": "sql-q41",
-        "title": "Q41. Find the difference between each employee's salary and the company's average salary.",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
-          }
-        ],
-        "tags": [
-          "🚀 Advanced",
-          "AVG OVER",
-          "Analytics"
-        ],
-        "answer": "SELECT \n  name, \n  salary,\n  salary - AVG(salary) OVER() AS difference\nFROM Employees;\n\nExplanation:\nAVG(salary) OVER() calculates the overall company average across all records without collapsing rows, allowing row-level arithmetic directly in the SELECT list."
+        "answer": "Answer:\nA Common Table Expression (CTE) is a named, temporary result set declared using the WITH clause. It exists only within the execution scope of the single statement that defines it.\n\nVisual Modular Structure:\n  WITH DeptAvg AS (\n    -- Block 1: Modular calculation\n    SELECT dept_id, AVG(salary) AS avg_sal FROM Employees GROUP BY dept_id\n  ),\n  HighEarners AS (\n    -- Block 2: Consumes Block 1\n    SELECT e.* FROM Employees e JOIN DeptAvg d ON e.dept_id = d.dept_id WHERE e.salary > d.avg_sal\n  )\n  -- Final Consumption:\n  SELECT * FROM HighEarners;"
       },
       {
         "id": "sql-q42",
         "title": "Q42. What is the difference between a CTE, a subquery and a temporary table?",
         "difficulty": "Medium",
+        "category": "theory",
         "links": [
           {
             "platform": "Other",
@@ -750,75 +291,25 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "⭐ Important",
-          "Architecture",
-          "CTE vs Temp Table"
+          "Theory",
+          "Architecture"
         ],
-        "answer": "Feature         | CTE (WITH clause)       | Subquery (Nested SELECT) | Temporary Table\n----------------+-------------------------+--------------------------+------------------------------\nDefinition      | WITH cte_name AS (...)  | Inside (SELECT ...)      | CREATE TEMPORARY TABLE ...\nScope           | Single SQL statement    | Clause / statement part  | Entire database session\nReusability     | Across statement        | Nested query only        | Multiple queries in session\nReadability     | High (top-down)         | Low (deeply nested)      | Modular across scripts\nStorage         | Optimizer-managed (RAM) | Optimizer-managed (RAM)  | Stored on temp disk/RAM\n\nTemporary Table Example:\nCREATE TEMPORARY TABLE HighSalary AS\nSELECT * FROM Employees WHERE salary > 50000;"
+        "answer": "Comparison Matrix:\n┌──────────────┬────────────────────────┬──────────────────────┬──────────────────────────┐\n│ Dimension    │ CTE (WITH clause)      │ Subquery (Nested)    │ Temporary Table          │\n├──────────────┼────────────────────────┼──────────────────────┼──────────────────────────┤\n│ Syntax       │ WITH cte AS (...)      │ (SELECT ...)         │ CREATE TEMPORARY TABLE   │\n│ Scope        │ Single statement       │ Clause/statement     │ Entire client session    │\n│ Reusability  │ Multiple times in stmt │ Must be re-written   │ Across multiple queries  │\n│ Indexing     │ No explicit indexes    │ No explicit indexes  │ Can add custom B-Tree idx│\n│ Disk Storage │ Usually in-memory/opt  │ In-memory optimizer  │ Temp storage tablespace  │\n└──────────────┴────────────────────────┴──────────────────────┴──────────────────────────┘"
       }
     ]
   },
   {
-    "id": "sql-advanced-problems",
-    "name": "Section 6: Advanced SQL Problem-Solving (Q43–Q50)",
-    "description": "Practical interview-style problems that test your ability to combine multiple SQL concepts.",
-    "icon": "🏆",
+    "id": "sql-cmd-basics",
+    "name": "Commands 1: Basic Filtering, Patterns & Sorting (Q6–Q9)",
+    "description": "Hands-on queries: WHERE filtering, LIKE wildcards, DISTINCT value deduplication, and multi-column ORDER BY.",
+    "icon": "💻",
+    "category": "commands",
     "problems": [
       {
-        "id": "sql-q43",
-        "title": "Q43. Find duplicate records based on employee name.",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "HAVING",
-          "Duplicates"
-        ],
-        "answer": "SELECT name, COUNT(*) AS total\nFROM Employees\nGROUP BY name\nHAVING COUNT(*) > 1;\n\nExplanation:\nGROUP BY groups employees sharing the exact same name, and HAVING filters only those groups with a row count exceeding 1."
-      },
-      {
-        "id": "sql-q44",
-        "title": "Q44. Delete duplicate records while keeping one record.",
-        "difficulty": "Hard",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/delete.html"
-          }
-        ],
-        "tags": [
-          "🔥 Frequently Asked",
-          "🚀 Advanced",
-          "Deduplication",
-          "DELETE CTE"
-        ],
-        "answer": "Assume duplicate employees are identified by the same name and salary, and the lowest emp_id should be retained:\n\nWITH DuplicateRecords AS (\n  SELECT \n    emp_id,\n    ROW_NUMBER() OVER (\n      PARTITION BY name, salary \n      ORDER BY emp_id ASC\n    ) AS rn\n  FROM Employees\n)\nDELETE FROM Employees\nWHERE emp_id IN (\n  SELECT emp_id FROM DuplicateRecords WHERE rn > 1\n);\n\nExplanation:\n• PARTITION BY groups duplicates by name and salary.\n• ROW_NUMBER() assigns sequential numbers starting at 1 for the lowest emp_id.\n• Rows with rn > 1 represent duplicates and are deleted, preserving the lowest ID.\n\nImportant:\nAlways run the equivalent SELECT first and ensure you have a database snapshot before running destructive DELETE scripts in production."
-      },
-      {
-        "id": "sql-q45",
-        "title": "Q45. Find employees who have the same salary.",
-        "difficulty": "Medium",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
-          }
-        ],
-        "tags": [
-          "⭐ Important",
-          "GROUP BY",
-          "HAVING"
-        ],
-        "answer": "SELECT * FROM Employees\nWHERE salary IN (\n  SELECT salary\n  FROM Employees\n  GROUP BY salary\n  HAVING COUNT(*) > 1\n);\n\nExplanation:\nThe inner query finds all salary figures earned by more than one person. The outer query returns every employee who earns one of those shared salaries."
-      },
-      {
-        "id": "sql-q46",
-        "title": "Q46. Find the department with the highest average salary.",
-        "difficulty": "Medium",
+        "id": "sql-q6",
+        "title": "Q6. Write a query to fetch all employees earning more than 50,000.",
+        "difficulty": "Easy",
+        "category": "commands",
         "links": [
           {
             "platform": "Other",
@@ -827,15 +318,250 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🔥 Frequently Asked",
-          "Aggregates",
-          "LIMIT"
+          "Commands",
+          "WHERE"
         ],
-        "answer": "SELECT dept_id, AVG(salary) AS avg_salary\nFROM Employees\nGROUP BY dept_id\nORDER BY avg_salary DESC\nLIMIT 1;\n\nExplanation:\nCalculates the average salary for each department, sorts them in descending order (highest first), and uses LIMIT 1 to return the top department."
+        "answer": "Query:\nSELECT * FROM Employees WHERE salary > 50000;\n\nVisual Result Set:\n┌────────┬────────┬────────┬─────────┬────────────┐\n│ emp_id │ name   │ salary │ dept_id │ manager_id │\n├────────┼────────┼────────┼─────────┼────────────┤\n│ 1      │ Rahul  │ 60000  │ 101     │ NULL       │\n│ 3      │ Priya  │ 75000  │ 101     │ 1          │\n│ 5      │ Karan  │ 60000  │ 102     │ 2          │\n└────────┴────────┴────────┴─────────┴────────────┘\n(Rows with Aman [45k] and Neha [50k] are filtered out because 50,000 is not > 50,000)"
       },
       {
-        "id": "sql-q47",
-        "title": "Q47. Find employees who earn the same salary as at least one other employee.",
+        "id": "sql-q7",
+        "title": "Q7. Write a query to fetch employees whose names start with 'A'.",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/pattern-matching.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "Commands",
+          "LIKE"
+        ],
+        "answer": "Query:\nSELECT * FROM Employees WHERE name LIKE 'A%';\n\nVisual Pattern Match:\n  'Aman'  ──> Starts with 'A' followed by 'man' (Matched!)\n  'Rahul' ──> Starts with 'R'                   (Rejected)\n  'Priya' ──> Starts with 'P'                   (Rejected)\n\nVisual Result Set:\n┌────────┬──────┬────────┬─────────┬────────────┐\n│ emp_id │ name │ salary │ dept_id │ manager_id │\n├────────┼──────┼────────┼─────────┼────────────┤\n│ 2      │ Aman │ 45000  │ 102     │ 1          │\n└────────┴──────┴────────┴─────────┴────────────┘"
+      },
+      {
+        "id": "sql-q8",
+        "title": "Q8. How do you find distinct department IDs?",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/distinct-optimization.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "Commands",
+          "DISTINCT"
+        ],
+        "answer": "Query:\nSELECT DISTINCT dept_id FROM Employees;\n\nVisual Deduplication:\n  Input Stream: [101, 102, 101, 103, 102]\n                       │\n                  [DISTINCT]\n                       │\n  Output Set:   [101, 102, 103]\n\nVisual Result Set:\n┌─────────┐\n│ dept_id │\n├─────────┤\n│ 101     │\n│ 102     │\n│ 103     │\n└─────────┘"
+      },
+      {
+        "id": "sql-q9",
+        "title": "Q9. How do you sort employees by salary in descending order?",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/sorting-rows.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "ORDER BY"
+        ],
+        "answer": "Query:\nSELECT * FROM Employees ORDER BY salary DESC;\n\n-- Multi-column (Salary descending, then name ascending for ties):\nSELECT * FROM Employees ORDER BY salary DESC, name ASC;\n\nVisual Result Set (Ordered by salary DESC):\n┌────────┬────────┬────────┬─────────┬────────────┐\n│ emp_id │ name   │ salary │ dept_id │ manager_id │\n├────────┼────────┼────────┼─────────┼────────────┤\n│ 3      │ Priya  │ 75000  │ 101     │ 1          │  <-- Highest\n│ 5      │ Karan  │ 60000  │ 102     │ 2          │  <-- Tie (Alphabetical)\n│ 1      │ Rahul  │ 60000  │ 101     │ NULL       │  <-- Tie\n│ 4      │ Neha   │ 50000  │ 103     │ 2          │\n│ 2      │ Aman   │ 45000  │ 102     │ 1          │  <-- Lowest\n└────────┴────────┴────────┴─────────┴────────────┘"
+      }
+    ]
+  },
+  {
+    "id": "sql-cmd-aggregates",
+    "name": "Commands 2: Aggregations & GROUP BY (Q12–Q17)",
+    "description": "Analytical queries: Department headcounts, salary averages, totals, and nested aggregate comparisons using HAVING.",
+    "icon": "📊",
+    "category": "commands",
+    "problems": [
+      {
+        "id": "sql-q12",
+        "title": "Q12. Find the total number of employees in each department.",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "GROUP BY"
+        ],
+        "answer": "Query:\nSELECT dept_id, COUNT(*) AS employee_count\nFROM Employees\nGROUP BY dept_id;\n\nVisual Partitioning:\n  Dept 101 Bucket: [Rahul, Priya] ──> Count = 2\n  Dept 102 Bucket: [Aman, Karan]  ──> Count = 2\n  Dept 103 Bucket: [Neha]         ──> Count = 1\n\nVisual Result Set:\n┌─────────┬────────────────┐\n│ dept_id │ employee_count │\n├─────────┼────────────────┤\n│ 101     │ 2              │\n│ 102     │ 2              │\n│ 103     │ 1              │\n└─────────┴────────────────┘"
+      },
+      {
+        "id": "sql-q13",
+        "title": "Q13. Find the average salary of each department.",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "AVG"
+        ],
+        "answer": "Query:\nSELECT dept_id, AVG(salary) AS avg_salary\nFROM Employees\nGROUP BY dept_id;\n\nVisual Result Set:\n┌─────────┬────────────┐\n│ dept_id │ avg_salary │\n├─────────┼────────────┤\n│ 101     │ 67500.0000 │  <-- (60,000 + 75,000) / 2\n│ 102     │ 52500.0000 │  <-- (45,000 + 60,000) / 2\n│ 103     │ 50000.0000 │  <-- 50,000 / 1\n└─────────┴────────────┘"
+      },
+      {
+        "id": "sql-q14",
+        "title": "Q14. Find departments having more than 2 employees.",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "HAVING"
+        ],
+        "answer": "Query:\nSELECT dept_id, COUNT(*) AS total_employees\nFROM Employees\nGROUP BY dept_id\nHAVING COUNT(*) > 2;\n\nVisual Filter:\n  Dept 101 (Count=2) ──> 2 > 2 is FALSE (Filtered out)\n  Dept 102 (Count=2) ──> 2 > 2 is FALSE (Filtered out)\n  Dept 103 (Count=1) ──> 1 > 2 is FALSE (Filtered out)\n  Result: Empty set (In our sample data, no department has > 2)"
+      },
+      {
+        "id": "sql-q15",
+        "title": "Q15. Find the highest and lowest salary in the company.",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "Commands",
+          "MAX/MIN"
+        ],
+        "answer": "Query:\nSELECT MAX(salary) AS highest_salary, MIN(salary) AS lowest_salary FROM Employees;\n\nVisual Result Set:\n┌────────────────┬───────────────┐\n│ highest_salary │ lowest_salary │\n├────────────────┼───────────────┤\n│ 75000          │ 45000         │\n└────────────────┴───────────────┘"
+      },
+      {
+        "id": "sql-q16",
+        "title": "Q16. Find the total salary paid by each department.",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "Commands",
+          "SUM"
+        ],
+        "answer": "Query:\nSELECT dept_id, SUM(salary) AS total_salary\nFROM Employees\nGROUP BY dept_id;\n\nVisual Result Set:\n┌─────────┬──────────────┐\n│ dept_id │ total_salary │\n├─────────┼──────────────┤\n│ 101     │ 135000       │  <-- 60k + 75k\n│ 102     │ 105000       │  <-- 45k + 60k\n│ 103     │ 50000        │  <-- 50k\n└─────────┴──────────────┘"
+      },
+      {
+        "id": "sql-q17",
+        "title": "Q17. Find departments whose average salary is greater than the company's overall average salary.",
         "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "HAVING Subquery"
+        ],
+        "answer": "Query:\nSELECT dept_id, AVG(salary) AS avg_salary\nFROM Employees\nGROUP BY dept_id\nHAVING AVG(salary) > (\n  SELECT AVG(salary) FROM Employees\n);\n\nVisual Comparison:\n  Overall Company Average = (60k + 45k + 75k + 50k + 60k) / 5 = 58,000\n\n  Dept 101 Avg: 67,500 > 58,000 ===> KEEP\n  Dept 102 Avg: 52,500 > 58,000 ===> DISCARD\n  Dept 103 Avg: 50,000 > 58,000 ===> DISCARD\n\nVisual Result Set:\n┌─────────┬────────────┐\n│ dept_id │ avg_salary │\n├─────────┼────────────┤\n│ 101     │ 67500.0000 │\n└─────────┴────────────┘"
+      }
+    ]
+  },
+  {
+    "id": "sql-cmd-joins",
+    "name": "Commands 3: Relational Join Queries (Q19–Q21, Q23, Q25)",
+    "description": "Hands-on table joins: Multi-table entity lookups, preserving unmatched rows via LEFT JOIN, anti-joins, and non-symmetric self joins.",
+    "icon": "🔗",
+    "category": "commands",
+    "problems": [
+      {
+        "id": "sql-q19",
+        "title": "Q19. Find employee names along with their department names.",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "INNER JOIN"
+        ],
+        "answer": "Query:\nSELECT e.name, d.dept_name\nFROM Employees e\nINNER JOIN Departments d ON e.dept_id = d.dept_id;\n\nVisual Relational Matching:\n  Employees (e)                  Departments (d)\n  [Rahul, dept_id: 101]   <--->  [dept_id: 101, IT]\n  [Aman,  dept_id: 102]   <--->  [dept_id: 102, HR]\n  [Priya, dept_id: 101]   <--->  [dept_id: 101, IT]\n  [Neha,  dept_id: 103]   <--->  [dept_id: 103, Finance]\n  [Karan, dept_id: 102]   <--->  [dept_id: 102, HR]\n\nVisual Result Set:\n┌───────┬───────────┐\n│ name  │ dept_name │\n├───────┼───────────┤\n│ Rahul │ IT        │\n│ Priya │ IT        │\n│ Aman  │ HR        │\n│ Karan │ HR        │\n│ Neha  │ Finance   │\n└───────┴───────────┘"
+      },
+      {
+        "id": "sql-q20",
+        "title": "Q20. Find all employees, including those who do not belong to any department.",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "LEFT JOIN"
+        ],
+        "answer": "Query:\nSELECT e.name, d.dept_name\nFROM Employees e\nLEFT JOIN Departments d ON e.dept_id = d.dept_id;\n\nVisual Representation:\n  If an employee has dept_id = NULL or non-existent in Departments,\n  LEFT JOIN preserves their row and produces NULL in d.dept_name."
+      },
+      {
+        "id": "sql-q21",
+        "title": "Q21. Find departments that have no employees.",
+        "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "Anti-Join"
+        ],
+        "answer": "Query:\nSELECT d.dept_id, d.dept_name\nFROM Departments d\nLEFT JOIN Employees e ON d.dept_id = e.dept_id\nWHERE e.emp_id IS NULL;\n\nVisual Anti-Join Process:\n  Departments    Joined Employee ID    Filter (IS NULL)\n  101 (IT)       1 (Rahul), 3 (Priya)  Discard\n  102 (HR)       2 (Aman), 5 (Karan)   Discard\n  103 (Finance)  4 (Neha)              Discard\n  104 (Marketing)NULL                  ===> KEEP (No employees!)\n\nVisual Result Set:\n┌─────────┬───────────┐\n│ dept_id │ dept_name │\n├─────────┼───────────┤\n│ 104     │ Marketing │\n└─────────┴───────────┘"
+      },
+      {
+        "id": "sql-q23",
+        "title": "Q23. Find employees who work in the IT department.",
+        "difficulty": "Easy",
+        "category": "commands",
         "links": [
           {
             "platform": "Other",
@@ -844,49 +570,250 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "⭐ Important",
-          "SELF JOIN",
-          "Non-Equi Join"
+          "Commands",
+          "JOIN Filter"
         ],
-        "answer": "SELECT DISTINCT e1.name, e1.salary\nFROM Employees e1\nJOIN Employees e2 \n  ON e1.salary = e2.salary \n AND e1.emp_id <> e2.emp_id;\n\nExplanation:\nA SELF JOIN matches employees on identical salaries while ensuring e1.emp_id <> e2.emp_id to exclude self-matches. DISTINCT ensures each employee name is reported only once if multiple peers share their salary."
+        "answer": "Query:\nSELECT e.name, d.dept_name\nFROM Employees e\nJOIN Departments d ON e.dept_id = d.dept_id\nWHERE d.dept_name = 'IT';\n\nVisual Result Set:\n┌───────┬───────────┐\n│ name  │ dept_name │\n├───────┼───────────┤\n│ Rahul │ IT        │\n│ Priya │ IT        │\n└───────┴───────────┘"
       },
       {
-        "id": "sql-q48",
-        "title": "Q48. Find the percentage contribution of each department to the total company salary.",
-        "difficulty": "Hard",
+        "id": "sql-q25",
+        "title": "Q25. Find pairs of employees working in the same department.",
+        "difficulty": "Medium",
+        "category": "commands",
         "links": [
           {
             "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
-          }
-        ],
-        "tags": [
-          "🚀 Advanced",
-          "Percentages",
-          "Analytics"
-        ],
-        "answer": "SELECT \n  dept_id,\n  SUM(salary) AS dept_salary,\n  ROUND(\n    SUM(salary) * 100.0 / (SELECT SUM(salary) FROM Employees), \n    2\n  ) AS percentage\nFROM Employees\nGROUP BY dept_id;\n\nExplanation:\nComputes the department's aggregate salary, divides it by the scalar total company payroll subquery, and rounds the percentage to 2 decimal places."
-      },
-      {
-        "id": "sql-q49",
-        "title": "Q49. Find employees who do not have a manager.",
-        "difficulty": "Easy",
-        "links": [
-          {
-            "platform": "Other",
-            "url": "https://dev.mysql.com/doc/refman/8.0/en/working-with-null.html"
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
           }
         ],
         "tags": [
           "⭐ Important",
-          "NULL Check",
-          "Hierarchies"
+          "Commands",
+          "Pairing Matrix"
         ],
-        "answer": "SELECT * FROM Employees WHERE manager_id IS NULL;\n\nExplanation:\nThe IS NULL operator checks for records where the manager_id field is NULL (representing top-level executives or unassigned personnel)."
+        "answer": "Query:\nSELECT \n  e1.name AS employee1,\n  e2.name AS employee2,\n  e1.dept_id\nFROM Employees e1\nJOIN Employees e2 \n  ON e1.dept_id = e2.dept_id \n AND e1.emp_id < e2.emp_id;\n\nVisual Pairing Mechanism:\n  Condition e1.emp_id < e2.emp_id guarantees:\n  1. No self-pairing (emp_id 1 with 1 rejected)\n  2. No duplicate mirror pairs (returns (Rahul, Priya), omits (Priya, Rahul))\n\nVisual Result Set:\n┌───────────┬───────────┬─────────┐\n│ employee1 │ employee2 │ dept_id │\n├───────────┼───────────┼─────────┤\n│ Rahul     │ Priya     │ 101     │\n│ Aman      │ Karan     │ 102     │\n└───────────┴───────────┴─────────┘"
+      }
+    ]
+  },
+  {
+    "id": "sql-cmd-subqueries",
+    "name": "Commands 4: Subqueries and Nested Queries (Q26–Q31)",
+    "description": "Subquery techniques: Scalar comparisons, department-correlated subqueries, Nth highest distinct values, and IN operators.",
+    "icon": "🎯",
+    "category": "commands",
+    "problems": [
+      {
+        "id": "sql-q26",
+        "title": "Q26. Find the employee receiving the highest salary.",
+        "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "Scalar Subquery"
+        ],
+        "answer": "Query:\nSELECT * FROM Employees\nWHERE salary = (\n  SELECT MAX(salary) FROM Employees\n);\n\nVisual Result Set:\n┌────────┬───────┬────────┬─────────┬────────────┐\n│ emp_id │ name  │ salary │ dept_id │ manager_id │\n├────────┼───────┼────────┼─────────┼────────────┤\n│ 3      │ Priya │ 75000  │ 101     │ 1          │\n└────────┴───────┴────────┴─────────┴────────────┘"
       },
       {
-        "id": "sql-q50",
-        "title": "Q50. Find the median salary of employees.",
+        "id": "sql-q27",
+        "title": "Q27. Find employees earning more than the average company salary.",
+        "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "Subquery AVG"
+        ],
+        "answer": "Query:\nSELECT * FROM Employees\nWHERE salary > (\n  SELECT AVG(salary) FROM Employees\n);\n\nVisual Filter (Threshold: 58,000):\n  Rahul: 60,000 > 58,000  ===> KEEP\n  Priya: 75,000 > 58,000  ===> KEEP\n  Karan: 60,000 > 58,000  ===> KEEP\n\nVisual Result Set:\n┌────────┬───────┬────────┬─────────┬────────────┐\n│ emp_id │ name  │ salary │ dept_id │ manager_id │\n├────────┼───────┼────────┼─────────┼────────────┤\n│ 1      │ Rahul │ 60000  │ 101     │ NULL       │\n│ 3      │ Priya │ 75000  │ 101     │ 1          │\n│ 5      │ Karan │ 60000  │ 102     │ 2          │\n└────────┴───────┴────────┴─────────┴────────────┘"
+      },
+      {
+        "id": "sql-q28",
+        "title": "Q28. Find the second-highest salary.",
+        "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "2nd Highest"
+        ],
+        "answer": "Query:\nSELECT MAX(salary) AS second_highest_salary\nFROM Employees\nWHERE salary < (\n  SELECT MAX(salary) FROM Employees\n);\n\nVisual Steps:\n  1. Inner Max: 75,000\n  2. Outer Filter: All salaries < 75,000 -> {60k, 45k, 50k, 60k}\n  3. Max of remaining: 60,000\n\nVisual Result Set:\n┌───────────────────────┐\n│ second_highest_salary │\n├───────────────────────┤\n│ 60000                 │\n└───────────────────────┘"
+      },
+      {
+        "id": "sql-q29",
+        "title": "Q29. Find the third-highest distinct salary.",
+        "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/select.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "LIMIT/OFFSET"
+        ],
+        "answer": "Query:\nSELECT DISTINCT salary\nFROM Employees\nORDER BY salary DESC\nLIMIT 1 OFFSET 2;\n\nVisual Pagination:\n  Distinct Ordered Salaries:\n  [75,000]  <-- Offset 0\n  [60,000]  <-- Offset 1\n  [50,000]  <-- Offset 2 (LIMIT 1 picks this!)\n  [45,000]\n\nVisual Result Set:\n┌────────┐\n│ salary │\n├────────┤\n│ 50000  │\n└────────┘"
+      },
+      {
+        "id": "sql-q30",
+        "title": "Q30. Find employees earning more than their department's average salary.",
+        "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/correlated-subqueries.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "Correlated Subquery"
+        ],
+        "answer": "Query:\nSELECT e.*\nFROM Employees e\nWHERE e.salary > (\n  SELECT AVG(e2.salary)\n  FROM Employees e2\n  WHERE e2.dept_id = e.dept_id\n);\n\nVisual Evaluation:\n  • Rahul (Dept 101, 60k) vs Dept 101 Avg (67.5k) ===> Below\n  • Priya (Dept 101, 75k) vs Dept 101 Avg (67.5k) ===> ABOVE!\n  • Aman  (Dept 102, 45k) vs Dept 102 Avg (52.5k) ===> Below\n  • Karan (Dept 102, 60k) vs Dept 102 Avg (52.5k) ===> ABOVE!\n  • Neha  (Dept 103, 50k) vs Dept 103 Avg (50.0k) ===> Equal (not >)\n\nVisual Result Set:\n┌────────┬───────┬────────┬─────────┬────────────┐\n│ emp_id │ name  │ salary │ dept_id │ manager_id │\n├────────┼───────┼────────┼─────────┼────────────┤\n│ 3      │ Priya │ 75000  │ 101     │ 1          │\n│ 5      │ Karan │ 60000  │ 102     │ 2          │\n└────────┴───────┴────────┴─────────┴────────────┘"
+      },
+      {
+        "id": "sql-q31",
+        "title": "Q31. Find employees who belong to departments present in the Departments table using IN.",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/any-in-some-subqueries.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "Commands",
+          "IN Subquery"
+        ],
+        "answer": "Query:\nSELECT * FROM Employees\nWHERE dept_id IN (\n  SELECT dept_id FROM Departments\n);\n\nVisual Result Set:\nReturns all 5 employees because 101, 102, and 103 are all present in Departments."
+      }
+    ]
+  },
+  {
+    "id": "sql-cmd-window",
+    "name": "Commands 5: Window Functions & Analytical Queries (Q34, Q36, Q37, Q39–Q41)",
+    "description": "Analytical MySQL 8.0 commands: DENSE_RANK partitioning, top N per department, LAG previous row lookups, and running totals.",
+    "icon": "⚡",
+    "category": "commands",
+    "problems": [
+      {
+        "id": "sql-q34",
+        "title": "Q34. Find the second-highest salary using DENSE_RANK().",
+        "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "DENSE_RANK"
+        ],
+        "answer": "Query:\nWITH RankedEmployees AS (\n  SELECT \n    name, \n    salary,\n    DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk\n  FROM Employees\n)\nSELECT name, salary\nFROM RankedEmployees\nWHERE rnk = 2;\n\nVisual Partition Ranks:\n  Priya (75k) ──> rnk 1\n  Rahul (60k) ──> rnk 2 (Matches!)\n  Karan (60k) ──> rnk 2 (Matches!)\n  Neha  (50k) ──> rnk 3\n\nVisual Result Set:\n┌───────┬────────┐\n│ name  │ salary │\n├───────┼────────┤\n│ Rahul │ 60000  │\n│ Karan │ 60000  │\n└───────┴────────┘"
+      },
+      {
+        "id": "sql-q36",
+        "title": "Q36. Find the highest-paid employee in each department.",
         "difficulty": "Hard",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "Top per Group"
+        ],
+        "answer": "Query:\nWITH RankedEmployees AS (\n  SELECT \n    name, \n    dept_id, \n    salary,\n    DENSE_RANK() OVER (\n      PARTITION BY dept_id \n      ORDER BY salary DESC\n    ) AS rnk\n  FROM Employees\n)\nSELECT name, dept_id, salary\nFROM RankedEmployees\nWHERE rnk = 1;\n\nVisual Partitioning:\n  Dept 101 Partition: Priya (75k: rank 1), Rahul (60k: rank 2)\n  Dept 102 Partition: Karan (60k: rank 1), Aman (45k: rank 2)\n  Dept 103 Partition: Neha (50k: rank 1)\n\nVisual Result Set:\n┌───────┬─────────┬────────┐\n│ name  │ dept_id │ salary │\n├───────┼─────────┼────────┤\n│ Priya │ 101     │ 75000  │\n│ Karan │ 102     │ 60000  │\n│ Neha  │ 103     │ 50000  │\n└───────┴─────────┴────────┘"
+      },
+      {
+        "id": "sql-q37",
+        "title": "Q37. Find the top 3 highest-paid employees in each department.",
+        "difficulty": "Hard",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "Top 3"
+        ],
+        "answer": "Query:\nWITH RankedEmployees AS (\n  SELECT \n    name, \n    dept_id, \n    salary,\n    DENSE_RANK() OVER (\n      PARTITION BY dept_id \n      ORDER BY salary DESC\n    ) AS rnk\n  FROM Employees\n)\nSELECT name, dept_id, salary, rnk\nFROM RankedEmployees\nWHERE rnk <= 3;"
+      },
+      {
+        "id": "sql-q39",
+        "title": "Q39. Find the employees whose salary is higher than the previous employee in employee ID order.",
+        "difficulty": "Hard",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-function-descriptions.html#function_lag"
+          }
+        ],
+        "tags": [
+          "🚀 Advanced",
+          "Commands",
+          "LAG Window"
+        ],
+        "answer": "Query:\nWITH SalaryComparison AS (\n  SELECT \n    emp_id, \n    name, \n    salary,\n    LAG(salary) OVER (ORDER BY emp_id) AS previous_salary\n  FROM Employees\n)\nSELECT emp_id, name, salary, previous_salary\nFROM SalaryComparison\nWHERE salary > previous_salary;\n\nVisual LAG Pointers:\n  emp_id 1 (Rahul: 60k) | Prev: NULL  (Discard)\n  emp_id 2 (Aman: 45k)  | Prev: 60k   (45k > 60k is False)\n  emp_id 3 (Priya: 75k) | Prev: 45k   (75k > 45k ===> TRUE!)\n  emp_id 4 (Neha: 50k)  | Prev: 75k   (50k > 75k is False)\n  emp_id 5 (Karan: 60k) | Prev: 50k   (60k > 50k ===> TRUE!)\n\nVisual Result Set:\n┌────────┬───────┬────────┬─────────────────┐\n│ emp_id │ name  │ salary │ previous_salary │\n├────────┼───────┼────────┼─────────────────┤\n│ 3      │ Priya │ 75000  │ 45000           │\n│ 5      │ Karan │ 60000  │ 50000           │\n└────────┴───────┴────────┴─────────────────┘"
+      },
+      {
+        "id": "sql-q40",
+        "title": "Q40. Calculate the running total of employee salaries.",
+        "difficulty": "Hard",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "Commands",
+          "Running Total"
+        ],
+        "answer": "Query:\nSELECT \n  emp_id, \n  name, \n  salary,\n  SUM(salary) OVER (\n    ORDER BY emp_id \n    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n  ) AS running_total\nFROM Employees;\n\nVisual Rolling Sum Accumulation:\n  Row 1 (Rahul: 60k): 60k                     =  60,000\n  Row 2 (Aman: 45k):  60k + 45k               = 105,000\n  Row 3 (Priya: 75k): 60k + 45k + 75k         = 180,000\n  Row 4 (Neha: 50k):  60k + 45k + 75k + 50k   = 230,000\n  Row 5 (Karan: 60k): 60k + ... + 60k         = 290,000\n\nVisual Result Set:\n┌────────┬───────┬────────┬───────────────┐\n│ emp_id │ name  │ salary │ running_total │\n├────────┼───────┼────────┼───────────────┤\n│ 1      │ Rahul │ 60000  │ 60000         │\n│ 2      │ Aman  │ 45000  │ 105000        │\n│ 3      │ Priya │ 75000  │ 180000        │\n│ 4      │ Neha  │ 50000  │ 230000        │\n│ 5      │ Karan │ 60000  │ 290000        │\n└────────┴───────┴────────┴───────────────┘"
+      },
+      {
+        "id": "sql-q41",
+        "title": "Q41. Find the difference between each employee's salary and the company's average salary.",
+        "difficulty": "Medium",
+        "category": "commands",
         "links": [
           {
             "platform": "Other",
@@ -895,10 +822,163 @@ export const sqlQuestions: Pattern[] = [
         ],
         "tags": [
           "🚀 Advanced",
-          "Median",
-          "Statistical Functions"
+          "Commands",
+          "AVG OVER"
         ],
-        "answer": "WITH RankedSalaries AS (\n  SELECT \n    salary,\n    ROW_NUMBER() OVER (ORDER BY salary ASC) AS rn,\n    COUNT(*) OVER() AS total\n  FROM Employees\n)\nSELECT AVG(salary) AS median_salary\nFROM RankedSalaries\nWHERE rn IN (\n  FLOOR((total + 1) / 2),\n  FLOOR((total + 2) / 2)\n);\n\nExplanation:\n• Sorts all salaries in ascending order and assigns a sequential row number (rn).\n• Computes the overall count (total) using COUNT(*) OVER().\n• For odd numbers of records (e.g. 5): FLOOR(6/2)=3 and FLOOR(7/2)=3, selecting the middle row.\n• For even numbers of records (e.g. 6): FLOOR(7/2)=3 and FLOOR(8/2)=4, averaging the two central values.\nThis MySQL 8.0 query accurately calculates the mathematical median for both even and odd dataset lengths."
+        "answer": "Query:\nSELECT \n  name, \n  salary,\n  salary - AVG(salary) OVER() AS difference\nFROM Employees;\n\nVisual Calculation (Company Avg = 58,000):\n  Rahul: 60,000 - 58,000 =  +2,000\n  Aman:  45,000 - 58,000 = -13,000\n  Priya: 75,000 - 58,000 = +17,000\n  Neha:  50,000 - 58,000 =  -8,000\n  Karan: 60,000 - 58,000 =  +2,000"
+      }
+    ]
+  },
+  {
+    "id": "sql-cmd-problems",
+    "name": "Commands 6: Problem Solving & Deduplication (Q43–Q50)",
+    "description": "Advanced real-world interview challenges: Deduplication with window CTEs, payroll percentages, manager hierarchies, and median calculations.",
+    "icon": "🏆",
+    "category": "commands",
+    "problems": [
+      {
+        "id": "sql-q43",
+        "title": "Q43. Find duplicate records based on employee name.",
+        "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "Duplicates"
+        ],
+        "answer": "Query:\nSELECT name, COUNT(*) AS total\nFROM Employees\nGROUP BY name\nHAVING COUNT(*) > 1;"
+      },
+      {
+        "id": "sql-q44",
+        "title": "Q44. Delete duplicate records while keeping one record.",
+        "difficulty": "Hard",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/delete.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "Deduplication"
+        ],
+        "answer": "Query:\nWITH DuplicateRecords AS (\n  SELECT \n    emp_id,\n    ROW_NUMBER() OVER (\n      PARTITION BY name, salary \n      ORDER BY emp_id ASC\n    ) AS rn\n  FROM Employees\n)\nDELETE FROM Employees\nWHERE emp_id IN (\n  SELECT emp_id FROM DuplicateRecords WHERE rn > 1\n);\n\nVisual Deduplication Flow:\n  Partition (Rahul, 60k):\n    emp_id: 1 ──> rn: 1  (KEEP)\n    emp_id: 6 ──> rn: 2  (DELETE)\n    emp_id: 9 ──> rn: 3  (DELETE)"
+      },
+      {
+        "id": "sql-q45",
+        "title": "Q45. Find employees who have the same salary.",
+        "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/subqueries.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "Commands",
+          "Salary Parity"
+        ],
+        "answer": "Query:\nSELECT * FROM Employees\nWHERE salary IN (\n  SELECT salary\n  FROM Employees\n  GROUP BY salary\n  HAVING COUNT(*) > 1\n);\n\nVisual Result Set:\n┌────────┬───────┬────────┬─────────┬────────────┐\n│ emp_id │ name  │ salary │ dept_id │ manager_id │\n├────────┼───────┼────────┼─────────┼────────────┤\n│ 1      │ Rahul │ 60000  │ 101     │ NULL       │\n│ 5      │ Karan │ 60000  │ 102     │ 2          │\n└────────┴───────┴────────┴─────────┴────────────┘"
+      },
+      {
+        "id": "sql-q46",
+        "title": "Q46. Find the department with the highest average salary.",
+        "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/select.html"
+          }
+        ],
+        "tags": [
+          "🔥 Frequently Asked",
+          "Commands",
+          "Top-1 Dept"
+        ],
+        "answer": "Query:\nSELECT dept_id, AVG(salary) AS avg_salary\nFROM Employees\nGROUP BY dept_id\nORDER BY avg_salary DESC\nLIMIT 1;\n\nVisual Result Set:\n┌─────────┬────────────┐\n│ dept_id │ avg_salary │\n├─────────┼────────────┤\n│ 101     │ 67500.0000 │\n└─────────┴────────────┘"
+      },
+      {
+        "id": "sql-q47",
+        "title": "Q47. Find employees who earn the same salary as at least one other employee.",
+        "difficulty": "Medium",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/join.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "Commands",
+          "Non-Equi Join"
+        ],
+        "answer": "Query:\nSELECT DISTINCT e1.name, e1.salary\nFROM Employees e1\nJOIN Employees e2 \n  ON e1.salary = e2.salary \n AND e1.emp_id <> e2.emp_id;\n\nVisual Result Set:\n┌───────┬────────┐\n│ name  │ salary │\n├───────┼────────┤\n│ Rahul │ 60000  │\n│ Karan │ 60000  │\n└───────┴────────┘"
+      },
+      {
+        "id": "sql-q48",
+        "title": "Q48. Find the percentage contribution of each department to the total company salary.",
+        "difficulty": "Hard",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html"
+          }
+        ],
+        "tags": [
+          "🚀 Advanced",
+          "Commands",
+          "Percentages"
+        ],
+        "answer": "Query:\nSELECT \n  dept_id,\n  SUM(salary) AS dept_salary,\n  ROUND(\n    SUM(salary) * 100.0 / (SELECT SUM(salary) FROM Employees), \n    2\n  ) AS percentage\nFROM Employees\nGROUP BY dept_id;\n\nVisual Percentage Breakdown (Total Company Payroll = 290,000):\n  Dept 101 (IT):      135,000 / 290,000 * 100 = 46.55%\n  Dept 102 (HR):      105,000 / 290,000 * 100 = 36.21%\n  Dept 103 (Finance):  50,000 / 290,000 * 100 = 17.24%\n\nVisual Result Set:\n┌─────────┬─────────────┬────────────┐\n│ dept_id │ dept_salary │ percentage │\n├─────────┼─────────────┼────────────┤\n│ 101     │ 135000      │ 46.55      │\n│ 102     │ 105000      │ 36.21      │\n│ 103     │ 50000       │ 17.24      │\n└─────────┴─────────────┴────────────┘"
+      },
+      {
+        "id": "sql-q49",
+        "title": "Q49. Find employees who do not have a manager.",
+        "difficulty": "Easy",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/working-with-null.html"
+          }
+        ],
+        "tags": [
+          "⭐ Important",
+          "Commands",
+          "IS NULL"
+        ],
+        "answer": "Query:\nSELECT * FROM Employees WHERE manager_id IS NULL;\n\nVisual Hierarchy Root:\n  [Rahul (emp_id: 1, manager_id: NULL)]  <=== Root of company!\n\nVisual Result Set:\n┌────────┬───────┬────────┬─────────┬────────────┐\n│ emp_id │ name  │ salary │ dept_id │ manager_id │\n├────────┼───────┼────────┼─────────┼────────────┤\n│ 1      │ Rahul │ 60000  │ 101     │ NULL       │\n└────────┴───────┴────────┴─────────┴────────────┘"
+      },
+      {
+        "id": "sql-q50",
+        "title": "Q50. Find the median salary of employees.",
+        "difficulty": "Hard",
+        "category": "commands",
+        "links": [
+          {
+            "platform": "Other",
+            "url": "https://dev.mysql.com/doc/refman/8.0/en/window-functions.html"
+          }
+        ],
+        "tags": [
+          "🚀 Advanced",
+          "Commands",
+          "Median Window"
+        ],
+        "answer": "Query:\nWITH RankedSalaries AS (\n  SELECT \n    salary,\n    ROW_NUMBER() OVER (ORDER BY salary ASC) AS rn,\n    COUNT(*) OVER() AS total\n  FROM Employees\n)\nSELECT AVG(salary) AS median_salary\nFROM RankedSalaries\nWHERE rn IN (\n  FLOOR((total + 1) / 2),\n  FLOOR((total + 2) / 2)\n);\n\nVisual Median Index Selector:\n  Total Records = 5 (Odd):\n  FLOOR((5 + 1) / 2) = 3\n  FLOOR((5 + 2) / 2) = 3\n\n  Sorted Salaries:\n  rn 1: 45,000\n  rn 2: 50,000\n  rn 3: 60,000  <=== MEDIAN! (Average of 60,000 = 60,000)\n  rn 4: 60,000\n  rn 5: 75,000\n\nVisual Result Set:\n┌───────────────┐\n│ median_salary │\n├───────────────┤\n│ 60000.0000    │\n└───────────────┘"
       }
     ]
   }
